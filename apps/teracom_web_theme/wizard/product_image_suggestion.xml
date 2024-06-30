@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="product_image_suggestion_form_view" model="ir.ui.view">
+            <field name="name">product.image.suggestion.form.view</field>
+            <field name="model">product.image.suggestion</field>
+            <field name="arch" type="xml">
+                <form string="Product Image Suggestion">
+                    <group>
+                        <field name="image" widget="image" options="{'size': [190, 190]}"/>
+                        <field name="product_tmpl_id" options="{'no_create': True}"/>
+                    </group>
+                    <footer>
+                        <button name="action_set_image" string="Set as Image" type="object" default_focus="1" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_product_image_suggestion_view" model="ir.actions.act_window">
+            <field name="name">Cash Book Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.image.suggestion</field>
+            <field name="view_id" ref="product_image_suggestion_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Adding button for loading chatgpt in systray -->
+<templates xml:space="preserve">
+    <t t-name="systray_icon" owl="1">
+        <div style="display: none;">
+            <Wysiwyg t-props="wysiwygProps"/>
+        </div>
+        <div class="o-dropdown dropdown o-dropdown--no-caret">
+            <div class="dropdown-toggle o-dropdown--narrow"
+                 role="button" title="Use ChatGPT">
+                <t t-if="this.odoo_version === 'Enterprise'">
+                    <i id='chatgpt_btn' t-on-click="_onClick"
+                        class="fa fa-connectdevelop"
+                    role="img" aria-label="ChatGPT"/>
+                </t>
+                <t t-else="">
+                    <i id='chatgpt_btn' t-on-click="_onClick"
+                        class="fa fa-connectdevelop"
+                    role="img" aria-label="ChatGPT"/>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee Form View Extension -->
+    <record id="view_employee_form_extension" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.extension</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_hr_payslip)d"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        type="action"
+                        groups="accounting_base_kit.group_hr_payroll_community_user">
+                    <field name="payslip_count" widget="statinfo"
+                           string="Payslips"/>
+                </button>
+                <button name="%(act_hr_employee_loan_request)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        groups="hr.group_hr_manager,hr.group_hr_user">
+                    <field name="loan_count" widget="statinfo" string="Loans"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//field[@name='visa_no']" position="after">
+                <field name="visa_issue_date"/>
+            </xpath>
+
+            <xpath expr="//group[@name='emergency']" position="before">
+                <separator string="Dependent Details"/>
+                <field name="family_info_ids" no_label="1" colspan="2">
+                    <tree editable="bottom">
+                        <field name="member_name" required="1"/>
+                        <field name="relation_id" required="1"/>
+                        <field name="member_contact"/>
+                        <field name="birth_date"/>
+                        <field name="age"/>
+                        <field name="on_visa" widget="boolean_toggle" column_invisible="not parent.visa_issue_date"/>
+                        <field name="visa_nationality" column_invisible="not parent.visa_issue_date"/>
+                        <field name="visa_no" column_invisible="not parent.visa_issue_date"/>
+                        <field name="visa_issue_date" column_invisible="not parent.visa_issue_date"/>
+                        <field name="visa_expiry_date" column_invisible="not parent.visa_issue_date"/>
+                        <field name="visa_expiry_days" column_invisible="not parent.visa_issue_date"/>
+                    </tree>
+                </field>
+            </xpath>
+
+            <xpath expr="//field[@name='children']" position="attributes">
+                <attribute name="string">Number of Dependent</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='birthday']" position="after">
+                <field name="age" string="Current Age"/>
+            </xpath>
+
+            <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                <field name="joining_date"/>
+            </xpath>
+
+            <field name="identification_id" position="replace"/>
+            <field name="passport_id" position="replace"/>
+            <xpath expr="//page[@name='personal_information']/group/group[1]" position="after">
+                <group name="identification_id" string="Identification ID">
+                    <field name="identification_id"/>
+                    <field name="id_expiry_date" groups="hr.group_hr_user"
+                           invisible="identification_id in [None,False]"/>
+                    <field name="identification_attachment_ids" groups="hr.group_hr_user" widget="many2many_binary"
+                           class="oe_inline" invisible="identification_id in [None,False]"/>
+                </group>
+                <group name="passport_id" string="Passport ID">
+                    <field name="passport_id"/>
+                    <field name="passport_expiry_date" groups="hr.group_hr_user"
+                           invisible="passport_id in [None,False]"/>
+                    <field name="passport_attachment_ids" groups="hr.group_hr_user" widget="many2many_binary"
+                           class="oe_inline" invisible="passport_id in [None,False]"/>
+                    <field name="is_non_resident"/>
+                </group>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_start_joined" string="Start Slap On"
+                        type="object" invisible="state and state not in ('terminate')"
+                        confirm="Are you sure you want to do this?"/>
+                <button name="action_start_grounding" string="Start Grounding"
+                        type="object" invisible="state not in ('joined')"
+                        confirm="Are you sure you want to do this?"/>
+                <button name="action_start_test_period" string="Start Test Period"
+                        type="object" invisible="state not in ('grounding')"
+                        confirm="Are you sure you want to do this?"/>
+                <button name="%(employee_stage_action)d"
+                        string="Set as Employee" type="action"
+                        invisible="state not in ('joined', 'test_period')"
+                        context="{'employee_id':id}"
+                        confirm="Are you sure you want to do this?"/>
+                <button name="action_start_notice_period" string="Start Notice Period"
+                        type="object" invisible="state not in ('employment')"
+                        confirm="Are you sure you want to do this?"/>
+                <button name="action_relived" string="Relieved" type="object"
+                        invisible="state not in ('notice_period')"
+                        confirm="Are you sure you want to do this?"/>
+                <button name="action_terminate" string="Terminate" type="object"
+                        invisible="state not in ('grounding','employment')"
+                        confirm="Are you sure you want to do this?"/>
+                <field name="state" widget="statusbar"
+                       statusbar_visible="joined,grounding,employment"/>
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']" position="after">
+                <page name="stage_history" string="Status History">
+                    <field name="stages_history_ids">
+                        <tree>
+                            <field name="state"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="duration" sum="Total"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='joining_date']" position="after">
+                <field name="resign_date" invisible="active != False"/>
+            </xpath>
+            <xpath expr="//page[@name='received_badges']" position="replace">
+                <page string="Received Badges" invisible="not user_id">
+                    <div name="badges" groups="hr.group_hr_user">
+                        <field name="has_badges" invisible="1"/>
+                        <button string="Grant a Badge" type="action"
+                                name="%(hr_gamification.action_reward_wizard)d"/>
+                        to reward this employee for a good action
+                        <div class="oe_view_nocontent" invisible="has_badges">
+                            <p class="oe_view_nocontent_create">
+                                Click to grant this employee his first badge
+                            </p>
+                            <p class="oe_grey">
+                                Badges are rewards of good work. Give them to people you believe deserve it.
+                            </p>
+                        </div>
+                    </div>
+                    <field name="badge_ids" widget="many2many_kanban"/>
+                </page>
+            </xpath>
+            <xpath expr="//group[@name='identification_group']" position="inside">
+                <field name="barcode_image" invisible="not barcode" readonly="1" widget="image"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">hr.employee.view.tree.inherit.employee.stages</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="state"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_kanban_view_employees" model="ir.ui.view">
+        <field name="name">hr.employee.view.kanban.inherit.employee.stages
+        </field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//li[3]" position="after">
+                <li t-if="record.state.raw_value">
+                    <field name="state"/>
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{"search_default_employee":1}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+            </p>
+            <p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_employee_filter" model="ir.ui.view">
+        <field name="name">hr.employee.view.search.inherit.employee.stage
+        </field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <field name="job_id" position="after">
+                <field name="state"/>
+                <filter string="Employees" name="employee"
+                        domain="[('state','=','employment')]"/>
+                <filter string="Resigned Employees" name="resigned"
+                        domain="['&amp;',('resigned', '=', True),('active', '=', False)]"/>
+                <filter string="Fired Employees" name="fired"
+                        domain="['&amp;',('fired', '=', True),('active', '=', False)]"/>
+            </field>
+            <xpath expr="//group" position="inside">
+                <filter name="state" string="State" domain="[]"
+                        context="{'group_by':'state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Reports Menu -->
+    <menuitem id="employee_report_menu" name="Reports" sequence="30"
+              groups="hr.group_hr_manager,hr.group_hr_user"/>
+
+    <!-- HR Management Menu -->
+    <menuitem id="hr_management_menu" name="HR Management" parent="hr.menu_hr_root" sequence="5"
+              groups="hr.group_hr_manager,hr.group_hr_user"/>
+
+    <menuitem
+            name="Recruitment"
+            id="hr_recruitment.menu_hr_recruitment_root"
+            parent="hr.menu_hr_root"
+            groups="hr_recruitment.group_hr_recruitment_user,hr_recruitment.group_hr_recruitment_interviewer"
+            sequence="21"/>
+
+    <menuitem
+            name="Recruitment Reporting"
+            id="hr_recruitment.report_hr_recruitment"
+            parent="hr.hr_menu_hr_reports"
+            groups="hr_recruitment.group_hr_recruitment_user"
+            sequence="99"/>
+
+    <menuitem id="hr_recruitment.menu_hr_recruitment_configuration"
+              name="Recruitment Configuration"
+              parent="hr.menu_human_resources_configuration"
+              groups="hr_recruitment.group_hr_recruitment_user" sequence="100"/>
+
+
+    <menuitem
+            name="Time Off"
+            id="hr_holidays.menu_hr_holidays_root"
+            sequence="22"
+            parent="hr.menu_hr_root"
+            groups="base.group_user"/>
+
+    <menuitem
+            id="hr_holidays.menu_hr_holidays_configuration"
+            name="Time Off Configuration"
+            parent="hr.menu_human_resources_configuration"
+            groups="hr_holidays.group_hr_holidays_manager"
+            sequence="95"/>
+
+    <menuitem
+            id="hr_holidays.menu_hr_holidays_report"
+            name="Time Off Reporting"
+            parent="hr.hr_menu_hr_reports"
+            groups="hr_holidays.group_hr_holidays_user"
+            sequence="88"/>
+
+    <menuitem
+            name="Departments"
+            id="hr.menu_hr_department_kanban"
+            action="hr.hr_department_kanban_action"
+            parent="hr.menu_hr_employee_payroll"
+            groups="hr.group_hr_user" sequence="5"/>
+
+</odoo>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <record id="view_res_users_form" model="ir.ui.view">
+        <field name="name">res.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='tz_offset']" position="after">
+                 <field name="chatter_position" readonly="1"/>
+                 <field name="dialog_size" readonly="0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_form_show_pin" model="ir.ui.view">
+        <field name="name">hr.employee.form.show.pin</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+             <xpath expr="//field[@name='pin']" position="replace">
+                <field name="show_pin" invisible="1"/>
+                 <label for="pin"/>
+                 <div class="o_row">
+                     <field name="pin" string="PIN Code" invisible="not show_pin" password="True"/>
+                     <button title="Show" class="btn btn-link" type="object"
+                             name="show_pin_field" icon="fa-eye" invisible="not show_pin"/>
+                     <field name="pin" string="PIN Code" invisible="show_pin"/>
+                     <button title="Hide" class="btn btn-link" type="object"
+                             name="hide_pin_field" icon="fa-eye-slash" invisible="show_pin"/>
+                 </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.password_policy.form.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location_id']" position="after">
+                <field name="password_write_date" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

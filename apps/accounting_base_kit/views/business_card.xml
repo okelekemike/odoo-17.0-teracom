@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="business_card_employee_view" model="ir.ui.view">
+        <field name="name">business.card.employee.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <div id="o_work_employee_main" position="inside">
+                    <group string="Business Card">
+                        <field name="enable_business_card" />
+                    </group>
+                    <group invisible="not enable_business_card">
+                        <group>
+                            <field name="bcFirstname"/>
+                            <field name="bcMiddlename"/>
+                            <field name="bcLastname"/>
+                            <field name="gif" widget="image" options="{'size': [150, 150]}"/>
+                        </group>
+                        <group>
+                            <field name="social_facebook"/>
+                            <field name="social_instagram"/>
+                            <field name="social_linkedin"/>
+                            <field name="url" widget="CopyClipboardChar"/>
+                            <field name="qr_code" widget="image" options="{'size': [150, 150]}"/>
+                        </group>
+                    </group>
+                </div>
+            </field>
+    </record>
+    
+    <template id="business_card" name="Business Card">
+        <t t-call="website.layout">
+            <link rel="stylesheet" href="/accounting_base_kit/static/src/business_card/style.css"/>
+            <div class="oe_structure">
+                <div class="container">
+                    <div class="scene mx-auto scene--cardflip" style="margin:15px; !important">
+                        <div class="cardflip">
+                            <div class="card shadow-lg mx-auto px-1 cardflip__face cardflip__face--front">
+                                <div class="corner"/>
+                                <img t-attf-src="data:image/*;base64,{{employee_data.company_id.bc_logo}}" t-att-alt="employee_data.company_id.name" class="img-fluid img-hero mx-auto"/>
+                                <div class="card-body text-center">
+                                    <div class="card-icon">
+                                        <t t-if="employee_data.gif">
+                                            <img t-attf-src="data:image/*;base64,{{employee_data.gif}}" alt="" class="lord-icon" style="width: 10rem; height: 10rem;"/>
+                                        </t>
+                                        <t t-if="not employee_data.gif and employee_data.company_id.gif">
+                                            <img t-attf-src="data:image/*;base64,{{employee_data.company_id.gif}}" alt="" class="lord-icon" style="width: 10rem; height: 10rem;"/>
+                                        </t>
+                                    </div>
+                                    <h1 class="card-title fs-4 pt-2">
+                                        <t t-if="employee_data.bcFirstname">
+                                            <span t-esc="employee_data.bcFirstname"/>
+                                            <span t-if="employee_data.bcMiddlename" t-esc="employee_data.bcMiddlename" style="margin-left:5px;"/>
+                                            <span t-if="employee_data.bcLastname" t-esc="employee_data.bcLastname" style="margin-left:5px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-esc="employee_data.name" id="employee_data_name"/>
+                                        </t>
+                                    </h1>
+                                    <h3 class="card-text fs-4"><span t-esc="employee_data.job_title"/></h3>
+
+                                    <div id="social">
+                                        <t t-if="employee_data.social_facebook">
+                                            <a t-attf-href="https://web.facebook.com/{{employee_data.social_facebook}}">
+                                                <img t-attf-src="/accounting_base_kit/static/src/business_card/facebook.svg" alt="Facebook"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="not employee_data.social_facebook and employee_data.company_id.social_facebook">
+                                            <a t-attf-href="https://web.facebook.com/{{employee_data.company_id.social_facebook}}">
+                                                <img t-attf-src="/accounting_base_kit/static/src/business_card/facebook.svg" alt="Facebook"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="employee_data.social_linkedin">
+                                            <a t-attf-href="https://www.linkedin.com/in/{{employee_data.social_linkedin}}">
+                                                <img t-attf-src="/accounting_base_kit/static/src/business_card/linkedin.svg" alt="LinkedIn"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="not employee_data.social_linkedin and employee_data.company_id.social_linkedin">
+                                            <a t-attf-href="https://www.linkedin.com/in/{{employee_data.company_id.social_linkedin}}">
+                                                <img t-attf-src="/accounting_base_kit/static/src/business_card/linkedin.svg" alt="LinkedIn"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="employee_data.social_instagram">
+                                            <a t-attf-href="https://www.instagram.com/{{employee_data.social_instagram}}">
+                                                <img t-attf-src="/accounting_base_kit/static/src/business_card/instagram.svg" alt="Instagram"/>
+                                            </a>
+                                        </t>
+                                        <t t-if="not employee_data.social_instagram and employee_data.company_id.social_instagram">
+                                            <a t-attf-href="https://www.instagram.com/{{employee_data.company_id.social_instagram}}">
+                                                <img t-attf-src="/accounting_base_kit/static/src/business_card/instagram.svg" alt="Instagram"/>
+                                            </a>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card shadow-lg mx-auto px-1 pt-4 cardflip__face cardflip__face--back">
+                                <div class="corner"/>
+                                <div class="card-body">
+                                    <div class="row pt-4">
+                                        <div class="col-8">
+                                            <h1 class="card-title fs-4 pt-2">
+                                                <t t-if="employee_data.bcFirstname">
+                                                    <span t-esc="employee_data.bcFirstname"/>
+                                                    <span t-if="employee_data.bcMiddlename" t-esc="employee_data.bcMiddlename" style="margin-left:5px;"/>
+                                                    <span t-if="employee_data.bcLastname" t-esc="employee_data.bcLastname" style="margin-left:5px;"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-esc="employee_data.name" id="employee_data_name"/>
+                                                </t>
+                                            </h1>
+                                            <h3 class="card-text fs-4"><span t-esc="employee_data.job_title"/></h3>
+                                            <ul class="list-unstyled">
+                                                <li class="d-flex pt-2">
+                                                    <a t-attf-href="mailto:{{employee_data.work_email}}">
+                                                        <span t-esc="employee_data.work_email"/>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                 <a t-attf-href="tel:{{employee_data.work_phone}}">
+                                                    <span t-esc="employee_data.work_phone"/>
+                                                 </a>
+                                                </li>
+                                                <li class="d-flex pt-2">
+                                                    <a t-attf-href="{{employee_data.company_id.website}}">
+                                                        <span t-esc="employee_data.company_id.website"/>
+                                                    </a>
+                                                </li>
+                                                <li class="fw-bold d-flex pt-2" style="font-size:24px">
+                                                    <span t-esc="employee_data.company_id.name"/>
+                                                </li>
+                                                <a t-attf-href="https://www.google.com/maps/dir/?api=1&amp;destination={{employee_data.company_id.street}},{{employee_data.company_id.street2}},{{employee_data.company_id.city}},{{employee_data.company_id.state_id.name}},{{employee_data.company_id.country_id.name}},{{employee_data.company_id.zip}}">
+
+                                                <li class="d-flex pt-2" >
+                                                    <img t-attf-src="/accounting_base_kit/static/src/business_card/map-marker-alt-solid.svg" alt="" style="width: 1rem; height: 1rem; margin-right: 0.5rem"/>
+                                                    <span t-esc="employee_data.company_id.street"/>
+                                                </li>
+                                                <li t-if="employee_data.company_id.street2">
+                                                    <span t-esc="employee_data.company_id.street2"/>
+                                                </li>
+                                                <li>
+                                                    <span t-esc="employee_data.company_id.zip"/>
+                                                    <span t-esc="employee_data.company_id.city"/>
+                                                    (<span t-esc="employee_data.company_id.state_id.name"/>)
+                                                    <span t-esc="employee_data.company_id.country_id.name"/>
+                                                </li>
+                                                </a>
+                                                <t t-if="employee_data.company_id.vat">
+                                                    <li class="py-1">
+                                                        <span class="fw-bold">VAT Number</span>
+                                                        <span t-esc="employee_data.company_id.vat"/>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </div>
+                                        <div class="col-4">
+                                            <img t-attf-src="data:image/*;base64,{{employee_data.company_id.bc_logo}}" class="img-fluid mx-auto"  t-att-alt="employee_data.company_id.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row pt-4">
+                                        <div class="col-4">
+                                            <img t-attf-src="data:image/*;base64,{{employee_data.address_qrcode}}" alt="QR Code" class="img-fluid mx-auto"/>
+                                        </div>
+                                        <div class="col-4"/>
+                                        <div class="col-4">
+                                            <div class="card-icon">
+                                                <t t-if="employee_data.gif">
+                                                    <img t-attf-src="data:image/*;base64,{{employee_data.gif}}" alt="" class="img-fluid mx-auto"/>
+                                                </t>
+                                                <t t-if="not employee_data.gif and employee_data.company_id.gif">
+                                                    <img t-attf-src="data:image/*;base64,{{employee_data.company_id.gif}}" alt="" class="img-fluid mx-auto"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="text-center pt-3">
+                            <input type="hidden" id="vcf_name" t-att-value="employee_data.name"/>
+                            <input type="hidden" id="vcf_firstname" t-att-value="employee_data.bcFirstname"/>
+                            <input type="hidden" id="vcf_middlename" t-att-value="employee_data.bcMiddlename"/>
+                            <input type="hidden" id="vcf_lastname" t-att-value="employee_data.bcLastname"/>
+                            <input type="hidden" id="vcf_phone" t-att-value="employee_data.work_phone"/>
+                            <input type="hidden" id="vcf_street" t-att-value="employee_data.company_id.street"/>
+                            <input type="hidden" id="vcf_street2" t-att-value="employee_data.company_id.street2"/>
+                            <input type="hidden" id="vcf_city" t-att-value="employee_data.company_id.city"/>
+                            <input type="hidden" id="vcf_zip" t-att-value="employee_data.company_id.zip"/>
+                            <input type="hidden" id="vcf_state" t-att-value="employee_data.company_id.state_id.name"/>
+                            <input type="hidden" id="vcf_country" t-att-value="employee_data.company_id.country_id.name"/>
+                            <input type="hidden" id="vcf_email" t-att-value="employee_data.work_email"/>
+                            <input type="hidden" id="vcf_website" t-att-value="employee_data.company_id.website"/>
+                            <input type="hidden" id="vcf_job_title" t-att-value="employee_data.job_title"/>
+                            <input type="hidden" id="vcf_company_name" t-att-value="employee_data.company_id.name"/>
+                            <input type="hidden" id="vcf_company_vat" t-att-value="employee_data.company_id.vat"/>
+                            <input type="file" id="fileVCF" style="display:none" />
+                            <button id="downloadVCF" style="margin:15px; !important" class="btn btn-secondary text-white btn-lg">
+                                <i class="fa fa-address-book" aria-hidden="true"/>
+                                <t t-if="employee_data.bcFirstname">
+                                    <span t-esc="employee_data.bcFirstname"/>
+                                    <span t-if="employee_data.bcMiddlename" t-esc="employee_data.bcMiddlename" style="margin-left:5px;"/>
+                                    <span t-if="employee_data.bcLastname" t-esc="employee_data.bcLastname" style="margin-left:5px;"/>
+                                </t>
+                                <t t-else="">
+                                    <span t-esc="employee_data.name" id="employee_data_name"/>
+                                </t>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="/accounting_base_kit/static/src/business_card/main.js"/>
+            <script src="/accounting_base_kit/static/src/business_card/vcf.js"/>
+        </t>
+    </template>
+
+    <record id="business_card_company_view" model="ir.ui.view">
+        <field name="name">business.card.company.view</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Business Card" >
+                    <group columns="2" >
+                        <field name="bc_logo" widget="image" options="{'size': [150, 150]}"/>
+                        <field name="gif" widget="image" options="{'size': [150, 150]}"/>
+                    </group>
+                </page>
+            </notebook>
+
+            <field name="city" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+            <field name="state_id" position="after">
+                <field name="city_id"
+                       placeholder="Local Area"
+                       class="o_address_city"
+                       options="{'no_open': True, 'no_quick_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <template id="business_card_company" name="Business Card Company">
+        <t t-call="website.layout">
+            <div class="oe_structure">
+                <div class="container"><br />
+                    <span t-esc="employee_data.name" />
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

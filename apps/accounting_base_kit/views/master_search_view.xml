@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- form view  -->
+    <record model="ir.ui.view" id="master_search_form">
+        <field name="name">Search</field>
+        <field name="model">master.search</field>
+        <field name="arch" type="xml">
+            <form string="Search">
+                <style>
+                    .o_control_panel {display: none !important;}
+                    .o_control_panel_breadcrumbs {display: none !important;}
+                </style>
+                <script>
+                    $(document).ready(function() {
+                        if ($(".oe_search_bgnd").length > 0){
+                            document.title = 'Search';
+                        }
+                        function toggleDetailsTree($target) {
+                            var element = $target.closest('.oe_result_div').find('.oe_details_tree');
+                            element.toggleClass('oe_details_tree--show');
+                            var elem = $target.closest('.oe_result_div').find('.fa-chevron-down');
+                            elem.toggleClass('fa-chevron-down--up');
+                        }
+                        $('.expand_tile').on("click", function(event) {
+                            var $target = $(event.target);
+                            if ($target.hasClass('expand_tile')) {
+                                toggleDetailsTree($target);
+                            } else if ($target.hasClass('history')) {
+                                toggleDetailsTree($target);
+                            } else if ($target.hasClass('dropdown')) {
+                                toggleDetailsTree($target);
+                            } else if ($target.hasClass('name_plate')) {
+                                toggleDetailsTree($target);
+                            }
+                        });
+                        $('.o_radio_input').on('change', function() {
+                            let targetEl = $(this).data().value;
+                            $('.oe_search_tab').addClass('d-none');
+                            $('.oe_details_tree').removeClass('oe_details_tree--show');
+                            switch(targetEl) {
+                                case 'customer':
+                                    $('#customer_search_results').addClass('d-block');
+                                    $('#customer_search_results').removeClass('d-none');
+                                    break;
+                                case 'product':
+                                    $('#product_search_results').addClass('d-block');
+                                    $('#product_search_results').removeClass('d-none');
+                                    break;
+                                case 'transaction details':
+                                    $('#inventory_search_results').addClass('d-block');
+                                    $('#inventory_search_results').removeClass('d-none');
+                                    break;
+                                case 'sale details':
+                                    $('#sale_search_results').addClass('d-block');
+                                    $('#sale_search_results').removeClass('d-none');
+                                    break;
+                                case 'purchase details':
+                                    $('#purchase_search_results').addClass('d-block');
+                                    $('#purchase_search_results').removeClass('d-none');
+                                    break;
+                                case 'account details':
+                                    $('#accounting_search_results').addClass('d-block');
+                                    $('#accounting_search_results').removeClass('d-none');
+                                    break;
+                                case 'any':
+                                    $('.oe_search_tab').removeClass('d-none');
+                                    break;
+                            }
+                            $('#recent_searches').addClass('d-block');
+                            $('#recent_searches').removeClass('d-none');
+                        });
+                    });
+                </script>
+                <sheet>
+                    <div class="row oe_search_bgnd"
+                         style="padding: 24px 5px; background-color: white; border-radius: 0;">
+                        <div class="col-12 col-md-12 col-xl-12">
+                            <label for="search_string" string="Search  "
+                                   style="display: inline-block;"
+                                   class="oe_read_only"/>
+                            <div class="input-group mb-3" style="justify-content:space-evenly;">
+                                <button name="action_clear_search"
+                                        type="object" title="Clear Search"
+                                        class="fa fa-times oe_edit_only btn_master_search btn_w_6"/>
+                                <field name="search_string" default_focus="1"
+                                       class="search_input"
+                                       style="width: 88%; display: inline-block; margin: -1px 0px; font-size:20px; block-size: 35px; text-indent: 5px"
+                                       placeholder="Type here to search.."/>
+                                <button name="action_search"
+                                        type="object"
+                                        title="Begin Search"
+                                        class="fa fa-search oe_search_btn btn_master_search oe_edit_only btn_w_6"/>
+                            </div>
+                            <div class="not-allowed">Regular expressions are not allowed in search!</div>
+                            <div class="row" style="padding-left:16px;padding-right:16px;">
+                                <div class="col-12 col-md-7 col-xl-7" style="display: block;">
+                                    <label for="search_by" string="Search For:" class="oe_read_only"/>
+                                    <field name="search_by" widget="radio" nolabel="1" options="{'horizontal': true}"/>
+                                </div>
+                                <div class="col-12 col-md-2 col-xl-2" style="display: inline-block;">
+                                    <label for="match_entire"
+                                           string="Match Phrase: "
+                                           style="display: inline-block; position: relative; top: 7px;"/>
+                                    <field name="match_entire"
+                                           style="display: inline-block; margin-left: 10px;"/>
+                                </div>
+                                <div class="col-12 col-md-3 col-xl-3" style="display: block;">
+                                    <label for="search_mode" string="Mode:" class="oe_read_only"/>
+                                    <field name="search_mode" widget="radio" nolabel="1" options="{'horizontal': true}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="oe_result_div">
+                        <div id="recent_searches"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 5px; margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab expand_tile"
+                             >
+                            <span class="name_plate" style="font-size:20px">Recent Searches</span>
+                            <div class="history" style="float: right;">
+                                <field name="history_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll; width: 100%;" class="oe_details_tree">
+                            <field name="master_search_ids">
+                                <tree create="false" edit="false" class="disable_open">
+                                    <field name="search_string"
+                                           class="re_search oe_key"/>
+                                    <field name="search_mode" string="Mode"
+                                           class="re_search"/>
+                                    <field name="search_by" string="Type"
+                                           class="re_search"/>
+                                    <button style="display: inline-block;"
+                                            name="action_unlink_search"
+                                            title="Search" type="object"
+                                            class="fa fa-trash"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <div class="oe_result_div">
+                        <div id="customer_search_results"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 5px;
+                                margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab accordion_tab expand_tile"
+                             invisible="not search_by in ['any', 'customer']"
+                             >
+                            <span class="name_plate" style="font-size:20px">Customer Search Results</span>
+                            <div class="history" style="float: right;">
+                                <field name="customer_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll;width: 100%;" class="oe_details_tree">
+                            <field name="customer_ids">
+                                <tree create="false" delete="false" edit="false">
+                                    <field name="name" string="Name"/>
+                                    <field name="email" string="Email"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <div class="oe_result_div">
+                        <div id="product_search_results"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 5px; margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab accordion_tab expand_tile"
+                             invisible="not search_by in ['any', 'product']"
+                             >
+                            <span class="name_plate" style="font-size:20px">Product Search Results</span>
+                            <div class="history" style="float: right;">
+                                <field name="product_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll;width: 100%;" class="oe_details_tree"
+                             name="products">
+                            <field name="product_ids">
+                                <tree create="false" delete="false" edit="false">
+                                    <field name="name" string="Name"/>
+                                    <field name="default_code" string="Code"/>
+                                    <field name="description" string="Description"/>
+                                    <field name="type" string="Product Type"/>
+                                    <field name="categ_id" string="Category"/>
+                                    <field name="uom_id" string="Base UoM" optional="hide"/>
+                                    <field name="qty_available" string="Stock"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <div class="oe_result_div">
+                        <div id="inventory_search_results"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 10px; margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab accordion_tab expand_tile"
+                             invisible="not search_by in ['any', 'transaction details']"
+                             >
+                            <span class="name_plate" style="font-size:20px">Inventory Search Results</span>
+                            <div class="history" style="float: right;">
+                                <field name="transaction_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll;width: 100%;" class="oe_details_tree">
+                            <field name="transaction_ids">
+                                <tree create="false" delete="false" edit="false">
+                                    <field name="name" string="Trans. # "/>
+                                    <field name="date_done" string="Transaction Date"/>
+                                    <field name="picking_type_id" string="Transaction Type"/>
+                                    <field name="partner_id" string="Reference Name"/>
+                                    <field name="state" string="Transaction Status"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <div class="oe_result_div">
+                        <div id="sale_search_results"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 10px; margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab accordion_tab expand_tile"
+                             invisible="not search_by in ['any', 'sale details']"
+                             >
+                            <span class="name_plate" style="font-size:20px">Sale Search Results</span>
+                            <div class="history" style="float: right;">
+                                <field name="sale_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll;width: 100%;" class="oe_details_tree">
+                            <field name="sale_ids">
+                                <tree create="false" delete="false" edit="false">
+                                    <field name="name" string="Trans. # "/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="pricelist_id" string="Pricelist"/>
+                                    <field name="payment_term_id" string="Payment Term"/>
+                                    <field name="state" string="Status"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <div class="oe_result_div">
+                        <div id="purchase_search_results"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 10px; margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab accordion_tab expand_tile"
+                             invisible="not search_by in ['any', 'purchase details']"
+                             >
+                            <span class="name_plate" style="font-size:20px">Purchase Search Results</span>
+                            <div class="history" style="float: right;">
+                                <field name="purchase_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll;width: 100%;" class="oe_details_tree">
+                            <field name="purchase_ids">
+                                <tree create="false" delete="false" edit="false">
+                                    <field name="name" string="Trans. # "/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="state" string="Status"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                    <div class="oe_result_div">
+                        <div id="accounting_search_results"
+                             style="background-color: white; color: #222222; width: 100%; padding: 5px 10px; margin-top: 10px; border-bottom-style:solid;"
+                             class="oe_search_tab accordion_tab expand_tile"
+                             invisible="not search_by in ['any', 'account details']"
+                             >
+                            <span class="name_plate" style="font-size:20px">Accounting Search Results</span>
+                            <div class="history" style="float: right;">
+                                <field name="account_count" class="oe_tab_count" readonly="1"/>
+                                Records Found
+                                <span class="oe_drop_down" style="margin-left: 5px">
+                                    <i style="color: #222222 !important; font-size: 16px;"
+                                       title="Search"
+                                       class="fa fa-chevron-down dropdown"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="height: 200px; overflow-y: scroll;width: 100%;" class="oe_details_tree">
+                            <field name="account_ids">
+                                <tree create="false" delete="false" edit="false">
+                                    <field name="name" string="Trans. # "/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="state" string="Status"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="master_search_action">
+        <field name="name">Search</field>
+        <field name="res_model">master.search</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'active_test': False, 'search_default_filter_active': 1}</field>
+    </record>
+    <!-- Search root menu -->
+    <menuitem id="master_search_root" name="Search"
+              action="master_search_action"
+              web_icon="accounting_base_kit,static/description/master_search_icon.png"
+              sequence="5" groups="accounting_base_kit.master_search_read"/>
+</odoo>

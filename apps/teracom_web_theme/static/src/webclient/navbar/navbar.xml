@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+
+	<t 
+		t-name="teracom_web_theme.NavBar"
+		t-inherit="web.NavBar" 
+		t-inherit-mode="extension" 
+	>
+		<xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="replace">
+			<AppsMenu 
+				hotkey="'h'" 
+				title="'Home Menu'" 
+				class="'o_navbar_apps_menu'" 
+			>
+				<t t-set-slot="toggler">
+					<img
+						t-if="this.getCurrentMenuWebIconData()"
+						t-att-src="this.getCurrentMenuWebIconData()"
+						id="app-menu-icon"
+						style="will-change: transform; transition:all 2s; width: 26px; height: 26px;"
+					/>
+					<img
+						t-else=""
+						id="app-menu-icon"
+						src="/base/static/description/icon.png"
+						style="will-change: transform; transition:all 2s; width: 26px; height: 26px;"
+					/>
+					<i id="app-menu-io" class="fa fa-th o_hidden" style="will-change: transform; transition: all 2s; font-size: 18px; object-fit: fill; margin-top: 3px; color: #714B67;"/>
+				</t>
+			    <DropdownItem
+			        t-foreach="this.getAppsMenuItems()"
+			        t-as="app"
+			        t-key="app.id"
+			        class="'o_app'"
+			        dataset="{ menuXmlid: app.xmlid, section: app.id }"
+					onSelected="() => app.action()"
+                	parentClosingMode="'none'"
+				>
+					<a 
+						t-att-href="app.href" 
+						t-on-click.prevent=""
+					>
+						<img 
+					        t-if="app.webIconData"          		
+		            		class="mk_app_icon" 
+			                t-att-src="app.webIconData"
+		            	/>
+		            	<img  
+		            		t-else="" 
+		            		class="mk_app_icon" 
+		            		src="/base/static/description/icon.png"
+		            	/>
+						<span class="mk_app_name">
+							<t t-out="app.name"/>
+						</span>
+					</a>
+				</DropdownItem>
+			</AppsMenu>
+		</xpath>
+	</t>
+
+	<t
+			t-name="teracom_web_theme.NavBar"
+			t-inherit="web.NavBar"
+			t-inherit-mode="extension"
+	>
+	    <xpath expr="//nav" position="inside">
+	    	<AppsBar apps="this.getAppsMenuItems()"/>
+	    </xpath>
+	</t>
+
+</templates>

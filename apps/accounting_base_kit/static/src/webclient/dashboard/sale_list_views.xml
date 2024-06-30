@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Displaying dashboard in list view-->
+<templates>
+    <t t-name="accounting_base_kit.SaleListView"
+       t-inherit="web.ListRenderer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-call='web.ActionHelper']" position="after">
+            <SaleDashBoard/>
+        </xpath>
+    </t>
+</templates>

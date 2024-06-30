@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherit purchase_order_form for adding 'Print Bill' button and 'automate_print_bills' field-->
+    <record id="purchase_order_form_sale_purchase_automated" model="ir.ui.view">
+        <field name="name">
+            purchase.order.view.form.inherit.sale.purchase.automated
+        </field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_create_invoice']"
+                   position="after">
+                <field name="automate_print_bills" invisible="1"/>
+                <button string="Print Bill" class="oe_highlight" type="object"
+                        name="action_print_bill"
+                        invisible="automate_print_bills==False or invoice_count==0"/>
+            </xpath>
+
+            <!-- Inheriting purchase order form for adding button for sending purchase order via WhatsApp.-->
+            <xpath expr="//button[@name='action_create_invoice'][1]" position="after">
+                <button type="object" class="oe_stat_button"
+                        style="background-color: #25D366;color: white;"
+                        name="action_send_whatsapp" icon="fa-whatsapp"
+                        string="Send by Whatsapp" data-hotkey="w"/>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="available_qty" force_save="1" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inheriting purchase order tree for adding button for sending multiple purchase orders via WhatsApp.-->
+    <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+        <field name="name">purchase.order.view.list.inherited.whatsapp.mail.messaging</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button type="object" class="btn-primary ml4"
+                            name="action_whatsapp_multi" icon="fa-whatsapp" string="Send by Whatsapp"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited purchase order form view. -->
+    <record id="purchase_order_form" model="ir.ui.view">
+        <field name="name">
+            purchases.order.view.form.inherit.payment.status.in.purchase
+        </field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='reminder']" position="after">
+                <field name="payment_status" invisible="1"/>
+                <field name="invoice_state" invisible="1"/>
+                <field name="payment_details" widget="payment" style="width: 60%"/>
+                <field name="amount_due"/>
+            </xpath>
+            <xpath expr="//sheet//div[hasclass('oe_button_box')]" position="after">
+                <div class="badge rounded-pill text-bg-secondary float-end fs-6 border-0" invisible="state !='done'">
+                    <i class="fa fa-lock"/>
+                    Locked
+                </div>
+                <widget name="web_ribbon" title="Not Paid"
+                        bg_color="bg-danger" invisible = "payment_status != 'Not Paid'"/>
+                <widget name="web_ribbon" title="Paid"
+                        bg_color="bg-success" invisible = "payment_status !=  'Paid'"/>
+                <widget name="web_ribbon" title="Partially Paid"
+                        bg_color="bg-warning" invisible = "payment_status !=  'Partially Paid'"/>
+                <widget name="web_ribbon" title="In Payment"
+                        bg_color="bg-info" invisible = "payment_status !=  'In Payment'"/>
+                <widget name="web_ribbon" title="Reversed"
+                        bg_color="bg-success" invisible = "payment_status != 'Reversed'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_create_invoice'][last()]" position="after">
+                <button name="action_register_payment"
+                        string="Register Payment" class="btn-secondary"
+                        type="object" invisible = "state not in ('purchase', 'done') or invoice_state != 'posted' or payment_status not in ('Not Paid', 'Partially Paid')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited purchase order tree view. -->
+    <record id="purchase_order_view_tree" model="ir.ui.view">
+        <field name="name">
+            purchase.order.view.tree.inherit.payment.status.in.purchase
+        </field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="payment_status" optional="show"
+                       decoration-success="payment_status in ['Paid', 'Reversed']"
+                       decoration-danger="payment_status == 'Not Paid'"
+                       decoration-info="payment_status == 'In Payment'"
+                       decoration-bf="payment_status == 'No invoice'"
+                       decoration-warning="payment_status == 'Partially Paid'"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited purchase order quotation tree view. -->
+    <record id="purchase_order_kpis_tree" model="ir.ui.view">
+        <field name="name">
+            purchase.order.view.tree.inherit.payment.status.in.purchase
+        </field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="payment_status" optional="show"
+                       decoration-success="payment_status in ['Paid', 'Reversed']"
+                       decoration-danger="payment_status == 'Not Paid'"
+                       decoration-info="payment_status == 'In Payment'"
+                       decoration-bf="payment_status == 'No invoice'"
+                       decoration-warning="payment_status == 'Partially Paid'"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Form view of hr_employee_document model-->
+    <record id='hr_employee_document_view_form' model='ir.ui.view'>
+        <field name="name">hr.employee.document.view.form</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_ref_id" string="Employee"/>
+                            <field name="name"/>
+                            <field name="document_id" options="{'no_create': True}"/>
+                            <field name="document_type_id" options="{'no_create': True}"/>
+                            <field name="doc_attachment_ids"
+                                   widget="many2many_binary"
+                                   class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiry_date"/>
+                            <field name="notification_type"/>
+                            <field name="before_days"
+                                   invisible="notification_type == 'single'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Tree view of hr_employee_document model-->
+    <record id='hr_employee_document_view_tree' model='ir.ui.view'>
+        <field name="name">hr.employee.document.view.tree</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <tree string="docs">
+                <field name="name"/>
+                <field name="employee_ref_id" string="Employee"/>
+                <field name="document_type_id"/>
+                <field name="issue_date"/>
+                <field name="expiry_date"/>
+            </tree>
+        </field>
+    </record>
+    <!--Search view of the model hr.employee.document-->
+    <record id="hr_employee_document_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.document.view.search</field>
+        <field name="model">hr.employee.document</field>
+        <field name="arch" type="xml">
+            <search string="Employee Documents">
+                <group expand="0" string="Group By">
+                    <filter name="Employee" string="Employee" domain="[]"
+                            context="{'group_by':'employee_ref_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!--Windows action for the model hr.employee.document-->
+    <record id="hr_employee_document_action" model="ir.actions.act_window">
+        <field name="name">Employee Documents</field>
+        <field name="res_model">hr.employee.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="hr_employee_document_view_tree"/>
+        <field name="context">{'search_default_Employee': 1}</field>
+    </record>
+    <!--Menu item for the model hr.employee.document-->
+    <menuitem id="hr_employee_document_menu"
+              name="Documents"
+              parent="hr.menu_hr_employee_payroll"
+              action="hr_employee_document_action"
+              groups="hr.group_hr_manager"/>
+
+
+    <!--Inherit Documents super button for hr_employee button-->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">
+            hr.employee.view.form.inherit.employee.documents.expiry
+        </field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" name="document_view"
+                        type="object" icon="fa-list-ol">
+                    <field string="Documents" name="document_count"
+                           widget="statinfo"/>
+                </button>
+            </div>
+            <field name="category_ids" position="after">
+                <div class="oe_inline">
+                    <field name="entry_progress" string="Entry Progress"
+                           widget="percentpie" style="margin-right: 10px;"/>
+                    <field name="exit_progress" string="Exit Progress"
+                           widget="percentpie" style="margin-right: 10px;"/>
+                </div>
+            </field>
+            <page name="hr_settings" position="after">
+                <page name="checklist" string="Checklist">
+                    <group>
+                        <group name="entry_checklist" string="Entry Checklist">
+                            <field name="entry_checklist" widget="many2many_checkboxes"/>
+                            <field name="check_list_enable" invisible="1"/>
+                        </group>
+                        <group name="exit_checklist" string="Exit Checklist">
+                            <field name="exit_checklist" widget="many2many_checkboxes"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">
+            hr.employee.view.tree.inherit.ent.employee.checklist
+        </field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name="entry_progress" widget="progressbar"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_kanban_view_employees" model="ir.ui.view">
+        <field name="name">
+            hr.employee.view.kanban.inherit.ent.employee.checklist
+        </field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="entry_progress"/>
+                <field name="maximum_rate"/>
+                <field name="check_list_enable" invisible="1"/>
+            </xpath>
+            <xpath expr="//ul/li[2]" position="after">
+                <li t-if="record.check_list_enable.raw_value==1">
+                    <field name="entry_progress" widget="gauge"
+                           style="width:120px;height:90px;cursor:pointer;"
+                           options="{'max_field': 'maximum_rate'}">
+                        Entry Progress
+                    </field>
+                </li>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Creating Document type view -->
+    <record id="document_type_view_form" model="ir.ui.view">
+        <field name="name">document.type.view.form</field>
+        <field name="model">document.type</field>
+        <field name="arch" type="xml">
+            <form string="Employee Tags">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Tree view of the model document.type-->
+    <record id='document_type_view_tree' model='ir.ui.view'>
+        <field name="name">document.type.view.tree</field>
+        <field name="model">document.type</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action of the model document.type-->
+    <record id="document_type_action" model="ir.actions.act_window">
+        <field name="name">Document Types</field>
+        <field name="res_model">document.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--Menu of the model document.type-->
+    <menuitem id="employee_documents"
+              name="Documents"
+              parent="hr.menu_human_resources_configuration"
+              sequence="120"/>
+
+    <menuitem id="document_type_menu"
+              action="document_type_action"
+              name="Document Types"
+              parent="employee_documents"
+              sequence="6"/>
+
+
+    <!--Creating hr document view-->
+    <record id='hr_document_view_form' model='ir.ui.view'>
+        <field name="name">hr.document.view.form</field>
+        <field name="model">hr.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="attach_ids"
+                                   widget="many2many_binary"
+                                   class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Tree view of the model hr.document-->
+    <record id='hr_document_tree_view' model='ir.ui.view'>
+        <field name="name">hr.document.tree</field>
+        <field name="model">hr.document</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="note" string="Note"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action of the model hr.document-->
+    <record id="hr_document_action" model="ir.actions.act_window">
+        <field name="name">Document Templates</field>
+        <field name="res_model">hr.document</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref=""/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create First Document Template
+            </p>
+        </field>
+    </record>
+    <!--Menuitem of the model hr.document-->
+    <menuitem id="hr_document_menu"
+              name="Document Templates"
+              parent="employee_documents"
+              sequence="7"
+              action="hr_document_action"
+              groups="hr.group_hr_manager"/>
+
+    <!-- Mail Activity view form-->
+    <record model="ir.ui.view" id="mail_activity_view_form_popup">
+        <field name="name">mail.activity.form.view</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <field name="note" position="replace">
+                <field name="check_type_check" invisible="1"/>
+                <field name="on_board_type_check" invisible="1"/>
+                <field name="off_board_type_check" invisible="1"/>
+                <notebook>
+                    <page string="Checklists" name="checklist">
+                        <group string="Checklists">
+                            <group name="entry_checklist">
+                                <field name="entry_checklist_plan_ids"
+                                       widget="many2many_checkboxes"/>
+                            </group>
+                            <group name="exit_checklist"
+                                   invisible="off_board_type_check != True">
+                                <field name="exit_checklist_plan_ids"
+                                       widget="many2many_checkboxes"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="notes" string="Notes">
+                        <field name="note" placeholder="Log a note..."/>
+                    </page>
+                </notebook>
+            </field>
+        </field>
+    </record>
+
+    <!--Form view of employee_checklist model-->
+    <record id='employee_checklist_view_form' model='ir.ui.view'>
+        <field name="name">employee.checklist.view.form</field>
+        <field name="model">employee.checklist</field>
+        <field name="arch" type="xml">
+            <form string="Checklist">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="document_type"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--Tree view of employee_checklist model-->
+    <record id='employee_checklist_view_tree' model='ir.ui.view'>
+        <field name="name">employee.checklist.view.tree</field>
+        <field name="model">employee.checklist</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="document_type"/>
+            </tree>
+        </field>
+    </record>
+    <!--Menu action for employee_checklist model-->
+    <record id="employee_checklist_action" model="ir.actions.act_window">
+        <field name="name">Employee Checklist</field>
+        <field name="res_model">employee.checklist</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--Menu for the model employee_checklist-->
+    <menuitem
+            id="employee_checklist_menu"
+            name="Employee Checklist"
+            action="employee_checklist_action"
+            parent="employee_documents"
+            sequence="3"
+            groups="hr.group_hr_manager"/>
+
+</odoo>

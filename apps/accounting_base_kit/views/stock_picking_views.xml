@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Stock Picking form view inherited-->
+    <record id="stock_view_picking_form" model="ir.ui.view">
+        <field name="name">stock.view.picking.form.inherited.force.availability.in.stock</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_assign']"
+                   position="after">
+                <field name="is_available" invisible="1"/>
+                <field name="show_set_qty_button" invisible="1"/>
+                <button string="Force Availability" class="btn-primary"
+                        type="object" name="action_force_availability"
+                        invisible="state in ['done', 'cancel'] or is_available or products_availability_state == 'available' or show_set_qty_button"/>
+            </xpath>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="mo_ref_id" readonly="1" force_save="1"/>
+            </xpath>
+
+        </field>
+    </record>
+<!--    Stock Picking tree view inherited-->
+    <record id="stock_view_picking_tree_inherited" model="ir.ui.view">
+        <field name="name">stock.picking.tree.inherited.force.availability.in.stock</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_assign']"
+                   position="after">
+                <button name="action_force_availability"
+                        string="Force Availability"
+                        type="object"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Form View to Modify stock picking -->
+    <record id="stock_picking_view_tree" model="ir.ui.view">
+        <field name="name">stock.picking.view.tree.inherit.inventory.move.mini.dashboard
+        </field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">stock_picking_dashboard_list</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Modify the attributes of the existing tree view -->
+    <record id="stock_move_view_tree" model="ir.ui.view">
+        <field name="name">
+            stock.move.view.tree.inherit.inventory.move.mini.dashboard
+        </field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">stock_move_dashboard_list</attribute>
+            </xpath>
+        </field>
+    </record>
+    <!-- Insert custom filters inside the existing search view -->
+    <record id="stock_move_search" model="ir.ui.view">
+        <field name="name">
+            stock.move.search.inherit.inventory.move.mini.dashboard
+        </field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Draft" name="draft"
+                        domain="[('state','=','draft')]"/>
+                <filter string="Waiting" name="waiting"
+                        domain="[('state','in',('waiting','confirmed'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_internal_search_move_mini_dashboard" model="ir.ui.view">
+        <field name="name">stock.picking.search.move.mini.dashboard</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='available']" position="after">
+                <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <filter string="Canceled" name="cancel" domain="[('state','=','cancel')]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

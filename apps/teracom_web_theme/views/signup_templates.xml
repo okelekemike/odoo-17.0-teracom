@@ -1,0 +1,16 @@
+<odoo>
+    <template id="fields" inherit_id="auth_password_policy_signup.fields" name="Hide password meter">
+        <xpath expr="//owl-component[@name='password_meter']" position="attributes">
+            <attribute name="style">visibility: hidden;</attribute>
+        </xpath>
+    </template>
+
+    <!-- Frontend Layout Extension -->
+    <template id="frontend_layout_extension" name="Frontend Layout" inherit_id="web.frontend_layout">
+        <xpath expr="//div[@id='wrapwrap']/main" position="attributes">
+            <!-- Add a background image style based on the signup configuration -->
+            <attribute name="t-attf-style"
+                       add="background-image: url('/teracom_web_theme/static/src/img/background-light.svg'); background-size: cover;"/>
+        </xpath>
+    </template>
+</odoo>

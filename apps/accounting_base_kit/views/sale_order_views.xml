@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inheriting sale order form for adding button for sending sale order via WhatsApp.-->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherited.whatsapp.mail.messaging</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="available_qty" force_save="1" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//button[@name='action_quotation_send'][last()]" position="after">
+                <button type="object" class="oe_stat_button"
+                        style="background-color: #25D366; color: white;"
+                        name="action_send_whatsapp" icon="fa-whatsapp"
+                        string="Send by Whatsapp" data-hotkey="w"/>
+            </xpath>
+
+            <group name="sale_info" position="inside">
+                <label for="qr"/>
+                <div class="o_row">
+                    <field name="qr" widget="image" options="{'size': [150, 150]}" readonly="1"/>
+                    <button type="object" name="action_gen_qrcode" string="Generate QR Code"/>
+                </div>
+            </group>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="payment_status" invisible="1"/>
+                <field name="invoice_state" invisible="1"/>
+                <field name="payment_details" widget="payment"
+                       style="width: 60%"/>
+                <field name="amount_due"/>
+            </xpath>
+            <xpath expr="//sheet//div[hasclass('oe_button_box')]"
+                   position="after">
+                <widget name="web_ribbon" title="Not Paid"
+                        bg_color="bg-danger" invisible = "payment_status != 'Not Paid'"/>
+                <widget name="web_ribbon" title="Paid"
+                        bg_color="bg-success" invisible = "payment_status !=  'Paid'"/>
+                <widget name="web_ribbon" title="Partially Paid"
+                        bg_color="bg-warning" invisible = "payment_status !=  'Partially Paid'"/>
+                <widget name="web_ribbon" title="In Payment"
+                        bg_color="bg-info" invisible = "payment_status !=  'In Payment'"/>
+                <widget name="web_ribbon" title="Reversed"
+                        bg_color="bg-success" invisible = "payment_status != 'Reversed'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']"
+                   position="after">
+                <button name="action_register_payment"
+                        string="Register Payment" class="btn-secondary"
+                        type="object" invisible = "state != 'sale' or invoice_state != 'posted' or payment_status not in ('Not Paid', 'Partially Paid')"/>
+            </xpath>
+
+        </field>
+    </record>
+    <!-- Inheriting sale order tree for adding button for sending multiple sale orders via WhatsApp.-->
+    <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+        <field name="name">sale.order.view.list.inherited.whatsapp.mail.messaging</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button type="object" class="btn-primary ml4"
+                            name="action_whatsapp_multi" icon="fa-whatsapp" string="Send by Whatsapp"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+    <!--Inherit view_order_form for adding 'Print Invoice'
+    button and 'automate_print_invoices' field-->
+    <record id="view_order_form_sale_purchase_automated" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.sale.purchase.automated
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_quotation_send'][last()]" position="after">
+                <field name="automate_print_invoices" invisible="1"/>
+                <button string="Print Invoice" class="oe_highlight"
+                        type="object" name="action_print_invoice" data-hotkey="p"
+                        invisible="automate_print_invoices==False or invoice_count==0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited sale order tree view. -->
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.view.tree.inherit.payment.status.in
+            .sale
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="payment_status" optional="show"
+                       decoration-success="payment_status in ['Paid', 'Reversed']"
+                       decoration-danger="payment_status == 'Not Paid'"
+                       decoration-info="payment_status == 'In Payment'"
+                       decoration-bf="payment_status == 'No invoice'"
+                       decoration-warning="payment_status == 'Partially Paid'"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inherited sale order quotation tree view. -->
+    <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+        <field name="name">
+            sale.order.view.tree.inherit.payment.status.in.sale
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id"
+               ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_status']" position="after">
+                <field name="payment_status" optional="show"
+                       decoration-success="payment_status in ['Paid', 'Reversed']"
+                       decoration-danger="payment_status == 'Not Paid'"
+                       decoration-info="payment_status == 'In Payment'"
+                       decoration-bf="payment_status == 'No invoice'"
+                       decoration-warning="payment_status == 'Partially Paid'"
+                       widget="badge"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--Sale order View Form-->
+    <record id="view_order_form_invoice_manual_link" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.order.invoice.manual.link</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <page name="other_information" position="inside">
+                <group colspan="2">
+                    <separator string="Link Invoice to Sale Order"/>
+                    <field name="invoice_ids" no_label="1">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="invoice_partner_display_name"/>
+                            <field name="invoice_date"/>
+                            <field name="invoice_date_due"/>
+                            <field name="activity_ids"/>
+                            <field name="amount_untaxed_signed"/>
+                            <field name="amount_total_signed"/>
+                            <field name="payment_state" string="Payment" widget="badge" decoration-danger="payment_state == 'not_paid'" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')" optional="show"/>
+                            <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+                            <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                            <button name="action_unlink_invoice" title="Unlink" type="object" class="fa fa-trash Unlink"/>
+                            <field name="company_currency_id" column_invisible="True"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <button name="action_open_invoices" string="Add Invoices"
+                                class="oe_highlight action_open_invoices badge"
+                                type="object"/>
+                    </group>
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <!-- Added new fields to Sale Order form view -->
+    <record id="view_order_form_delivery_split" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.delivery.split</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_due']" position="after">
+                <field name="delivery_split" readonly="state in ['cancel', 'sale']"/>
+                <field name="is_consolidate"
+                       readonly="state in ['cancel', 'sale']"
+                       invisible="not delivery_split"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                <field name="recipient_id"
+                       column_invisible="parent.delivery_split == False"
+                       readonly="state == 'sale'"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

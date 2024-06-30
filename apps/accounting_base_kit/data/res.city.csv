@@ -1,0 +1,812 @@
+id,country_id/id,state_id/id,name
+lcda_lg_1,base.ng,state_ng_la,Agege
+lcda_lg_2,base.ng,state_ng_la,Orile-Agege
+lcda_lg_3,base.ng,state_ng_la,Ajeromi
+lcda_lg_4,base.ng,state_ng_la,Ifelodun
+lcda_lg_5,base.ng,state_ng_la,Alimosho
+lcda_lg_6,base.ng,state_ng_la,Agbado/Oke-Odo
+lcda_lg_7,base.ng,state_ng_la,Ayobo-Ipaja
+lcda_lg_8,base.ng,state_ng_la,Egbe-Idimu
+lcda_lg_9,base.ng,state_ng_la,Igando-Ikotun
+lcda_lg_10,base.ng,state_ng_la,Mosan Okunola
+lcda_lg_11,base.ng,state_ng_la,Amuwo-Odofin
+lcda_lg_12,base.ng,state_ng_la,Oriade
+lcda_lg_13,base.ng,state_ng_la,Apapa
+lcda_lg_14,base.ng,state_ng_la,Apapa Iganmu
+lcda_lg_15,base.ng,state_ng_la,Badagry
+lcda_lg_16,base.ng,state_ng_la,Badagry West
+lcda_lg_17,base.ng,state_ng_la,Olorunda
+lcda_lg_18,base.ng,state_ng_la,Epe
+lcda_lg_19,base.ng,state_ng_la,Eredo
+lcda_lg_20,base.ng,state_ng_la,Ikosi Ejinrin
+lcda_lg_21,base.ng,state_ng_la,Eti-Osa East
+lcda_lg_22,base.ng,state_ng_la,Eti-Osa West
+lcda_lg_23,base.ng,state_ng_la,Iru Victoria Island
+lcda_lg_24,base.ng,state_ng_la,Ikoyi-Obalende
+lcda_lg_25,base.ng,state_ng_la,Ibeju
+lcda_lg_26,base.ng,state_ng_la,Lekki
+lcda_lg_27,base.ng,state_ng_la,Ifako/Ijaiye
+lcda_lg_28,base.ng,state_ng_la,Ojokoro
+lcda_lg_29,base.ng,state_ng_la,Ikeja
+lcda_lg_30,base.ng,state_ng_la,Ojodu
+lcda_lg_31,base.ng,state_ng_la,Onigbongbo
+lcda_lg_32,base.ng,state_ng_la,Ikorodu
+lcda_lg_33,base.ng,state_ng_la,Ikorodu North
+lcda_lg_34,base.ng,state_ng_la,Ikorodu West
+lcda_lg_35,base.ng,state_ng_la,Imota
+lcda_lg_36,base.ng,state_ng_la,Ijede
+lcda_lg_37,base.ng,state_ng_la,Igbogbo-Baiyeku
+lcda_lg_38,base.ng,state_ng_la,Kosofe
+lcda_lg_39,base.ng,state_ng_la,Ikosi Isheri
+lcda_lg_40,base.ng,state_ng_la,Agboyi-Ketu
+lcda_lg_41,base.ng,state_ng_la,Lagos Island West
+lcda_lg_42,base.ng,state_ng_la,Lagos Island East
+lcda_lg_43,base.ng,state_ng_la,Lagos Mainland
+lcda_lg_44,base.ng,state_ng_la,Yaba
+lcda_lg_45,base.ng,state_ng_la,Mushin
+lcda_lg_46,base.ng,state_ng_la,Odi-Olowo
+lcda_lg_47,base.ng,state_ng_la,Ojo
+lcda_lg_48,base.ng,state_ng_la,Oto Awori
+lcda_lg_49,base.ng,state_ng_la,Iba
+lcda_lg_50,base.ng,state_ng_la,Shomolu
+lcda_lg_51,base.ng,state_ng_la,Bariga
+lcda_lg_52,base.ng,state_ng_la,Ejigbo
+lcda_lg_53,base.ng,state_ng_la,Isolo
+lcda_lg_54,base.ng,state_ng_la,Oshodi
+lcda_lg_55,base.ng,state_ng_la,Surulere
+lcda_lg_56,base.ng,state_ng_la,Coker Aguda
+lcda_lg_57,base.ng,state_ng_la,Itire-Ikate
+lcda_fc_1,base.ng,state_ng_fc,Abaji
+lcda_fc_2,base.ng,state_ng_fc,Abuja
+lcda_fc_3,base.ng,state_ng_fc,Bwari
+lcda_fc_4,base.ng,state_ng_fc,Gwagwalada
+lcda_fc_5,base.ng,state_ng_fc,Kuje
+lcda_fc_6,base.ng,state_ng_fc,Kwali
+lcda_ab_1,base.ng,state_ng_ab,Aba North
+lcda_ab_2,base.ng,state_ng_ab,Aba South
+lcda_ab_3,base.ng,state_ng_ab,Arochukwu
+lcda_ab_4,base.ng,state_ng_ab,Bende
+lcda_ab_5,base.ng,state_ng_ab,Ikwuano
+lcda_ab_6,base.ng,state_ng_ab,Isiala Ngwa North
+lcda_ab_7,base.ng,state_ng_ab,Isiala Ngwa South
+lcda_ab_8,base.ng,state_ng_ab,Isuikwuato
+lcda_ab_9,base.ng,state_ng_ab,Obi Ngwa
+lcda_ab_10,base.ng,state_ng_ab,Ohafia
+lcda_ab_11,base.ng,state_ng_ab,Osisioma
+lcda_ab_12,base.ng,state_ng_ab,Ugwunagbo
+lcda_ab_13,base.ng,state_ng_ab,Ukwa East
+lcda_ab_14,base.ng,state_ng_ab,Ukwa West
+lcda_ab_15,base.ng,state_ng_ab,Umu Nneochi
+lcda_ab_16,base.ng,state_ng_ab,Umuahia North
+lcda_ab_17,base.ng,state_ng_ab,Umuahia South
+lcda_ad_1,base.ng,state_ng_ad,Demsa
+lcda_ad_2,base.ng,state_ng_ad,Fufure
+lcda_ad_3,base.ng,state_ng_ad,Ganye
+lcda_ad_4,base.ng,state_ng_ad,Gayuk
+lcda_ad_5,base.ng,state_ng_ad,Gombi
+lcda_ad_6,base.ng,state_ng_ad,Grie
+lcda_ad_7,base.ng,state_ng_ad,Hong
+lcda_ad_8,base.ng,state_ng_ad,Jada
+lcda_ad_9,base.ng,state_ng_ad,Lamurde
+lcda_ad_10,base.ng,state_ng_ad,Madagali
+lcda_ad_11,base.ng,state_ng_ad,Maiha
+lcda_ad_12,base.ng,state_ng_ad,Mayo Belwa
+lcda_ad_13,base.ng,state_ng_ad,Michika
+lcda_ad_14,base.ng,state_ng_ad,Mubi North
+lcda_ad_15,base.ng,state_ng_ad,Mubi South
+lcda_ad_16,base.ng,state_ng_ad,Numan
+lcda_ad_17,base.ng,state_ng_ad,Shelleng
+lcda_ad_18,base.ng,state_ng_ad,Song
+lcda_ad_19,base.ng,state_ng_ad,Toungo
+lcda_ad_20,base.ng,state_ng_ad,Yola North
+lcda_ad_21,base.ng,state_ng_ad,Yola South
+lcda_ak_1,base.ng,state_ng_ak,Abak
+lcda_ak_2,base.ng,state_ng_ak,Eastern Obolo
+lcda_ak_3,base.ng,state_ng_ak,Eket
+lcda_ak_4,base.ng,state_ng_ak,Esit Eket
+lcda_ak_5,base.ng,state_ng_ak,Essien Udim
+lcda_ak_6,base.ng,state_ng_ak,Etim Ekpo
+lcda_ak_7,base.ng,state_ng_ak,Etinan
+lcda_ak_8,base.ng,state_ng_ak,Ibeno
+lcda_ak_9,base.ng,state_ng_ak,Ibesikpo Asutan
+lcda_ak_10,base.ng,state_ng_ak,Ibiono-Ibom
+lcda_ak_11,base.ng,state_ng_ak,Ika
+lcda_ak_12,base.ng,state_ng_ak,Ikono
+lcda_ak_13,base.ng,state_ng_ak,Ikot Abasi
+lcda_ak_14,base.ng,state_ng_ak,Ikot Ekpene
+lcda_ak_15,base.ng,state_ng_ak,Ini
+lcda_ak_16,base.ng,state_ng_ak,Itu
+lcda_ak_17,base.ng,state_ng_ak,Mbo
+lcda_ak_18,base.ng,state_ng_ak,Mkpat-Enin
+lcda_ak_19,base.ng,state_ng_ak,Nsit-Atai
+lcda_ak_20,base.ng,state_ng_ak,Nsit-Ibom
+lcda_ak_21,base.ng,state_ng_ak,Nsit-Ubium
+lcda_ak_22,base.ng,state_ng_ak,Obot Akara
+lcda_ak_23,base.ng,state_ng_ak,Okobo
+lcda_ak_24,base.ng,state_ng_ak,Onna
+lcda_ak_25,base.ng,state_ng_ak,Oron
+lcda_ak_26,base.ng,state_ng_ak,Oruk Anam
+lcda_ak_27,base.ng,state_ng_ak,Udung-Uko
+lcda_ak_28,base.ng,state_ng_ak,Ukanafun
+lcda_ak_29,base.ng,state_ng_ak,Uruan
+lcda_ak_30,base.ng,state_ng_ak,Urue-Offong/Oruko
+lcda_ak_31,base.ng,state_ng_ak,Uyo
+lcda_an_1,base.ng,state_ng_an,Aguata
+lcda_an_2,base.ng,state_ng_an,Anambra East
+lcda_an_3,base.ng,state_ng_an,Anambra West
+lcda_an_4,base.ng,state_ng_an,Anaocha
+lcda_an_5,base.ng,state_ng_an,Awka North
+lcda_an_6,base.ng,state_ng_an,Awka South
+lcda_an_7,base.ng,state_ng_an,Ayamelum
+lcda_an_8,base.ng,state_ng_an,Dunukofia
+lcda_an_9,base.ng,state_ng_an,Ekwusigo
+lcda_an_10,base.ng,state_ng_an,Idemili North
+lcda_an_11,base.ng,state_ng_an,Idemili South
+lcda_an_12,base.ng,state_ng_an,Ihiala
+lcda_an_13,base.ng,state_ng_an,Njikoka
+lcda_an_14,base.ng,state_ng_an,Nnewi North
+lcda_an_15,base.ng,state_ng_an,Nnewi South
+lcda_an_16,base.ng,state_ng_an,Ogbaru
+lcda_an_17,base.ng,state_ng_an,Onitsha North
+lcda_an_18,base.ng,state_ng_an,Onitsha South
+lcda_an_19,base.ng,state_ng_an,Orumba North
+lcda_an_20,base.ng,state_ng_an,Orumba South
+lcda_an_21,base.ng,state_ng_an,Oyi
+lcda_ba_1,base.ng,state_ng_ba,Alkaleri
+lcda_ba_2,base.ng,state_ng_ba,Bauchi
+lcda_ba_3,base.ng,state_ng_ba,Bogoro
+lcda_ba_4,base.ng,state_ng_ba,Damban
+lcda_ba_5,base.ng,state_ng_ba,Darazo
+lcda_ba_6,base.ng,state_ng_ba,Dass
+lcda_ba_7,base.ng,state_ng_ba,Gamawa
+lcda_ba_8,base.ng,state_ng_ba,Ganjuwa
+lcda_ba_9,base.ng,state_ng_ba,Giade
+lcda_ba_10,base.ng,state_ng_ba,Itas/Gadau
+lcda_ba_11,base.ng,state_ng_ba,Jama'are
+lcda_ba_12,base.ng,state_ng_ba,Katagum
+lcda_ba_13,base.ng,state_ng_ba,Kirfi
+lcda_ba_14,base.ng,state_ng_ba,Misau
+lcda_ba_15,base.ng,state_ng_ba,Ningi
+lcda_ba_16,base.ng,state_ng_ba,Shira
+lcda_ba_17,base.ng,state_ng_ba,Tafawa Balewa
+lcda_ba_18,base.ng,state_ng_ba,Toro
+lcda_ba_19,base.ng,state_ng_ba,Warji
+lcda_ba_20,base.ng,state_ng_ba,Zaki
+lcda_by_1,base.ng,state_ng_by,Brass
+lcda_by_2,base.ng,state_ng_by,Ekeremor
+lcda_by_3,base.ng,state_ng_by,Kolokuma/Opokuma
+lcda_by_4,base.ng,state_ng_by,Nembe
+lcda_by_5,base.ng,state_ng_by,Ogbia
+lcda_by_6,base.ng,state_ng_by,Sagbama
+lcda_by_7,base.ng,state_ng_by,Southern Ijaw
+lcda_by_8,base.ng,state_ng_by,Yenagoa
+lcda_be_1,base.ng,state_ng_be,Ado
+lcda_be_2,base.ng,state_ng_be,Agatu
+lcda_be_3,base.ng,state_ng_be,Apa
+lcda_be_4,base.ng,state_ng_be,Buruku
+lcda_be_5,base.ng,state_ng_be,Gboko
+lcda_be_6,base.ng,state_ng_be,Guma
+lcda_be_7,base.ng,state_ng_be,Gwer East
+lcda_be_8,base.ng,state_ng_be,Gwer West
+lcda_be_9,base.ng,state_ng_be,Katsina-Ala
+lcda_be_10,base.ng,state_ng_be,Konshisha
+lcda_be_11,base.ng,state_ng_be,Kwande
+lcda_be_12,base.ng,state_ng_be,Logo
+lcda_be_13,base.ng,state_ng_be,Makurdi
+lcda_be_14,base.ng,state_ng_be,Obi
+lcda_be_15,base.ng,state_ng_be,Ogbadibo
+lcda_be_16,base.ng,state_ng_be,Ohimini
+lcda_be_17,base.ng,state_ng_be,Oju
+lcda_be_18,base.ng,state_ng_be,Okpokwu
+lcda_be_19,base.ng,state_ng_be,Oturkpo
+lcda_be_20,base.ng,state_ng_be,Tarka
+lcda_be_21,base.ng,state_ng_be,Ukum
+lcda_be_22,base.ng,state_ng_be,Ushongo
+lcda_be_23,base.ng,state_ng_be,Vandeikya
+lcda_bo_1,base.ng,state_ng_bo,Abadam
+lcda_bo_2,base.ng,state_ng_bo,Askira/Uba
+lcda_bo_3,base.ng,state_ng_bo,Bama
+lcda_bo_4,base.ng,state_ng_bo,Bayo
+lcda_bo_5,base.ng,state_ng_bo,Biu
+lcda_bo_6,base.ng,state_ng_bo,Chibok
+lcda_bo_7,base.ng,state_ng_bo,Damboa
+lcda_bo_8,base.ng,state_ng_bo,Dikwa
+lcda_bo_9,base.ng,state_ng_bo,Gubio
+lcda_bo_10,base.ng,state_ng_bo,Guzamala
+lcda_bo_11,base.ng,state_ng_bo,Gwoza
+lcda_bo_12,base.ng,state_ng_bo,Hawul
+lcda_bo_13,base.ng,state_ng_bo,Jere
+lcda_bo_14,base.ng,state_ng_bo,Kaga
+lcda_bo_15,base.ng,state_ng_bo,Kala/Balge
+lcda_bo_16,base.ng,state_ng_bo,Konduga
+lcda_bo_17,base.ng,state_ng_bo,Kukawa
+lcda_bo_18,base.ng,state_ng_bo,Kwaya Kusar
+lcda_bo_19,base.ng,state_ng_bo,Mafa
+lcda_bo_20,base.ng,state_ng_bo,Magumeri
+lcda_bo_21,base.ng,state_ng_bo,Maiduguri
+lcda_bo_22,base.ng,state_ng_bo,Marte
+lcda_bo_23,base.ng,state_ng_bo,Mobbar
+lcda_bo_24,base.ng,state_ng_bo,Monguno
+lcda_bo_25,base.ng,state_ng_bo,Ngala
+lcda_bo_26,base.ng,state_ng_bo,Nganzai
+lcda_bo_27,base.ng,state_ng_bo,Shani
+lcda_cr_1,base.ng,state_ng_cr,Abi
+lcda_cr_2,base.ng,state_ng_cr,Akamkpa
+lcda_cr_3,base.ng,state_ng_cr,Akpabuyo
+lcda_cr_4,base.ng,state_ng_cr,Bakassi
+lcda_cr_5,base.ng,state_ng_cr,Bekwarra
+lcda_cr_6,base.ng,state_ng_cr,Biase
+lcda_cr_7,base.ng,state_ng_cr,Boki
+lcda_cr_8,base.ng,state_ng_cr,Calabar Municipal
+lcda_cr_9,base.ng,state_ng_cr,Calabar South
+lcda_cr_10,base.ng,state_ng_cr,Etung
+lcda_cr_11,base.ng,state_ng_cr,Ikom
+lcda_cr_12,base.ng,state_ng_cr,Obanliku
+lcda_cr_13,base.ng,state_ng_cr,Obubra
+lcda_cr_14,base.ng,state_ng_cr,Obudu
+lcda_cr_15,base.ng,state_ng_cr,Odukpani
+lcda_cr_16,base.ng,state_ng_cr,Ogoja
+lcda_cr_17,base.ng,state_ng_cr,Yakuur
+lcda_cr_18,base.ng,state_ng_cr,Yala
+lcda_de_1,base.ng,state_ng_de,Aniocha North
+lcda_de_2,base.ng,state_ng_de,Aniocha South
+lcda_de_3,base.ng,state_ng_de,Bomadi
+lcda_de_4,base.ng,state_ng_de,Burutu
+lcda_de_5,base.ng,state_ng_de,Ethiope East
+lcda_de_6,base.ng,state_ng_de,Ethiope West
+lcda_de_7,base.ng,state_ng_de,Ika North East
+lcda_de_8,base.ng,state_ng_de,Ika South
+lcda_de_9,base.ng,state_ng_de,Isoko North
+lcda_de_10,base.ng,state_ng_de,Isoko South
+lcda_de_11,base.ng,state_ng_de,Ndokwa East
+lcda_de_12,base.ng,state_ng_de,Ndokwa West
+lcda_de_13,base.ng,state_ng_de,Okpe
+lcda_de_14,base.ng,state_ng_de,Oshimili North
+lcda_de_15,base.ng,state_ng_de,Oshimili South
+lcda_de_16,base.ng,state_ng_de,Patani
+lcda_de_17,base.ng,state_ng_de,Sapele
+lcda_de_18,base.ng,state_ng_de,Udu
+lcda_de_19,base.ng,state_ng_de,Ughelli North
+lcda_de_20,base.ng,state_ng_de,Ughelli South
+lcda_de_21,base.ng,state_ng_de,Ukwuani
+lcda_de_22,base.ng,state_ng_de,Uvwie
+lcda_de_23,base.ng,state_ng_de,Warri North
+lcda_de_24,base.ng,state_ng_de,Warri South
+lcda_de_25,base.ng,state_ng_de,Warri South West
+lcda_eb_1,base.ng,state_ng_eb,Abakaliki
+lcda_eb_2,base.ng,state_ng_eb,Afikpo North
+lcda_eb_3,base.ng,state_ng_eb,Afikpo South
+lcda_eb_4,base.ng,state_ng_eb,Ebonyi
+lcda_eb_5,base.ng,state_ng_eb,Ezza North
+lcda_eb_6,base.ng,state_ng_eb,Ezza South
+lcda_eb_7,base.ng,state_ng_eb,Ikwo
+lcda_eb_8,base.ng,state_ng_eb,Ishielu
+lcda_eb_9,base.ng,state_ng_eb,Ivo
+lcda_eb_10,base.ng,state_ng_eb,Izzi
+lcda_eb_11,base.ng,state_ng_eb,Ohaozara
+lcda_eb_12,base.ng,state_ng_eb,Ohaukwu
+lcda_eb_13,base.ng,state_ng_eb,Onicha
+lcda_ed_1,base.ng,state_ng_ed,Akoko-Edo
+lcda_ed_2,base.ng,state_ng_ed,Egor
+lcda_ed_3,base.ng,state_ng_ed,Esan Central
+lcda_ed_4,base.ng,state_ng_ed,Esan North-East
+lcda_ed_5,base.ng,state_ng_ed,Esan South-East
+lcda_ed_6,base.ng,state_ng_ed,Esan West
+lcda_ed_7,base.ng,state_ng_ed,Etsako Central
+lcda_ed_8,base.ng,state_ng_ed,Etsako East
+lcda_ed_9,base.ng,state_ng_ed,Etsako West
+lcda_ed_10,base.ng,state_ng_ed,Igueben
+lcda_ed_11,base.ng,state_ng_ed,Ikpoba Okha
+lcda_ed_12,base.ng,state_ng_ed,Oredo
+lcda_ed_13,base.ng,state_ng_ed,Orhionmwon
+lcda_ed_14,base.ng,state_ng_ed,Ovia North-East
+lcda_ed_15,base.ng,state_ng_ed,Ovia South-West
+lcda_ed_16,base.ng,state_ng_ed,Owan East
+lcda_ed_17,base.ng,state_ng_ed,Owan West
+lcda_ed_18,base.ng,state_ng_ed,Uhunmwonde
+lcda_ek_1,base.ng,state_ng_ek,Ado Ekiti
+lcda_ek_2,base.ng,state_ng_ek,Efon
+lcda_ek_3,base.ng,state_ng_ek,Ekiti East
+lcda_ek_4,base.ng,state_ng_ek,Ekiti South-West
+lcda_ek_5,base.ng,state_ng_ek,Ekiti West
+lcda_ek_6,base.ng,state_ng_ek,Emure
+lcda_ek_7,base.ng,state_ng_ek,Gbonyin
+lcda_ek_8,base.ng,state_ng_ek,Ido Osi
+lcda_ek_9,base.ng,state_ng_ek,Ijero
+lcda_ek_10,base.ng,state_ng_ek,Ikere
+lcda_ek_11,base.ng,state_ng_ek,Ikole
+lcda_ek_12,base.ng,state_ng_ek,Ilejemeje
+lcda_ek_13,base.ng,state_ng_ek,Irepodun/Ifelodun
+lcda_ek_14,base.ng,state_ng_ek,Ise/Orun
+lcda_ek_15,base.ng,state_ng_ek,Moba
+lcda_ek_16,base.ng,state_ng_ek,Oye
+lcda_en_1,base.ng,state_ng_en,Aninri
+lcda_en_2,base.ng,state_ng_en,Awgu
+lcda_en_3,base.ng,state_ng_en,Enugu East
+lcda_en_4,base.ng,state_ng_en,Enugu North
+lcda_en_5,base.ng,state_ng_en,Enugu South
+lcda_en_6,base.ng,state_ng_en,Ezeagu
+lcda_en_7,base.ng,state_ng_en,Igbo Etiti
+lcda_en_8,base.ng,state_ng_en,Igbo Eze North
+lcda_en_9,base.ng,state_ng_en,Igbo Eze South
+lcda_en_10,base.ng,state_ng_en,Isi Uzo
+lcda_en_11,base.ng,state_ng_en,Nkanu East
+lcda_en_12,base.ng,state_ng_en,Nkanu West
+lcda_en_13,base.ng,state_ng_en,Nsukka
+lcda_en_14,base.ng,state_ng_en,Oji River
+lcda_en_15,base.ng,state_ng_en,Udenu
+lcda_en_16,base.ng,state_ng_en,Udi
+lcda_en_17,base.ng,state_ng_en,Uzo Uwani
+lcda_go_1,base.ng,state_ng_go,Akko
+lcda_go_2,base.ng,state_ng_go,Balanga
+lcda_go_3,base.ng,state_ng_go,Billiri
+lcda_go_4,base.ng,state_ng_go,Dukku
+lcda_go_5,base.ng,state_ng_go,Funakaye
+lcda_go_6,base.ng,state_ng_go,Gombe
+lcda_go_7,base.ng,state_ng_go,Kaltungo
+lcda_go_8,base.ng,state_ng_go,Kwami
+lcda_go_9,base.ng,state_ng_go,Nafada
+lcda_go_10,base.ng,state_ng_go,Shongom
+lcda_go_11,base.ng,state_ng_go,Yamaltu/Deba
+lcda_im_1,base.ng,state_ng_im,Aboh Mbaise
+lcda_im_2,base.ng,state_ng_im,Ahiazu Mbaise
+lcda_im_3,base.ng,state_ng_im,Ehime Mbano
+lcda_im_4,base.ng,state_ng_im,Ezinihitte
+lcda_im_5,base.ng,state_ng_im,Ideato North
+lcda_im_6,base.ng,state_ng_im,Ideato South
+lcda_im_7,base.ng,state_ng_im,Ihitte/Uboma
+lcda_im_8,base.ng,state_ng_im,Ikeduru
+lcda_im_9,base.ng,state_ng_im,Isiala Mbano
+lcda_im_10,base.ng,state_ng_im,Isu
+lcda_im_11,base.ng,state_ng_im,Mbaitoli
+lcda_im_12,base.ng,state_ng_im,Ngor Okpala
+lcda_im_13,base.ng,state_ng_im,Njaba
+lcda_im_14,base.ng,state_ng_im,Nkwerre
+lcda_im_15,base.ng,state_ng_im,Nwangele
+lcda_im_16,base.ng,state_ng_im,Obowo
+lcda_im_17,base.ng,state_ng_im,Oguta
+lcda_im_18,base.ng,state_ng_im,Ohaji/Egbema
+lcda_im_19,base.ng,state_ng_im,Okigwe
+lcda_im_20,base.ng,state_ng_im,Orlu
+lcda_im_21,base.ng,state_ng_im,Orsu
+lcda_im_22,base.ng,state_ng_im,Oru East
+lcda_im_23,base.ng,state_ng_im,Oru West
+lcda_im_24,base.ng,state_ng_im,Owerri Municipal
+lcda_im_25,base.ng,state_ng_im,Owerri North
+lcda_im_26,base.ng,state_ng_im,Owerri West
+lcda_im_27,base.ng,state_ng_im,Unuimo
+lcda_ji_1,base.ng,state_ng_ji,Auyo
+lcda_ji_2,base.ng,state_ng_ji,Babura
+lcda_ji_3,base.ng,state_ng_ji,Biriniwa
+lcda_ji_4,base.ng,state_ng_ji,Birnin Kudu
+lcda_ji_5,base.ng,state_ng_ji,Buji
+lcda_ji_6,base.ng,state_ng_ji,Dutse
+lcda_ji_7,base.ng,state_ng_ji,Gagarawa
+lcda_ji_8,base.ng,state_ng_ji,Garki
+lcda_ji_9,base.ng,state_ng_ji,Gumel
+lcda_ji_10,base.ng,state_ng_ji,Guri
+lcda_ji_11,base.ng,state_ng_ji,Gwaram
+lcda_ji_12,base.ng,state_ng_ji,Gwiwa
+lcda_ji_13,base.ng,state_ng_ji,Hadejia
+lcda_ji_14,base.ng,state_ng_ji,Jahun
+lcda_ji_15,base.ng,state_ng_ji,Kafin Hausa
+lcda_ji_16,base.ng,state_ng_ji,Kaugama
+lcda_ji_17,base.ng,state_ng_ji,Kazaure
+lcda_ji_18,base.ng,state_ng_ji,Kiri Kasama
+lcda_ji_19,base.ng,state_ng_ji,Kiyawa
+lcda_ji_20,base.ng,state_ng_ji,Maigatari
+lcda_ji_21,base.ng,state_ng_ji,Malam Madori
+lcda_ji_22,base.ng,state_ng_ji,Miga
+lcda_ji_23,base.ng,state_ng_ji,Ringim
+lcda_ji_24,base.ng,state_ng_ji,Roni
+lcda_ji_25,base.ng,state_ng_ji,Sule Tankarkar
+lcda_ji_26,base.ng,state_ng_ji,Taura
+lcda_ji_27,base.ng,state_ng_ji,Yankwashi
+lcda_ka_1,base.ng,state_ng_ka,Birnin Gwari
+lcda_ka_2,base.ng,state_ng_ka,Chikun
+lcda_ka_3,base.ng,state_ng_ka,Giwa
+lcda_ka_4,base.ng,state_ng_ka,Igabi
+lcda_ka_5,base.ng,state_ng_ka,Ikara
+lcda_ka_6,base.ng,state_ng_ka,Jaba
+lcda_ka_7,base.ng,state_ng_ka,Jema'a
+lcda_ka_8,base.ng,state_ng_ka,Kachia
+lcda_ka_9,base.ng,state_ng_ka,Kaduna North
+lcda_ka_10,base.ng,state_ng_ka,Kaduna South
+lcda_ka_11,base.ng,state_ng_ka,Kagarko
+lcda_ka_12,base.ng,state_ng_ka,Kajuru
+lcda_ka_13,base.ng,state_ng_ka,Kaura
+lcda_ka_14,base.ng,state_ng_ka,Kauru
+lcda_ka_15,base.ng,state_ng_ka,Kubau
+lcda_ka_16,base.ng,state_ng_ka,Kudan
+lcda_ka_17,base.ng,state_ng_ka,Lere
+lcda_ka_18,base.ng,state_ng_ka,Makarfi
+lcda_ka_19,base.ng,state_ng_ka,Sabon Gari
+lcda_ka_20,base.ng,state_ng_ka,Sanga
+lcda_ka_21,base.ng,state_ng_ka,Soba
+lcda_ka_22,base.ng,state_ng_ka,Zangon Kataf
+lcda_ka_23,base.ng,state_ng_ka,Zaria
+lcda_kn_1,base.ng,state_ng_kn,Ajingi
+lcda_kn_2,base.ng,state_ng_kn,Albasu
+lcda_kn_3,base.ng,state_ng_kn,Bagwai
+lcda_kn_4,base.ng,state_ng_kn,Bebeji
+lcda_kn_5,base.ng,state_ng_kn,Bichi
+lcda_kn_6,base.ng,state_ng_kn,Bunkure
+lcda_kn_7,base.ng,state_ng_kn,Dala
+lcda_kn_8,base.ng,state_ng_kn,Dambatta
+lcda_kn_9,base.ng,state_ng_kn,Dawakin Kudu
+lcda_kn_10,base.ng,state_ng_kn,Dawakin Tofa
+lcda_kn_11,base.ng,state_ng_kn,Doguwa
+lcda_kn_12,base.ng,state_ng_kn,Fagge
+lcda_kn_13,base.ng,state_ng_kn,Gabasawa
+lcda_kn_14,base.ng,state_ng_kn,Garko
+lcda_kn_15,base.ng,state_ng_kn,Garun Mallam
+lcda_kn_16,base.ng,state_ng_kn,Gaya
+lcda_kn_17,base.ng,state_ng_kn,Gezawa
+lcda_kn_18,base.ng,state_ng_kn,Gwale
+lcda_kn_19,base.ng,state_ng_kn,Gwarzo
+lcda_kn_20,base.ng,state_ng_kn,Kabo
+lcda_kn_21,base.ng,state_ng_kn,Kano Municipal
+lcda_kn_22,base.ng,state_ng_kn,Karaye
+lcda_kn_23,base.ng,state_ng_kn,Kibiya
+lcda_kn_24,base.ng,state_ng_kn,Kiru
+lcda_kn_25,base.ng,state_ng_kn,Kumbotso
+lcda_kn_26,base.ng,state_ng_kn,Kunchi
+lcda_kn_27,base.ng,state_ng_kn,Kura
+lcda_kn_28,base.ng,state_ng_kn,Madobi
+lcda_kn_29,base.ng,state_ng_kn,Makoda
+lcda_kn_30,base.ng,state_ng_kn,Minjibir
+lcda_kn_31,base.ng,state_ng_kn,Nasarawa
+lcda_kn_32,base.ng,state_ng_kn,Rano
+lcda_kn_33,base.ng,state_ng_kn,Rimin Gado
+lcda_kn_34,base.ng,state_ng_kn,Rogo
+lcda_kn_35,base.ng,state_ng_kn,Shanono
+lcda_kn_36,base.ng,state_ng_kn,Sumaila
+lcda_kn_37,base.ng,state_ng_kn,Takai
+lcda_kn_38,base.ng,state_ng_kn,Tarauni
+lcda_kn_39,base.ng,state_ng_kn,Tofa
+lcda_kn_40,base.ng,state_ng_kn,Tsanyawa
+lcda_kn_41,base.ng,state_ng_kn,Tudun Wada
+lcda_kn_42,base.ng,state_ng_kn,Ungogo
+lcda_kn_43,base.ng,state_ng_kn,Warawa
+lcda_kn_44,base.ng,state_ng_kn,Wudil
+lcda_kt_1,base.ng,state_ng_kt,Bakori
+lcda_kt_2,base.ng,state_ng_kt,Batagarawa
+lcda_kt_3,base.ng,state_ng_kt,Batsari
+lcda_kt_4,base.ng,state_ng_kt,Baure
+lcda_kt_5,base.ng,state_ng_kt,Bindawa
+lcda_kt_6,base.ng,state_ng_kt,Charanchi
+lcda_kt_7,base.ng,state_ng_kt,Dan Musa
+lcda_kt_8,base.ng,state_ng_kt,Dandume
+lcda_kt_9,base.ng,state_ng_kt,Danja
+lcda_kt_10,base.ng,state_ng_kt,Daura
+lcda_kt_11,base.ng,state_ng_kt,Dutsi
+lcda_kt_12,base.ng,state_ng_kt,Dutsin Ma
+lcda_kt_13,base.ng,state_ng_kt,Faskari
+lcda_kt_14,base.ng,state_ng_kt,Funtua
+lcda_kt_15,base.ng,state_ng_kt,Ingawa
+lcda_kt_16,base.ng,state_ng_kt,Jibia
+lcda_kt_17,base.ng,state_ng_kt,Kafur
+lcda_kt_18,base.ng,state_ng_kt,Kaita
+lcda_kt_19,base.ng,state_ng_kt,Kankara
+lcda_kt_20,base.ng,state_ng_kt,Kankia
+lcda_kt_21,base.ng,state_ng_kt,Katsina
+lcda_kt_22,base.ng,state_ng_kt,Kurfi
+lcda_kt_23,base.ng,state_ng_kt,Kusada
+lcda_kt_24,base.ng,state_ng_kt,Mai'Adua
+lcda_kt_25,base.ng,state_ng_kt,Malumfashi
+lcda_kt_26,base.ng,state_ng_kt,Mani
+lcda_kt_27,base.ng,state_ng_kt,Mashi
+lcda_kt_28,base.ng,state_ng_kt,Matazu
+lcda_kt_29,base.ng,state_ng_kt,Musawa
+lcda_kt_30,base.ng,state_ng_kt,Rimi
+lcda_kt_31,base.ng,state_ng_kt,Sabuwa
+lcda_kt_32,base.ng,state_ng_kt,Safana
+lcda_kt_33,base.ng,state_ng_kt,Sandamu
+lcda_kt_34,base.ng,state_ng_kt,Zango
+lcda_ke_1,base.ng,state_ng_ke,Aleiro
+lcda_ke_2,base.ng,state_ng_ke,Arewa Dandi
+lcda_ke_3,base.ng,state_ng_ke,Argungu
+lcda_ke_4,base.ng,state_ng_ke,Augie
+lcda_ke_5,base.ng,state_ng_ke,Bagudo
+lcda_ke_6,base.ng,state_ng_ke,Birnin Kebbi
+lcda_ke_7,base.ng,state_ng_ke,Bunza
+lcda_ke_8,base.ng,state_ng_ke,Dandi
+lcda_ke_9,base.ng,state_ng_ke,Fakai
+lcda_ke_10,base.ng,state_ng_ke,Gwandu
+lcda_ke_11,base.ng,state_ng_ke,Jega
+lcda_ke_12,base.ng,state_ng_ke,Kalgo
+lcda_ke_13,base.ng,state_ng_ke,Koko/Besse
+lcda_ke_14,base.ng,state_ng_ke,Maiyama
+lcda_ke_15,base.ng,state_ng_ke,Ngaski
+lcda_ke_16,base.ng,state_ng_ke,Sakaba
+lcda_ke_17,base.ng,state_ng_ke,Shanga
+lcda_ke_18,base.ng,state_ng_ke,Suru
+lcda_ke_19,base.ng,state_ng_ke,Wasagu/Danko
+lcda_ke_20,base.ng,state_ng_ke,Yauri
+lcda_ke_21,base.ng,state_ng_ke,Zuru
+lcda_ko_1,base.ng,state_ng_ko,Adavi
+lcda_ko_2,base.ng,state_ng_ko,Ajaokuta
+lcda_ko_3,base.ng,state_ng_ko,Ankpa
+lcda_ko_4,base.ng,state_ng_ko,Bassa
+lcda_ko_5,base.ng,state_ng_ko,Dekina
+lcda_ko_6,base.ng,state_ng_ko,Ibaji
+lcda_ko_7,base.ng,state_ng_ko,Idah
+lcda_ko_8,base.ng,state_ng_ko,Igalamela Odolu
+lcda_ko_9,base.ng,state_ng_ko,Ijumu
+lcda_ko_10,base.ng,state_ng_ko,Kabba/Bunu
+lcda_ko_11,base.ng,state_ng_ko,Kogi
+lcda_ko_12,base.ng,state_ng_ko,Lokoja
+lcda_ko_13,base.ng,state_ng_ko,Mopa Muro
+lcda_ko_14,base.ng,state_ng_ko,Ofu
+lcda_ko_15,base.ng,state_ng_ko,Ogori/Magongo
+lcda_ko_16,base.ng,state_ng_ko,Okehi
+lcda_ko_17,base.ng,state_ng_ko,Okene
+lcda_ko_18,base.ng,state_ng_ko,Olamaboro
+lcda_ko_19,base.ng,state_ng_ko,Omala
+lcda_ko_20,base.ng,state_ng_ko,Yagba East
+lcda_ko_21,base.ng,state_ng_ko,Yagba West
+lcda_kw_1,base.ng,state_ng_kw,Asa
+lcda_kw_2,base.ng,state_ng_kw,Baruten
+lcda_kw_3,base.ng,state_ng_kw,Edu
+lcda_kw_4,base.ng,state_ng_kw,Ekiti
+lcda_kw_5,base.ng,state_ng_kw,Ifelodun
+lcda_kw_6,base.ng,state_ng_kw,Ilorin East
+lcda_kw_7,base.ng,state_ng_kw,Ilorin South
+lcda_kw_8,base.ng,state_ng_kw,Ilorin West
+lcda_kw_9,base.ng,state_ng_kw,Irepodun
+lcda_kw_10,base.ng,state_ng_kw,Isin
+lcda_kw_11,base.ng,state_ng_kw,Kaiama
+lcda_kw_12,base.ng,state_ng_kw,Moro
+lcda_kw_13,base.ng,state_ng_kw,Offa
+lcda_kw_14,base.ng,state_ng_kw,Oke Ero
+lcda_kw_15,base.ng,state_ng_kw,Oyun
+lcda_kw_16,base.ng,state_ng_kw,Pategi
+lcda_na_1,base.ng,state_ng_na,Akwanga
+lcda_na_2,base.ng,state_ng_na,Awe
+lcda_na_3,base.ng,state_ng_na,Doma
+lcda_na_4,base.ng,state_ng_na,Karu
+lcda_na_5,base.ng,state_ng_na,Keana
+lcda_na_6,base.ng,state_ng_na,Keffi
+lcda_na_7,base.ng,state_ng_na,Kokona
+lcda_na_8,base.ng,state_ng_na,Lafia
+lcda_na_9,base.ng,state_ng_na,Nasarawa
+lcda_na_10,base.ng,state_ng_na,Nasarawa Egon
+lcda_na_11,base.ng,state_ng_na,Obi
+lcda_na_12,base.ng,state_ng_na,Toto
+lcda_na_13,base.ng,state_ng_na,Wamba
+lcda_ni_1,base.ng,state_ng_ni,Agaie
+lcda_ni_2,base.ng,state_ng_ni,Agwara
+lcda_ni_3,base.ng,state_ng_ni,Bida
+lcda_ni_4,base.ng,state_ng_ni,Borgu
+lcda_ni_5,base.ng,state_ng_ni,Bosso
+lcda_ni_6,base.ng,state_ng_ni,Chanchaga
+lcda_ni_7,base.ng,state_ng_ni,Edati
+lcda_ni_8,base.ng,state_ng_ni,Gbako
+lcda_ni_9,base.ng,state_ng_ni,Gurara
+lcda_ni_10,base.ng,state_ng_ni,Katcha
+lcda_ni_11,base.ng,state_ng_ni,Kontagora
+lcda_ni_12,base.ng,state_ng_ni,Lapai
+lcda_ni_13,base.ng,state_ng_ni,Lavun
+lcda_ni_14,base.ng,state_ng_ni,Magama
+lcda_ni_15,base.ng,state_ng_ni,Mariga
+lcda_ni_16,base.ng,state_ng_ni,Mashegu
+lcda_ni_17,base.ng,state_ng_ni,Mokwa
+lcda_ni_18,base.ng,state_ng_ni,Moya
+lcda_ni_19,base.ng,state_ng_ni,Paikoro
+lcda_ni_20,base.ng,state_ng_ni,Rafi
+lcda_ni_21,base.ng,state_ng_ni,Rijau
+lcda_ni_22,base.ng,state_ng_ni,Shiroro
+lcda_ni_23,base.ng,state_ng_ni,Suleja
+lcda_ni_24,base.ng,state_ng_ni,Tafa
+lcda_ni_25,base.ng,state_ng_ni,Wushishi
+lcda_og_1,base.ng,state_ng_og,Abeokuta North
+lcda_og_2,base.ng,state_ng_og,Abeokuta South
+lcda_og_3,base.ng,state_ng_og,Ado-Odo/Ota
+lcda_og_4,base.ng,state_ng_og,Egbado North
+lcda_og_5,base.ng,state_ng_og,Egbado South
+lcda_og_6,base.ng,state_ng_og,Ewekoro
+lcda_og_7,base.ng,state_ng_og,Ifo
+lcda_og_8,base.ng,state_ng_og,Ijebu East
+lcda_og_9,base.ng,state_ng_og,Ijebu North
+lcda_og_10,base.ng,state_ng_og,Ijebu North East
+lcda_og_11,base.ng,state_ng_og,Ijebu Ode
+lcda_og_12,base.ng,state_ng_og,Ikenne
+lcda_og_13,base.ng,state_ng_og,Imeko Afon
+lcda_og_14,base.ng,state_ng_og,Ipokia
+lcda_og_15,base.ng,state_ng_og,Obafemi Owode
+lcda_og_16,base.ng,state_ng_og,Odeda
+lcda_og_17,base.ng,state_ng_og,Odogbolu
+lcda_og_18,base.ng,state_ng_og,Ogun Waterside
+lcda_og_19,base.ng,state_ng_og,Remo North
+lcda_og_20,base.ng,state_ng_og,Shagamu
+lcda_on_1,base.ng,state_ng_on,Akoko North-East
+lcda_on_2,base.ng,state_ng_on,Akoko North-West
+lcda_on_3,base.ng,state_ng_on,Akoko South-East
+lcda_on_4,base.ng,state_ng_on,Akoko South-West
+lcda_on_5,base.ng,state_ng_on,Akure North
+lcda_on_6,base.ng,state_ng_on,Akure South
+lcda_on_7,base.ng,state_ng_on,Ese Odo
+lcda_on_8,base.ng,state_ng_on,Idanre
+lcda_on_9,base.ng,state_ng_on,Ifedore
+lcda_on_10,base.ng,state_ng_on,Ilaje
+lcda_on_11,base.ng,state_ng_on,Ile Oluji/Okeigbo
+lcda_on_12,base.ng,state_ng_on,Irele
+lcda_on_13,base.ng,state_ng_on,Odigbo
+lcda_on_14,base.ng,state_ng_on,Okitipupa
+lcda_on_15,base.ng,state_ng_on,Ondo East
+lcda_on_16,base.ng,state_ng_on,Ondo West
+lcda_on_17,base.ng,state_ng_on,Ose
+lcda_on_18,base.ng,state_ng_on,Owo
+lcda_os_1,base.ng,state_ng_os,Aiyedaade
+lcda_os_2,base.ng,state_ng_os,Aiyedire
+lcda_os_3,base.ng,state_ng_os,Atakunmosa East
+lcda_os_4,base.ng,state_ng_os,Atakunmosa West
+lcda_os_5,base.ng,state_ng_os,Boluwaduro
+lcda_os_6,base.ng,state_ng_os,Boripe
+lcda_os_7,base.ng,state_ng_os,Ede North
+lcda_os_8,base.ng,state_ng_os,Ede South
+lcda_os_9,base.ng,state_ng_os,Egbedore
+lcda_os_10,base.ng,state_ng_os,Ejigbo
+lcda_os_11,base.ng,state_ng_os,Ife Central
+lcda_os_12,base.ng,state_ng_os,Ife East
+lcda_os_13,base.ng,state_ng_os,Ife North
+lcda_os_14,base.ng,state_ng_os,Ife South
+lcda_os_15,base.ng,state_ng_os,Ifedayo
+lcda_os_16,base.ng,state_ng_os,Ifelodun
+lcda_os_17,base.ng,state_ng_os,Ila
+lcda_os_18,base.ng,state_ng_os,Ilesa East
+lcda_os_19,base.ng,state_ng_os,Ilesa West
+lcda_os_20,base.ng,state_ng_os,Irepodun
+lcda_os_21,base.ng,state_ng_os,Irewole
+lcda_os_22,base.ng,state_ng_os,Isokan
+lcda_os_23,base.ng,state_ng_os,Iwo
+lcda_os_24,base.ng,state_ng_os,Obokun
+lcda_os_25,base.ng,state_ng_os,Odo Otin
+lcda_os_26,base.ng,state_ng_os,Ola Oluwa
+lcda_os_27,base.ng,state_ng_os,Olorunda
+lcda_os_28,base.ng,state_ng_os,Oriade
+lcda_os_29,base.ng,state_ng_os,Orolu
+lcda_os_30,base.ng,state_ng_os,Osogbo
+lcda_oy_1,base.ng,state_ng_oy,Afijio
+lcda_oy_2,base.ng,state_ng_oy,Akinyele
+lcda_oy_3,base.ng,state_ng_oy,Atiba
+lcda_oy_4,base.ng,state_ng_oy,Atisbo
+lcda_oy_5,base.ng,state_ng_oy,Egbeda
+lcda_oy_6,base.ng,state_ng_oy,Ibadan North
+lcda_oy_7,base.ng,state_ng_oy,Ibadan North-East
+lcda_oy_8,base.ng,state_ng_oy,Ibadan North-West
+lcda_oy_9,base.ng,state_ng_oy,Ibadan South-East
+lcda_oy_10,base.ng,state_ng_oy,Ibadan South-West
+lcda_oy_11,base.ng,state_ng_oy,Ibarapa Central
+lcda_oy_12,base.ng,state_ng_oy,Ibarapa East
+lcda_oy_13,base.ng,state_ng_oy,Ibarapa North
+lcda_oy_14,base.ng,state_ng_oy,Ido
+lcda_oy_15,base.ng,state_ng_oy,Irepo
+lcda_oy_16,base.ng,state_ng_oy,Iseyin
+lcda_oy_17,base.ng,state_ng_oy,Itesiwaju
+lcda_oy_18,base.ng,state_ng_oy,Iwajowa
+lcda_oy_19,base.ng,state_ng_oy,Kajola
+lcda_oy_20,base.ng,state_ng_oy,Lagelu
+lcda_oy_21,base.ng,state_ng_oy,Ogbomosho North
+lcda_oy_22,base.ng,state_ng_oy,Ogbomosho South
+lcda_oy_23,base.ng,state_ng_oy,Ogo Oluwa
+lcda_oy_24,base.ng,state_ng_oy,Olorunsogo
+lcda_oy_25,base.ng,state_ng_oy,Oluyole
+lcda_oy_26,base.ng,state_ng_oy,Ona Ara
+lcda_oy_27,base.ng,state_ng_oy,Orelope
+lcda_oy_28,base.ng,state_ng_oy,Ori Ire
+lcda_oy_29,base.ng,state_ng_oy,Oyo
+lcda_oy_30,base.ng,state_ng_oy,Oyo East
+lcda_oy_31,base.ng,state_ng_oy,Saki East
+lcda_oy_32,base.ng,state_ng_oy,Saki West
+lcda_oy_33,base.ng,state_ng_oy,Surulere
+lcda_pi_1,base.ng,state_ng_pl,Barkin Ladi
+lcda_pi_2,base.ng,state_ng_pl,Bassa
+lcda_pi_3,base.ng,state_ng_pl,Bokkos
+lcda_pi_4,base.ng,state_ng_pl,Jos East
+lcda_pi_5,base.ng,state_ng_pl,Jos North
+lcda_pi_6,base.ng,state_ng_pl,Jos South
+lcda_pi_7,base.ng,state_ng_pl,Kanam
+lcda_pi_8,base.ng,state_ng_pl,Kanke
+lcda_pi_9,base.ng,state_ng_pl,Langtang North
+lcda_pi_10,base.ng,state_ng_pl,Langtang South
+lcda_pi_11,base.ng,state_ng_pl,Mangu
+lcda_pi_12,base.ng,state_ng_pl,Mikang
+lcda_pi_13,base.ng,state_ng_pl,Pankshin
+lcda_pi_14,base.ng,state_ng_pl,Qua'an Pan
+lcda_pi_15,base.ng,state_ng_pl,Riyom
+lcda_pi_16,base.ng,state_ng_pl,Shendam
+lcda_pi_17,base.ng,state_ng_pl,Wase
+lcda_ri_1,base.ng,state_ng_ri,Abua/Odual
+lcda_ri_2,base.ng,state_ng_ri,Ahoada East
+lcda_ri_3,base.ng,state_ng_ri,Ahoada West
+lcda_ri_4,base.ng,state_ng_ri,Akuku-Toru
+lcda_ri_5,base.ng,state_ng_ri,Andoni
+lcda_ri_6,base.ng,state_ng_ri,Asari-Toru
+lcda_ri_7,base.ng,state_ng_ri,Bonny
+lcda_ri_8,base.ng,state_ng_ri,Degema
+lcda_ri_9,base.ng,state_ng_ri,Eleme
+lcda_ri_10,base.ng,state_ng_ri,Emuoha
+lcda_ri_11,base.ng,state_ng_ri,Etche
+lcda_ri_12,base.ng,state_ng_ri,Gokana
+lcda_ri_13,base.ng,state_ng_ri,Ikwerre
+lcda_ri_14,base.ng,state_ng_ri,Khana
+lcda_ri_15,base.ng,state_ng_ri,Obio/Akpor
+lcda_ri_16,base.ng,state_ng_ri,Ogba/Egbema/Ndoni
+lcda_ri_17,base.ng,state_ng_ri,Ogu/Bolo
+lcda_ri_18,base.ng,state_ng_ri,Okrika
+lcda_ri_19,base.ng,state_ng_ri,Omuma
+lcda_ri_20,base.ng,state_ng_ri,Opobo/Nkoro
+lcda_ri_21,base.ng,state_ng_ri,Oyigbo
+lcda_ri_22,base.ng,state_ng_ri,Port Harcourt
+lcda_ri_23,base.ng,state_ng_ri,Tai
+lcda_so_1,base.ng,state_ng_so,Binji
+lcda_so_2,base.ng,state_ng_so,Bodinga
+lcda_so_3,base.ng,state_ng_so,Dange Shuni
+lcda_so_4,base.ng,state_ng_so,Gada
+lcda_so_5,base.ng,state_ng_so,Goronyo
+lcda_so_6,base.ng,state_ng_so,Gudu
+lcda_so_7,base.ng,state_ng_so,Gwadabawa
+lcda_so_8,base.ng,state_ng_so,Illela
+lcda_so_9,base.ng,state_ng_so,Isa
+lcda_so_10,base.ng,state_ng_so,Kebbe
+lcda_so_11,base.ng,state_ng_so,Kware
+lcda_so_12,base.ng,state_ng_so,Rabah
+lcda_so_13,base.ng,state_ng_so,Sabon Birni
+lcda_so_14,base.ng,state_ng_so,Shagari
+lcda_so_15,base.ng,state_ng_so,Silame
+lcda_so_16,base.ng,state_ng_so,Sokoto North
+lcda_so_17,base.ng,state_ng_so,Sokoto South
+lcda_so_18,base.ng,state_ng_so,Tambuwal
+lcda_so_19,base.ng,state_ng_so,Tangaza
+lcda_so_20,base.ng,state_ng_so,Tureta
+lcda_so_21,base.ng,state_ng_so,Wamako
+lcda_so_22,base.ng,state_ng_so,Wurno
+lcda_so_23,base.ng,state_ng_so,Yabo
+lcda_ta_1,base.ng,state_ng_ta,Ardo Kola
+lcda_ta_2,base.ng,state_ng_ta,Bali
+lcda_ta_3,base.ng,state_ng_ta,Donga
+lcda_ta_4,base.ng,state_ng_ta,Gashaka
+lcda_ta_5,base.ng,state_ng_ta,Gassol
+lcda_ta_6,base.ng,state_ng_ta,Ibi
+lcda_ta_7,base.ng,state_ng_ta,Jalingo
+lcda_ta_8,base.ng,state_ng_ta,Karim Lamido
+lcda_ta_9,base.ng,state_ng_ta,Kumi
+lcda_ta_10,base.ng,state_ng_ta,Lau
+lcda_ta_11,base.ng,state_ng_ta,Sardauna
+lcda_ta_12,base.ng,state_ng_ta,Takum
+lcda_ta_13,base.ng,state_ng_ta,Ussa
+lcda_ta_14,base.ng,state_ng_ta,Wukari
+lcda_ta_15,base.ng,state_ng_ta,Yorro
+lcda_ta_16,base.ng,state_ng_ta,Zing
+lcda_yo_1,base.ng,state_ng_yo,Bade
+lcda_yo_2,base.ng,state_ng_yo,Bursari
+lcda_yo_3,base.ng,state_ng_yo,Damaturu
+lcda_yo_4,base.ng,state_ng_yo,Fika
+lcda_yo_5,base.ng,state_ng_yo,Fune
+lcda_yo_6,base.ng,state_ng_yo,Geidam
+lcda_yo_7,base.ng,state_ng_yo,Gujba
+lcda_yo_8,base.ng,state_ng_yo,Gulani
+lcda_yo_9,base.ng,state_ng_yo,Jakusko
+lcda_yo_10,base.ng,state_ng_yo,Karasuwa
+lcda_yo_11,base.ng,state_ng_yo,Machina
+lcda_yo_12,base.ng,state_ng_yo,Nangere
+lcda_yo_13,base.ng,state_ng_yo,Nguru
+lcda_yo_14,base.ng,state_ng_yo,Potiskum
+lcda_yo_15,base.ng,state_ng_yo,Tarmuwa
+lcda_yo_16,base.ng,state_ng_yo,Yunusari
+lcda_yo_17,base.ng,state_ng_yo,Yusufari
+lcda_za_1,base.ng,state_ng_za,Anka
+lcda_za_2,base.ng,state_ng_za,Bakura
+lcda_za_3,base.ng,state_ng_za,Birnin Magaji/Kiyaw
+lcda_za_4,base.ng,state_ng_za,Bukkuyum
+lcda_za_5,base.ng,state_ng_za,Bungudu
+lcda_za_6,base.ng,state_ng_za,Chafe
+lcda_za_7,base.ng,state_ng_za,Gummi
+lcda_za_8,base.ng,state_ng_za,Gusau
+lcda_za_9,base.ng,state_ng_za,Kaura Namoda
+lcda_za_10,base.ng,state_ng_za,Maradun
+lcda_za_11,base.ng,state_ng_za,Maru
+lcda_za_12,base.ng,state_ng_za,Shinkafi
+lcda_za_13,base.ng,state_ng_za,Talata Mafara
+lcda_za_14,base.ng,state_ng_za,Zurmi

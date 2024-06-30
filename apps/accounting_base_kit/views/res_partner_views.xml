@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="address_street_extended_city_form" model="ir.ui.view">
+        <field name="name">l10n_ng_city.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_address_extended.address_street_extended_city_form" />
+        <field name="arch" type="xml">
+            <field name="city_id" position="attributes">
+                <attribute name="domain">[('state_id', '=', state_id)]</attribute>
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="partners_form_view_base_updates" model="ir.ui.view">
+        <field name="name">base.update.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='internal_notes']" position="before">
+                <page name="products" string="Products">
+                    <p>Compressive list of products, bought or sold to this Contact as a Customer or Vendor.</p>
+                    <group col="2" string="Customer Product Bought">
+                        <field name="buyers_ids" nolabel="1" colspan="2" readonly="True">
+                            <tree>
+                                <field name="date_order" string="Order Date" readonly="True"/>
+                                <field name="name" string="Order" readonly="True"/>
+                                <field name="product_tmpl_id" string="Product" readonly="True"/>
+                                <field name="product_id" string="Product Variant" readonly="True"/>
+                                <field name="qty"  string="Quantity" readonly="True" sum="Total Qty"/>
+                                <field name="uom_id"  string="UoM" readonly="True"/>
+                                <field name="price_unit" readonly="True"/>
+                                <field name="price_tax" readonly="True" sum="Total"/>
+                                <field name="subtotal" readonly="True" sum="Total"/>
+                                <field name="total" readonly="True" sum="Total"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group col="2" string="Vendor Product Sold">
+                        <field name="sellers_ids" nolabel="1" colspan="2" readonly = "True">
+                            <tree>
+                                <field name="date_order" string="Order Date" readonly="True"/>
+                                <field name="name" string="Order" readonly="True"/>
+                                <field name="product_tmpl_id" string="Product" readonly="True"/>
+                                <field name="product_id" string="Product Variant" readonly="True"/>
+                                <field name="qty"  string="Quantity" readonly="True" sum="Total Qty"/>
+                                <field name="uom_id"  string="UoM" readonly="True"/>
+                                <field name="price_unit" readonly="True"/>
+                                <field name="price_tax" readonly="True" sum="Total"/>
+                                <field name="subtotal" readonly="True" sum="Total"/>
+                                <field name="total" readonly="True" sum="Total"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//div[@class='o_address_format']" position="after">
+                <field name="is_lender"/>
+            </xpath>
+
+            <!-- Customer and vendor statements -->
+            <xpath expr="//page[@name='sales_purchases']" position="after">
+                <page name="statement_page" string="Statements">
+                    <separator string="Customer Statement"/>
+                    <header>
+                        <button name="action_customer_print_pdf" type="object" class="btn-secondary" string="Print PDF" groups="base.group_user"/>
+                        <button name="action_customer_print_xlsx" type="object" class="btn-secondary" string="Print Excel" groups="base.group_user"/>
+                        <button name="action_customer_share_pdf" type="object" class="btn-secondary" string="Sent PDF By Email" groups="base.group_user"/>
+                        <button name="action_customer_share_xlsx" type="object" class="btn-secondary" string="Sent Excel By Email" groups="base.group_user"/>
+                        <field name="show_paid_customer_invoice" widget="boolean_toggle" string="Show Paid Invoices"/>
+                    </header>
+                    <field name="customer_report_ids" colspan="2" nolabel="1">
+                        <tree create="false" delete="false">
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="invoice_date" string="Invoice Date"/>
+                            <field name="name" string="Invoice No."/>
+                            <field name="invoice_date_due"/>
+                            <field name="amount_total_signed" sum="Total Amount" string="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual_signed" string="Amount Due" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual" sum="Balance Due" string="Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </tree>
+                    </field>
+                    <hr/>
+
+                    <separator string="Supplier Statement"/>
+                    <header>
+                        <button name="action_vendor_print_pdf" type="object" class="btn-secondary" string="Print PDF" groups="base.group_user"/>
+                        <button name="action_vendor_print_xlsx" type="object" class="btn-secondary" string="Print Excel" groups="base.group_user"/>
+                        <button name="action_vendor_share_pdf" type="object" class="btn-secondary" string="Sent PDF By Email" groups="base.group_user"/>
+                        <button name="action_vendor_share_xlsx" type="object" class="btn-secondary" string="Sent Excel By Email" groups="base.group_user"/>
+                        <field name="show_paid_vendor_bill" widget="boolean_toggle" string="Show Paid Bills"/>
+                    </header>
+                    <field name="vendor_statement_ids" colspan="2" nolabel="1">
+                        <tree create="false" delete="false">
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="invoice_date" string="Bill Date"/>
+                            <field name="name" string="Bill No."/>
+                            <field name="invoice_date_due"/>
+                            <field name="amount_total_signed" sum="Total Amount" string="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual_signed" string="Amount Due" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="amount_residual" sum="Balance Due" string="Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <!--  Add the smart tab and count for partner loans-->
+                <button
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-money"
+                        name="action_view_partner_lended_loans"
+                        context="{'default_partner_id': active_id}"
+                        invisible="lended_loan_count == 0"
+                >
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="lended_loan_count" />
+                        </span>
+                        <span class="o_stat_text">Loans</span>
+                    </div>
+                </button>
+
+                <!--  Add the smart tab and count for partner documents-->
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_partner_documents"
+                        string="Documents"
+                        icon="fa-file-text-o"
+                        context="{'default_partner_id': active_id}"
+                >
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="document_count" />
+                        </span>
+                        <span class="o_stat_text">Documents</span>
+                    </div>
+                </button>
+                <!--  Add the smart tab for to send partner whatsapp messages -->
+                <button name="action_send_msg" string="Whatsapp"
+                        type="object"
+                        class="oe_stat_button" icon="fa-whatsapp"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

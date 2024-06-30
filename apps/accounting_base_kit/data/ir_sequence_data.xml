@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="seq_account_loan" model="ir.sequence">
+            <field name="name">Account Loan Sequence</field>
+            <field name="code">account.loan</field>
+            <field name="prefix">ACL/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False" />
+        </record>
+
+        <!-- Sequences for hr_resignation -->
+        <record id="seq_hr_resignation" model="ir.sequence">
+            <field name="name">Open HRMS Resignation</field>
+            <field name="code">hr.resignation</field>
+            <field name="prefix">RES/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence for Loan Request -->
+        <record id="ir_seq_hr_loan" model="ir.sequence">
+            <field name="name">Loan Request</field>
+            <field name="code">hr.loan.seq</field>
+            <field name="prefix">LO/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!--   Sequence number for salary advance.-->
+        <record id="ir_seq_hr_advance" model="ir.sequence">
+            <field name="name">Salary Advance Request</field>
+            <field name="code">salary.advance.seq</field>
+            <field name="prefix">SAR/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next_actual">1</field>
+            <field name="implementation">standard</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- sequence for employee purchase requisition -->
+        <record id="sequence_purchase_requisition" model="ir.sequence">
+            <field name="name">Employee Requisition</field>
+            <field name="code">employee.purchase.requisition</field>
+            <field name="prefix">EPR/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">4</field>
+            <field name="implementation">standard</field>
+            <field name="number_next" eval="1"/>
+            <field name="number_increment" eval="1"/>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- General Announcement Sequence -->
+        <record id="seq_general_announcement" model="ir.sequence">
+            <field name="name">General Announcement</field>
+            <field name="code">hr.announcement.general</field>
+            <field name="prefix">GA</field>
+            <field eval="4" name="padding"/>
+        </record>
+
+        <!-- Announcement Sequence -->
+        <record id="seq_announcement" model="ir.sequence">
+            <field name="name">Announcement</field>
+            <field name="code">hr.announcement</field>
+            <field name="prefix">AN</field>
+            <field eval="4" name="padding"/>
+        </record>
+
+        <!-- Sequence id for employee verification-->
+        <record id="ir_sequence_employee_verification" model="ir.sequence">
+            <field name="name">Employee Verification</field>
+            <field name="code">employee.verification</field>
+            <field name="prefix">EV/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence for scrap management model -->
+        <record id="sequence_scrap_management" model="ir.sequence">
+            <field name="name">Scrap Management</field>
+            <field name="code">scrap.management</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">SM</field>
+            <field name="padding">6</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sequence number for Bonus Request -->
+        <record id="ir_sequence_bonus_request" model="ir.sequence">
+            <field name="name">Bonus Request Sequence</field>
+            <field name="code">bonus.request</field>
+            <field name="prefix">BR/%(y)s%(month)s%(day)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Salary rule Employee Bonus -->
+        <record id="hr_salary_rule_bonus" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">BONUS</field>
+            <field name="category_id" ref="accounting_base_kit.ALW"/>
+            <field name="name">Employee Bonus</field>
+            <field name="sequence" eval="59"/>
+            <field name="amount_python_compute">result = inputs.BONUS and inputs.BONUS.amount</field>
+        </record>
+
+        <!-- Update salary structure for bonus -->
+        <record id="accounting_base_kit.structure_base" model="hr.payroll.structure">
+            <field
+                    eval="[(6, 0, [
+                ref('accounting_base_kit.hr_rule_basic'),
+                ref('accounting_base_kit.hr_rule_taxable'),
+                ref('accounting_base_kit.hr_rule_net'),
+                ref('hr_salary_rule_bonus')])]"
+                    name="rule_ids"/>
+        </record>
+
+        <!-- Sequences for disciplinary.action -->
+        <record id="disciplinary_action_sequence" model="ir.sequence">
+            <field name="name">Disciplinary Action</field>
+            <field name="code">disciplinary.action</field>
+            <field name="prefix">DIS</field>
+            <field name="padding">3</field>
+        </record>
+
+        <!-- Pantry order sequence -->
+        <record id="pantry_order_sequence" model="ir.sequence">
+            <field name="name">Pantry Order Sequence</field>
+            <field name="code">pantry.order</field>
+            <field name="active">TRUE</field>
+            <field name="prefix">PAO/</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="padding">4</field>
+        </record>
+
+        <!-- Freight order sequence-->
+        <record id="freight_order_sequence" model="ir.sequence">
+            <field name="name">Freight Order Sequence</field>
+            <field name="code">freight.order.sequence</field>
+            <field name="prefix">FO-%(year)s%(month)s%(day)s-</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field name="padding">4</field>
+        </record>
+
+        <!-- Created a route-->
+        <record id="main_carriage" model="freight.routes">
+            <field name="name">Main Carriage</field>
+            <field name="land_sale">0.00</field>
+            <field name="air_sale">0.00</field>
+            <field name="water_sale">0.00</field>
+        </record>
+
+    </data>
+</odoo>

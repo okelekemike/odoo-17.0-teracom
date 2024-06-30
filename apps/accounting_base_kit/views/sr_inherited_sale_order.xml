@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="view_quotation_tree_with_onboarding_extends_add_contect_person_information" model="ir.ui.view">
+			<field name="name">view.quotation.tree.with.onboarding.extends.add.contect.person.information</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="partner_contact_person_id"
+						options='{"always_reload": True}'
+						domain="[('parent_id', '=', partner_id)]" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_order_form_extends_add_contect_person_information" model="ir.ui.view">
+			<field name="name">view.order.form.extends.add.contect.person.information</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="partner_contact_person_id" readonly="state in ['cancel', 'sale', 'sent']"
+						options='{"always_reload": True}'
+						domain="[('parent_id', '=', partner_id)]" />
+				</xpath>
+			</field>
+		</record>
+
+		<record id="view_sales_order_filter_extends_add_contect_person_filter" model="ir.ui.view">
+			<field name="name">view.sales.order.filter.extends.add.contect.person.filter</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="partner_contact_person_id"
+						string="Contact Person"
+						domain="[('child_ids', 'ilike', self)]" />
+				</xpath>
+				<xpath expr="//group" position="inside">
+					<filter string="Contact Person" name="contact_person"
+						context="{'group_by': 'partner_contact_person_id'}" />
+				</xpath>
+			</field>
+		</record>
+
+		<!--Adding the dashboard in list view-->
+		<record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
+			<field name="name">sale.order.view.tree.inherit.sale.mini.dashboard</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+			<field name="arch" type="xml">
+				<xpath expr="//tree" position="attributes">
+					<attribute name="js_class">sale_dashboard_list</attribute>
+				</xpath>
+			</field>
+		</record>
+		<record id="sale_order_tree_sale_mini_dashboard" model="ir.ui.view">
+			<field name="name">sale.order.view.tree.inherit.sale.mini.dashboard</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.sale_order_tree"/>
+			<field name="arch" type="xml">
+				<xpath expr="//tree" position="attributes">
+					<attribute name="js_class">sale_dashboard_list</attribute>
+				</xpath>
+			</field>
+		</record>
+		<!--Adding the dashboard in kanban view-->
+		<record id="view_sale_order_kanban" model="ir.ui.view">
+			<field name="name">sale.order.view.kanban.inherit.sale.mini.dashboard</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sale_order_kanban"/>
+			<field name="arch" type="xml">
+				<xpath expr="//kanban" position="attributes">
+					<attribute name="js_class">sale_dashboard_kanban</attribute>
+				</xpath>
+			</field>
+		</record>
+		<!--Adding additional filters used in mini dashboard-->
+		<record id="sale_order_view_search_inherit_quotation" model="ir.ui.view">
+			<field name="name">sale.order.view.search.inherit.sale.mini.dashboard</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id"
+				   ref="sale.sale_order_view_search_inherit_quotation"/>
+			<field name="arch" type="xml">
+				<filter name="my_quotation" position="replace">
+					<filter string="My Total Orders" name="my_quotation"
+							domain="[('user_id', '=', uid)]"/>
+					<filter string="My Quotations" name="my_draft"
+							domain="[('user_id', '=', uid),('state', 'in', ['draft','sent'])]"/>
+					<filter string="My Orders" name="my_sale_orders"
+							domain="[('user_id', '=', uid),('state','in',('sale','done'))]"/>
+					<separator/>
+				</filter>
+				<filter name="sales" position="after">
+					<filter string="Total Orders" name="total" domain="[]"/>
+					<separator/>
+				</filter>
+			</field>
+		</record>
+	</data>
+</odoo>

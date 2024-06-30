@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Pantry products action -->
+    <record id="action_pantry_product" model="ir.actions.act_window">
+        <field name="name">Pantry Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain">[('pantry_product','=',True)]</field>
+        <field name="context">{'default_pantry_product': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Pantry Product
+            </p>
+        </field>
+    </record>
+
+    <!-- Pantry products menu -->
+    <menuitem id="hr_pantry_menu"
+              name="Pantry"
+              parent="hr.menu_hr_root"/>
+    <menuitem id="product_menu"
+              name="Pantry Products"
+              action="action_pantry_product"
+              parent="hr_pantry_menu"/>
+
+    <!-- Pantry products kanban view -->
+    <record id="pantry_product_view_kanban" model="ir.ui.view">
+        <field name="name">product.product.view.kanban.pantry.payroll</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <kanban create="0" sample="1">
+                <field name="id"/>
+                <field name="lst_price"/>
+                <field name="activity_state"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)"
+                                     alt="Product" class="o_image_64_contain"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                    <small t-if="record.default_code.value">[
+                                        <field name="default_code"/>]
+                                    </small>
+                                </strong>
+                                <div class="o_kanban_tags_section">
+                                    <field name="product_template_variant_value_ids"
+                                           groups="product.group_product_variant"
+                                           widget="many2many_tags"
+                                           options="{'color_field': 'color'}"/>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <strong>
+                                            Price: <field name="lst_price"/>
+                                        </strong>
+                                    </li>
+                                </ul>
+                                <div name="tags"/>
+                                <div class="oe_kanban_footer oe_kanban_bottom_left">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <div class="d-flex">
+                                                <div>
+                                                    <button name="action_quantity_decrement"
+                                                            string="-"
+                                                            id="quantity_decrement"
+                                                            type="object"
+                                                            class="btn-primary"/>
+                                                </div>
+                                                <div class="bg-secondary"
+                                                     style="width: 70px">
+                                                    <center>
+                                                        <div class="mt-2">
+                                                            <field name="pantry_quantity" string="Quantity"/>
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="align-self-center">
+                                                    <button name="action_quantity_increment"
+                                                            string="+"
+                                                            id="quantity_increment"
+                                                            type="object"
+                                                            class="btn-primary"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button name="action_buy_pantry"
+                                                    string="Buy Now"
+                                                    type="object"
+                                                    confirm="Are you sure you want to buy this product?"
+                                                    class="btn-primary"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="pantry_product_kanban_action_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="70"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="accounting_base_kit.pantry_product_view_kanban"/>
+        <field name="act_window_id" ref="action_pantry_product"/>
+    </record>
+
+    <!-- Products inherit form view -->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.pantry.payroll
+        </field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="pantry_product"/>
+                    <label for="pantry_product"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Products inherit form view -->
+    <record id="product_template_only_form_view_pantry_payroll" model="ir.ui.view" >
+        <field name="name">product.template.view.form.inherit.pantry.payroll</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="pantry_product"/>
+                    <label for="pantry_product"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Pantry order action -->
+    <record id="action_pantry_order" model="ir.actions.act_window">
+        <field name="name">Pantry Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pantry.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Pantry Order
+            </p>
+        </field>
+    </record>
+
+    <!-- Pantry order menu -->
+    <menuitem id="pantry_order_menu"
+              name="Pantry Order"
+              action="accounting_base_kit.action_pantry_order"
+              parent="hr_pantry_menu"/>
+
+    <!-- Pantry order tree view -->
+    <record id="pantry_order_view_tree" model="ir.ui.view">
+        <field name="name">pantry.order.view.tree</field>
+        <field name="model">pantry.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_order"/>
+                <field name="amount_total"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--  Search View of Pantry order model -->
+    <record id="pantry_order_view_search" model="ir.ui.view">
+        <field name="name">pantry.order.view.search</field>
+        <field name="model">pantry.order</field>
+        <field name="arch" type="xml">
+            <search string="Pantry Order">
+                <field name="name" string="Name"/>
+                <field name="state" string="State"/>
+                <separator/>
+                <filter name="to_approve" string="Waiting For Approval"
+                        domain="[('state', '=', 'to_approve')]"/>
+                <filter name="refused" string="Refused"
+                        domain="[('state', '=', 'refused')]"/>
+                <filter name="approved_rewards" string="Approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter string="Status" name="Status" domain="[]"
+                        context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Pantry order form view -->
+    <record id="pantry_order_view_form" model="ir.ui.view">
+        <field name="name">pantry.order.view.form</field>
+        <field name="model">pantry.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button string="Send For Approval" class="btn-primary"
+                            type="object" name="action_sent_approval"
+                            groups="hr.group_hr_user"
+                            invisible="state != 'draft'"/>
+                    <button string="Approve" class="btn-primary"
+                            groups="hr.group_hr_manager" type="object"
+                            name="action_approve"
+                            invisible="state != 'to_approve'"/>
+                    <button string="Refuse" groups="hr.group_hr_manager"
+                            type="object" name="action_reject"
+                            invisible="state != 'to_approve'"/>
+                    <button string="Confirm" class="btn btn-primary"
+                            type="object" name="action_confirm_pantry_order"
+                            groups="hr.group_hr_manager"
+                            invisible="state != 'approved'"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="date_order"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines">
+                            <field name="order_line_ids" readonly="state == 'confirmed'">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal"/>
+                                </tree>
+                            </field>
+                            <h2 class="oe_subtotal_footer oe_right">
+                                <group>
+                                    <field name="amount_total"/>
+                                </group>
+                            </h2>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="account_statement_import_form_inherited" model="ir.ui.view">
+        <field name="name">account.statement.import</field>
+        <field name="model">account.statement.import</field>
+        <field
+            name="inherit_id"
+            ref="accounting_base_kit.account_statement_import_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//ul[@id='statement_format']" position="inside">
+                <li>
+                    TXT/CSV/XLSX mapping: <field name="sheet_mapping_id" nolabel="1" />
+                </li>
+            </xpath>
+        </field>
+    </record>
+</odoo>

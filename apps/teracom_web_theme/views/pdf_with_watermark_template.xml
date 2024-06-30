@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Apply the watermark to the pdf report with mentioned specifications-->
+<odoo>
+    <template id="pdf_watermark_report_standard"
+              inherit_id="web.external_layout_standard">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <div t-if="company.watermark" class="row"
+                 style="top:250px !important;left: 10%; max-width: 80%;max-height: 80%;min-width: 80%;min-height: 80%;position:absolute;text-align: center;">
+                <span t-attf-style="#{'top:200px;' if company.watermark_type == 'text' else ''}-webkit-transform:rotate(-{{company.rotating_angle}}deg);color:{{company.color_picker}};font-size:{{company.font_size}}px;position:absolute;text-align:center;opacity:0.1;">
+                    <t t-if="company.watermark_type == 'text'">
+                        <t t-esc="company.content_text"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'image'">
+                        <img t-if="company.pdf_background_image"
+                             t-att-src="image_data_uri(company.pdf_background_image)"
+                             style="opacity: 1;"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'logo'">
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             style="opacity: 1;"/>
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="pdf_watermark_report_bold"
+              inherit_id="web.external_layout_bold">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <div t-if="company.watermark" class="row"
+                 style="top:250px !important;left: 10%; max-width: 80%;max-height: 80%;min-width: 80%;min-height: 80%;position:absolute;text-align: center;">
+                <span t-attf-style="#{'top:200px;' if company.watermark_type == 'text' else ''}-webkit-transform:rotate(-{{company.rotating_angle}}deg);color:{{company.color_picker}};font-size:{{company.font_size}}px;position:absolute;text-align:center;opacity:0.1;">
+                    <t t-if="company.watermark_type == 'text'">
+                        <t t-esc="company.content_text"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'image'">
+                        <img t-if="company.pdf_background_image"
+                             t-att-src="image_data_uri(company.pdf_background_image)"
+                             style="opacity: 1;"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'logo'">
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             style="opacity: 1;"/>
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="pdf_watermark_report_boxed"
+              inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <div t-if="company.watermark" class="row"
+                 style="top:250px !important;left: 10%; max-width: 80%;max-height: 80%;min-width: 80%;min-height: 80%;position:absolute;text-align: center;">
+                <span t-attf-style="#{'top:200px;' if company.watermark_type == 'text' else ''}-webkit-transform:rotate(-{{company.rotating_angle}}deg);color:{{company.color_picker}};font-size:{{company.font_size}}px;position:absolute;text-align:center;opacity:0.1;">
+                    <t t-if="company.watermark_type == 'text'">
+                        <t t-esc="company.content_text"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'image'">
+                        <img t-if="company.pdf_background_image"
+                             t-att-src="image_data_uri(company.pdf_background_image)"
+                             style="opacity: 1;"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'logo'">
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             style="opacity: 1;"/>
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="pdf_watermark_report_striped"
+              inherit_id="web.external_layout_striped">
+        <xpath expr="//div[contains(@t-attf-class, 'article')]" position="inside">
+            <div t-if="company.watermark" class="row"
+                 style="top:250px !important;left: 10%; max-width: 80%;max-height: 80%;min-width: 80%;min-height: 80%;position:absolute;text-align: center;">
+                <span t-attf-style="#{'top:200px;' if company.watermark_type == 'text' else ''}-webkit-transform:rotate(-{{company.rotating_angle}}deg);color:{{company.color_picker}};font-size:{{company.font_size}}px;position:absolute;text-align:center;opacity:0.1;">
+                    <t t-if="company.watermark_type == 'text'">
+                        <t t-esc="company.content_text"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'image'">
+                        <img t-if="company.pdf_background_image"
+                             t-att-src="image_data_uri(company.pdf_background_image)"
+                             style="opacity: 1;"/>
+                    </t>
+                    <t t-if="company.watermark_type == 'logo'">
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             style="opacity: 1;"/>
+                    </t>
+                </span>
+            </div>
+        </xpath>
+    </template>
+</odoo>

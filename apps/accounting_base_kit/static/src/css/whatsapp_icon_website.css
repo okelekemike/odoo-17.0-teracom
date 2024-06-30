@@ -1,0 +1,39 @@
+.cy_whatsapp_web {
+	position:fixed;
+	width:50px;
+	height:50px;
+	bottom:100px;
+	right:20px;
+	background-color:#25d36645;
+	box-shadow: 0 2px 4px darkslategray;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+    font-size:30px;
+    z-index:100;
+}
+
+.cy_whatsapp_web:hover {
+	background-color:#25d366;
+	box-shadow: 0 0 0 0.5rem rgba(25, 135, 84, 0.25);
+}
+
+.cy-icon {
+	color: white;
+}
+
+.mail-icon{
+	color: white;
+	position: absolute;
+	right: 47px;
+}
+
+.whatsapp_icon {
+	font-size: 16px !important;
+}
+
+.action_open_invoices {
+	font-size: 14px !important;
+	border-radius: 3px !important;
+	padding: 10px;
+}

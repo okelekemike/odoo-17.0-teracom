@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2023 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="account_move_form_view">
+        <field name="name">account.move.form (in account_reconcile_oca)</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    type="action"
+                    name="%(accounting_base_kit.action_bank_statement_line_move_view_reconcile)s"
+                    string="Reconcile"
+                    class="btn btn-primary"
+                    icon="fa-list"
+                    invisible="statement_line_id == False"
+                    data-hotkey="h"
+                />
+            </div>
+            <button name="button_draft" position="attributes">
+                <attribute name="groups">
+                    accounting_base_kit.hide_reset_draft_button_group
+                </attribute>
+            </button>
+        </field>
+    </record>
+
+
+
+</odoo>
