@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<template
+		id="report_delivery_document_extends_add_barcode_in_report"
+		inherit_id="stock.report_delivery_document">
+		<xpath expr="//h2" position="after">
+			<div class="row justify-content-start mb16">
+				<div class="col-4" name="right_box">
+					<div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
+						<div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center p-3 opacity-75 text-muted text-center">
+							(document barcode)
+						</div>
+					</div>
+				</div>
+			</div>
+		</xpath>
+	</template>
+</odoo>

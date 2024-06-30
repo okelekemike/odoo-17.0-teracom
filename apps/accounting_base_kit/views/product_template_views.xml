@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Template -->
+    <record id="view_product_template_form_inherit" model="ir.ui.view">
+        <field name="name">Product Template (form)</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="property_account_expense_id" position="after">
+                <field name="asset_category_id"
+                    domain="[('type', '=', 'purchase')]"
+                    context="{'default_type': 'purchase'}"
+                    groups="account.group_account_user"/>
+            </field>
+        </field>
+    </record>
+
+    <!--    Inherit the view of product.template and add separate tab for product transaction history-->
+    <record id="product_template_only_form_view_product_history" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.purchase.product.history</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <page name="purchase" position="inside">
+                <group col="2">
+                    <separator string="Purchase History"/>
+                    <field name="po_history_line_ids" nolabel="1" colspan="2">
+                        <tree editable="bottom">
+                            <field name="order_reference_id"/>
+                            <field name="order_date" string="Order Date"/>
+                            <field name="description" optional="show"/>
+                            <field name="price_unit"/>
+                            <field name="product_qty" string="Qty" sum="Total Qty"/>
+                            <field name="price_subtotal" string="Subtotal(Tax Exclude)" sum="Subtotal"/>
+                            <field name="price_total" string="Total(Tax Include)" sum="Total"/>
+                        </tree>
+                    </field>
+                </group>
+            </page>
+            <page name="sales" position="inside">
+                <group col="2">
+                    <separator string="Sales History"/>
+                    <field name="so_history_line_ids" nolabel="1" colspan="2">
+                        <tree editable="bottom">
+                            <field name="order_reference_id"/>
+                            <field name="order_date" string="Order Date"/>
+                            <field name="description" optional="show"/>
+                            <field name="price_unit"/>
+                            <field name="product_qty" string="Qty" sum="Total Qty"/>
+                            <field name="price_subtotal" string="Subtotal(Tax Exclude)" sum="Subtotal"/>
+                            <field name="price_total" string="Total(Tax Include)" sum="Total"/>
+                        </tree>
+                    </field>
+                </group>
+                <group col="2" invisible="not available_in_pos">
+                    <separator string="Point of Sales History"/>
+                    <field name="pos_history_line_ids" nolabel="1" colspan="2">
+                        <tree editable="bottom">
+                            <field name="order_reference_id"/>
+                            <field name="order_date" string="Order Date"/>
+                            <field name="description" optional="show"/>
+                            <field name="price_unit"/>
+                            <field name="product_qty" string="Qty" sum="Total Qty"/>
+                            <field name="price_subtotal" string="Subtotal(Tax Exclude)" sum="Subtotal"/>
+                            <field name="price_total" string="Total(Tax Include)" sum="Total"/>
+                        </tree>
+                    </field>
+                </group>
+            </page>
+        </field>
+    </record>
+
+    <!-- Adding button in product template for website publish -->
+    <record id="product_template_form_view_website_product_publish" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.website.product.publish</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_published']" position="after">
+                <button name="action_published_product" type="object"
+                        string="Publish" invisible="is_published ==True"
+                        sequence="10">
+                    <i class="fa fa-fw o_button_icon fa-globe text-success"/>
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Publish</span>
+                    </div>
+                </button>
+                <button name="action_unpublished_product" type="object"
+                        invisible="is_published ==False"
+                        sequence="10">
+                    <i class="fa fa-fw o_button_icon fa-globe text-danger"/>
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Unpublished</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding button in product category for website publish -->
+    <record id="product_category_form_view" model="ir.ui.view">
+        <field name="name">
+            product.category.view.form.inherit.website.product.publish
+        </field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_publish_all_products" type="object"
+                        class="oe_stat_button" icon="fa-globe"
+                        string="Publish All Products"
+                        sequence="10">
+                </button>
+                <button style="width: 200px;" name="action_nothing"
+                        type="object">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value" style="margin-left: 5px;">
+                            Published:
+                            <field name="published_count"/>
+                        </span>
+                        <span class="o_stat_value" style="margin-left: 5px;">
+                            Unpublished :
+                            <field name="unpublished_count"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

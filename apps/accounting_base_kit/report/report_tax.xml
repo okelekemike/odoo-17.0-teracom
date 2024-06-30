@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_tax">
+        <t t-call="web.html_container">
+            <t t-set="data_report_margin_top" t-value="12"/>
+            <t t-set="data_report_header_spacing" t-value="9"/>
+            <t t-set="data_report_dpi" t-value="110"/>
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h3>Tax Report</h3>
+                    <div class="row">
+                        <div class="col-3">
+                            <strong>Company:</strong>
+                            <p t-esc="env.company.name"/>
+                        </div>
+                        <div>
+                            <t t-if="data['date_from']">
+                                <strong>Date from :</strong>
+                                <span t-esc="data['date_from']"/>
+                            </t>
+                            <br/>
+                            <t t-if="data['date_to']">
+                                <strong>Date to :</strong>
+                                <span t-esc="data['date_to']"/>
+                            </t>
+                        </div>
+                    </div>
+                    <t t-set="sale_tax_total" t-value="0"/>
+                    <t t-set="purc_tax_total" t-value="0"/>
+                    <table class="table table-sm table-reports">
+                        <tr align="left">
+                            <th><strong>Sale</strong></th>
+                            <th>Net</th>
+                            <th>Tax</th>
+                        </tr>
+                        <tr align="left" t-foreach="lines['sale']" t-as="line">
+                            <td>
+                                <span t-esc="line.get('name')"/>
+                            </td>
+                            <td>
+                                <span t-att-style="style" t-esc="line.get('net')"
+                                      t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                            </td>
+                            <td>
+                                <span t-att-style="style" t-esc="line.get('tax')"
+                                      t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                <t t-set="sale_tax_total" t-value="sale_tax_total + line.get('tax')"/>
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <th>
+                                <strong>Purchase</strong>
+                            </th>
+                            <th/>
+                            <th/>
+                        </tr>
+                        <tr align="left" t-foreach="lines['purchase']" t-as="line">
+                            <td>
+                                <span t-esc="line.get('name')"/>
+                            </td>
+                            <td>
+                                <span t-att-style="style" t-esc="line.get('net')"
+                                      t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                            </td>
+                            <td>
+                                <span t-att-style="style" t-esc="line.get('tax')"
+                                      t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+
+                                <t t-set="purc_tax_total" t-value="purc_tax_total + line.get('tax')"/>
+                            </td>
+                        </tr>
+                        <tfoot>
+                            <tr>
+                                <td/>
+                                <td>
+                                    <strong>Total Tax Return</strong>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <span t-att-style="style" t-esc="purc_tax_total - sale_tax_total"
+                                              t-options="{'widget': 'monetary', 'display_currency': env.company.currency_id}"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

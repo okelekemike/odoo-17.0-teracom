@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Employee Purchase Requisition view -->
+    <record id="employee_purchase_requisition_action" model="ir.actions.act_window">
+        <field name="name">Requisition</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.purchase.requisition</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new record!
+            </p>
+        </field>
+    </record>
+
+    <record id="employee_purchase_requisition_view_form" model="ir.ui.view">
+        <field name="name">employee.purchase.requisition.view.form</field>
+        <field name="model">employee.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget='statusbar'
+                           statusbar_visible='new,waiting_department_approval,waiting_head_approval,approved,order_created,received'/>
+                    <button name="action_confirm_requisition"
+                            class="oe_highlight"
+                            invisible="state != 'new'" string="Confirm"
+                            type="object"
+                            help="Submit to Department Approval"
+                            groups="accounting_base_kit.employee_requisition_user"/>
+                    <button name="action_department_approval"
+                            class="oe_highlight"
+                            invisible="state != 'waiting_department_approval'"
+                            string="Approve" type="object"
+                            help="Approve purchase requisition,Submit for Approval for Requisition Head"
+                            groups="accounting_base_kit.employee_requisition_head"/>
+                    <button name="action_department_cancel"
+                            class="oe_highlight"
+                            invisible="state != 'waiting_department_approval'"
+                            string="Reject" type="object"
+                            help="Reject Purchase Requisition"
+                            confirm="Are you sure, you want to Reject this Requisition?"
+                            groups="accounting_base_kit.employee_requisition_head"/>
+                    <button name="action_head_approval" class="oe_highlight"
+                            invisible="state != 'waiting_head_approval'"
+                            string="Approve"
+                            type="object"
+                            help="Approve Purchase requisition"
+                            groups="accounting_base_kit.employee_requisition_manager"/>
+                    <button name="action_head_cancel" class="oe_highlight"
+                            invisible="state != 'waiting_head_approval'"
+                            string="Reject"
+                            type="object"
+                            help="Reject Purchase Requisition"
+                            confirm="Are you sure, you want to Reject this Requisition?"
+                            groups="accounting_base_kit.employee_requisition_manager"/>
+                    <button name="action_create_purchase_order"
+                            class="oe_highlight"
+                            invisible="state != 'approved'"
+                            string="Create All Orders"
+                            type="object"
+                            confirm="Are you sure, you want to Create Picking, Manufacturing and Purchasing Orders for this Requisition?"
+                            help="Create Picking/Manufacturing/Purchase Order"/>
+                    <button name="action_create_purchase_order"
+                            class="oe_highlight"
+                            invisible="state != 'order_created'"
+                            string="Update All Orders"
+                            type="object"
+                            confirm="Are you sure, you want to Update Picking, Manufacturing and Purchasing Orders for this Requisition?"
+                            help="Update Picking/Manufacturing/Purchase Order"/>
+                    <button name="action_approval_reversal"
+                            class="oe_highlight"
+                            invisible="not state in ('approved', 'waiting_head_approval')"
+                            string="Reverse Last Approval"
+                            type="object"
+                            help="Reverse current approval"
+                            confirm="Are you sure, you want to Reverse the current Approval for this Requisition?"
+                            groups="accounting_base_kit.employee_requisition_manager"/>
+                    <button name="action_approval_reversal"
+                            class="oe_highlight"
+                            invisible="not state in ('waiting_department_approval')"
+                            string="Reverse Confirmation"
+                            type="object"
+                            help="Reverse current confirmation"
+                            confirm="Are you sure, you want to Reverse the current Confirmation for this Requisition?"
+                            groups="accounting_base_kit.employee_requisition_manager"/>
+                    <button name="action_receive" class="oe_highlight"
+                            invisible="state != 'order_created'"
+                            string="Received"
+                            type="object"
+                            groups="accounting_base_kit.employee_requisition_manager"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="get_purchase_order"
+                                icon="fa-book"
+                                invisible="not purchase_count">
+                            <field string="Purchase Order"
+                                   name="purchase_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="get_manufacturing_order"
+                                icon="fa-industry"
+                                invisible="not manufacturing_count">
+                            <field string="Manufacturing Order"
+                                   name="manufacturing_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="get_internal_transfer"
+                                icon="fa-truck"
+                                invisible="not internal_transfer_count">
+                            <field string="Internal Transfer"
+                                   name="internal_transfer_count"
+                                   widget="statinfo"
+                            />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="New"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="state not in ['new']"/>
+                            <field name="dept_id"/>
+                            <field name="employee_received_id" readonly="state not in ['new']"/>
+                            <field name="dept_received_id"/>
+                        </group>
+                        <group>
+                            <field name="requisition_date" readonly="state not in ['new']"/>
+                            <field name="receive_date"/>
+                            <field name="requisition_deadline" readonly="state not in ['new']"/>
+                            <field name="company_id" readonly="state not in ['new']"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="requisition_description" readonly="state not in ['new']"/>
+                    </group>
+                    <notebook>
+                        <page string="Requisition Orders ">
+                            <field name="requisition_order_ids" readonly="state in ['order_created', 'received', 'cancelled']"/>
+                        </page>
+                        <page string="Available Orders" invisible="not state in ['approved', 'order_created']"
+                              groups="accounting_base_kit.employee_requisition_manager">
+                            <separator string="Internal Transfers"/>
+                            <field name="root_transfer_ids" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="display_name"/>
+                                    <field name="partner_id"/>
+                                    <field name="location_id"/>
+                                    <field name="location_dest_id"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'posted'"
+                                           decoration-info="state == 'draft'"
+                                           optional="show"/>
+                                    <button name="action_unlink_requisition" title="Unlink" type="object" class="fa fa-trash Unlink"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <button name="action_add_internal_transfer" string="Add Internal Transfer"
+                                        class="oe_highlight action_open_invoices badge" type="object"/>
+                            </group>
+                            <separator string="Purchase Orders"/>
+                            <field name="root_purchase_ids" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="display_name"/>
+                                    <field name="partner_id"/>
+                                    <field name="amount_total"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'posted'"
+                                           decoration-info="state == 'draft'"
+                                           optional="show"/>
+                                    <button name="action_unlink_requisition" title="Unlink" type="object" class="fa fa-trash Unlink"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <button name="action_add_purchase_order" string="Add Purchase Order"
+                                        class="oe_highlight action_open_invoices badge" type="object"/>
+                            </group>
+                            <separator string="Manufacturing Orders"/>
+                            <field name="root_manufacturing_ids" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="display_name"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" />
+                                    <field name="location_src_id" />
+                                    <field name="location_dest_id" />
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'posted'"
+                                           decoration-info="state == 'draft'"
+                                           optional="show"/>
+                                    <button name="action_unlink_requisition" title="Unlink" type="object" class="fa fa-trash Unlink"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <button name="action_add_manufacturing_order" string="Add Manufacturing Order"
+                                        class="oe_highlight action_open_invoices badge" type="object"/>
+                            </group>
+                        </page>
+                        <page string="Picking Details"
+                              groups="accounting_base_kit.employee_requisition_manager,accounting_base_kit.employee_requisition_head">
+                            <group>
+                                <group>
+                                    <field name="source_location_id"/>
+                                    <field name="destination_location_id"/>
+                                </group>
+                                <group>
+                                    <field name="delivery_type_id"/>
+                                    <field name="internal_picking_id"/>
+                                    <field name="manufacturing_picking_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Other Info">
+                            <group>
+                                <group>
+                                    <field name="confirm_id"/>
+                                    <field name="manager_id"/>
+                                    <field name="requisition_head_id"/>
+                                    <field name="rejected_user_id"/>
+                                </group>
+                                <group>
+                                    <field name="confirmed_date"/>
+                                    <field name="department_approval_date"/>
+                                    <field name="approval_date"/>
+                                    <field name="reject_date"/>
+                                </group>
+                            </group>
+                            <group invisible="not rejected_user_id">
+                                <field name="rejected_reason"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_purchase_requisition_view_tree" model="ir.ui.view">
+        <field name="name">employee.purchase.requisition.view.tree</field>
+        <field name="model">employee.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="dept_id"/>
+                <field name="employee_received_id"/>
+                <field name="dept_received_id"/>
+                <field name="requisition_date"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ('approved','received')"
+                       decoration-warning="state in ('waiting_department_approval','waiting_head_approval')"
+                       decoration-info="state =='order_created'"
+                       decoration-danger="state =='cancelled'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="employee_purchase_requisition_view_kanban" model="ir.ui.view">
+        <field name="name">employee.purchase.requisition.view.kanban</field>
+        <field name="model">employee.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="oe_kanban_card">
+                                    <div>
+                                        <b>
+                                            <field name="name"/>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <b>
+                                            <field name="employee_id"/>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <b>
+                                            <field name="dept_id"/>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <b>
+                                            <field name="user_id"/>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <b>
+                                            <field name="requisition_date"/>
+                                        </b>
+                                    </div>
+                                    <div>
+                                        <b>
+                                            <field name="state" widget="badge"
+                                                   decoration-success="state in
+                                            ('approved','received')"
+                                                   decoration-warning="state in
+                                            ('waiting_department_approval','waiting_head_approval')"
+                                                   decoration-info="state =='order_created'"
+                                                   decoration-danger="state
+                                            =='cancelled'"
+                                            />
+                                        </b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="employee_purchase_requisition_view_search" model="ir.ui.view">
+        <field name="name">employee.purchase.requisition.view.search</field>
+        <field name="model">employee.purchase.requisition</field>
+        <field name="arch" type="xml">
+            <search string="Search Tips">
+                <group expand="1" string="Group By">
+                    <filter string="Employee" name="employee_id"
+                            context="{'group_by':'employee_id', 'residual_visible':True}"/>
+                    <filter string="Department" name="dept_id"
+                            context="{'group_by':'dept_id', 'residual_visible':True}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--Tree view for requisition order-->
+    <record id="requisition_order_view_tree" model="ir.ui.view">
+        <field name="name">requisition.order.view.tree</field>
+        <field name="model">requisition.order</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" default_order=""
+                  delete="parent.state in ['order_created','received', 'cancelled']"
+                  create="parent.state in ['order_created','received', 'cancelled']">
+                <field name="sequence" widget="handle"/>
+                <field name="state" column_invisible="True"/>
+                <field name="requisition_type"
+                       column_invisible="not parent.state in ['approved','order_created','received']"
+                       readonly="parent.state in ['order_created', 'received', 'cancelled']"
+                       groups="accounting_base_kit.employee_requisition_head,accounting_base_kit.employee_requisition_manager"/>
+                <field name="product_id"
+                       readonly="parent.state in ['order_created', 'received', 'cancelled']"/>
+                <field name="description"
+                       readonly="parent.state in ['order_created', 'received', 'cancelled']"/>
+                <field name="quantity"
+                       readonly="parent.state in ['order_created', 'received', 'cancelled']"/>
+                <field name="uom"/>
+                <field name="partner_id" column_invisible="not parent.state in ['approved','order_created','received']"
+                       invisible="not requisition_type in ['purchase_order']"
+                       readonly="parent.state in ['received', 'cancelled']"
+                       groups="accounting_base_kit.employee_requisition_head,accounting_base_kit.employee_requisition_manager"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--Adding field in the employee form view-->
+    <record id="view_employee_form_employee_purchase_requisition" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.employee.purchase.requisition</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='managers']" position="after">
+                <group name="requisition_settings" string="Requisition Settings">
+                    <field name="employee_location_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding field in the department form view -->
+    <record id="view_department_form_employee_purchase_requisition" model="ir.ui.view">
+        <field name="name">hr.department.view.form.inherit.employee.purchase.requisition</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="department_location_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Adding a field in the purchase order form view -->
+    <record id="purchase_order_form_employee_purchase_requisition" model="ir.ui.view">
+        <field name="name">purchase.order.view.form.inherit.employee.purchase.requisition</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_calculation_rounding_method']" position="after">
+                <field name="requisition_order" readonly="1" invisible="not requisition_order"/>
+                <field name="receiver_id" readonly="1" invisible="not receiver_id"/>
+            </xpath>
+
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="get_requisition_order"
+                        icon="fa-book"
+                        invisible="not requisition_count">
+                    <field string="Requisition Order"
+                           name="requisition_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Adding field in the stock picking form view -->
+    <record id="view_picking_form_employee_purchase_requisition" model="ir.ui.view">
+        <field name="name">stock.picking.view.form.inherit.employee.purchase.requisition</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mo_ref_id']" position="after">
+                <field name="requisition_order" readonly="1"
+                       invisible="not picking_type_code == 'internal' or not requisition_order"/>
+                <field name="receiver_id" readonly="1"
+                       invisible="not picking_type_code == 'internal' or not receiver_id" />
+            </xpath>
+
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="get_requisition_order"
+                        icon="fa-book"
+                        invisible="not requisition_count">
+                    <field string="Requisition Order"
+                           name="requisition_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Adding field in the Manufacturing Orders form view -->
+    <record id="mrp_production_form_view_employee_purchase_requisition" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.employee.purchase.requisition</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="requisition_order" readonly="1" invisible="not requisition_order"/>
+                <field name="receiver_id" readonly="1" invisible="not receiver_id"/>
+            </xpath>
+
+            <div class="oe_button_box" position="inside">
+                <button class="oe_stat_button" type="object"
+                        name="get_requisition_order"
+                        icon="fa-book"
+                        invisible="not requisition_count">
+                    <field string="Requisition Order"
+                           name="requisition_count" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!--Action to print report-->
+    <record id="print_requisition_order_pdf" model="ir.actions.server">
+        <field name="name">Print Requisition Order</field>
+        <field name="model_id" ref="accounting_base_kit.model_employee_purchase_requisition"/>
+        <field name="binding_model_id" ref="accounting_base_kit.model_employee_purchase_requisition"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_print_report()</field>
+    </record>
+    <record id="print_thermal_requisition_order_pdf" model="ir.actions.server">
+        <field name="name">Print Requisition Order (80mm)</field>
+        <field name="model_id" ref="accounting_base_kit.model_employee_purchase_requisition"/>
+        <field name="binding_model_id" ref="accounting_base_kit.model_employee_purchase_requisition"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_print_thermal_report()</field>
+    </record>
+
+    <!-- Employee Purchase Requisition menu -->
+    <menuitem id="employee_purchase_requisition_menu_root"
+              name="Requisition"
+              parent="hr.menu_hr_employee_payroll"
+              action="employee_purchase_requisition_action"
+              sequence="118"/>
+
+    <menuitem id="employee_purchase_requisition_menu_inventory_root"
+              name="Requisition"
+              parent="stock.menu_stock_transfers"
+              action="employee_purchase_requisition_action"
+              sequence="118"/>
+
+    <record id="stock_picking_type_kanban_employee_purchase_requisition_button" model="ir.ui.view">
+        <field name="name">employee.purchase.requisition.button</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_card_content')]/div[hasclass('row')]" position="inside">
+                <div class="col-6 o_kanban_primary_left" t-if="record.code.raw_value == 'internal'">
+                    <button class="btn btn-secondary mt-3"
+                            name="get_employee_requisition"
+                            type="object">
+                        <span>Requisition</span>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Define the view for the transfer link form -->
+    <record id="link_transfer_orders_view_form" model="ir.ui.view">
+        <field name="name">link.transfer.orders.view.form</field>
+        <field name="model">link.transfer.orders</field>
+        <field name="arch" type="xml">
+            <form string="Link and Remove Transfer Orders">
+                <field name="requisition_id" invisible="1"/>
+                <field name='transfer_ids'>
+                    <tree>
+                        <field name="link_requisition" widget="boolean_toggle"/>
+                        <field name="display_name"/>
+                        <field name="partner_id"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
+                        <field name="state" widget="badge" decoration-success="state == 'posted'"
+                               decoration-info="state == 'draft'" optional="show"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_add_orders"
+                            string="Add Orders" type="object"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Define the view for the purchase link form -->
+    <record id="link_purchase_orders_view_form" model="ir.ui.view">
+        <field name="name">link.purchase.orders.view.form</field>
+        <field name="model">link.purchase.orders</field>
+        <field name="arch" type="xml">
+            <form string="Link and Remove Purchase Orders">
+                <field name="requisition_id" invisible="1"/>
+                <field name='purchase_ids'>
+                    <tree>
+                        <field name="link_requisition" widget="boolean_toggle"/>
+                        <field name="display_name"/>
+                        <field name="partner_id"/>
+                        <field name="amount_total"/>
+                        <field name="state" widget="badge" decoration-success="state == 'posted'"
+                               decoration-info="state == 'draft'" optional="show"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_add_orders"
+                            string="Add Orders" type="object"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Define the view for the manufacturing link form -->
+    <record id="link_manufacturing_orders_view_form" model="ir.ui.view">
+        <field name="name">link.manufacturing.orders.view.form</field>
+        <field name="model">link.manufacturing.orders</field>
+        <field name="arch" type="xml">
+            <form string="Link and Remove Manufacturing Orders">
+                <field name="requisition_id" invisible="1"/>
+                <field name='manufacturing_ids'>
+                    <tree>
+                        <field name="link_requisition" widget="boolean_toggle"/>
+                        <field name="display_name"/>
+                        <field name="product_id"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom_id" />
+                        <field name="location_src_id" />
+                        <field name="location_dest_id" />
+                        <field name="state" widget="badge" decoration-success="state == 'posted'"
+                               decoration-info="state == 'draft'" optional="show"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_add_orders"
+                            string="Add Orders" type="object"
+                            class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Client Name on Manufacturing OrderClient Name on Manufacturing Order -->
+    <record id="mrp_production_view_form_customer_name" model="ir.ui.view">
+        <field name="name">mrp.production.view.form.customer_name</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='bom_div']" position="after">
+                <field name="customer_ids" widget="many2many_tags" />
+                <field name="source_sale_orders" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_view_tree_customer_name" model="ir.ui.view">
+        <field name="name">mrp.production.view.form.customer_name</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="customer_ids" optional="show" widget="many2many_tags" />
+                <field name="source_sale_orders" />
+            </field>
+        </field>
+    </record>
+</odoo>

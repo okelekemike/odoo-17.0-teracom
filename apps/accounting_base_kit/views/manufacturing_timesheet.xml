@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherited form view of mrp production-->
+    <record id="mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.view.form.inherit.manufacturing.timesheet</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='operations']//field[@name='workorder_ids']"
+                   position="inside">
+                <tree editable="bottom" multi_edit="1">
+                    <field name="consumption" column_invisible="1"/>
+                    <field name="company_id" column_invisible="1"/>
+                    <field name="is_produced" column_invisible="1"/>
+                    <field name="is_user_working" column_invisible="1"/>
+                    <field name="product_uom_id" column_invisible="1" readonly="0"/>
+                    <field name="production_state" column_invisible="1"/>
+                    <field name="production_bom_id" column_invisible="1"/>
+                    <field name="qty_producing" column_invisible="1"/>
+                    <field name="time_ids" column_invisible="1"/>
+                    <field name="working_state" column_invisible="1"/>
+                    <field name="operation_id" column_invisible="1"
+                           domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]"
+                           context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
+                    <field name="name" string="Operation"/>
+                    <field name="workcenter_id"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="employee_id" optional="show"/>
+                    <field name="qty_remaining" optional="show"
+                           string="Quantity"/>
+                    <field name="finished_lot_id" optional="hide"
+                           string="Lot/Serial"/>
+                    <field name="date_start" optional="hide" readonly="1"/>
+                    <field name="date_finished" optional="hide" readonly="1"/>
+                    <field name="duration_expected" widget="float_time"
+                           sum="expected duration"/>
+                    <field name="duration" widget="mrp_timer"
+                           attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"
+                           sum="real duration"/>
+                    <field name="state" widget="badge"
+                           decoration-warning="state == 'progress'"
+                           decoration-success="state == 'done'"
+                           decoration-danger="state == 'cancel'"
+                           decoration-info="state not in ('progress', 'done', 'cancel')"
+                           attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
+                    <button name="button_start" type="object" string="Start"
+                            class="btn-success"
+                            attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'cancel')), ('is_user_working', '!=', False)]}"/>
+                    <button name="button_pending" type="object" string="Pause"
+                            class="btn-warning"
+                            attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                    <button name="button_finish" type="object" string="Done"
+                            class="btn-success"
+                            attrs="{'invisible': ['|', '|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
+                    <button name="%(mrp.act_mrp_block_workcenter_wo)d"
+                            type="action" string="Block"
+                            context="{'default_workcenter_id': workcenter_id}"
+                            class="btn-danger"
+                            attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked')]}"/>
+                    <button name="button_unblock" type="object" string="Unblock"
+                            context="{'default_workcenter_id': workcenter_id}"
+                            class="btn-danger"
+                            attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done', 'cancel')), ('working_state', '!=', 'blocked')]}"/>
+                    <button name="action_open_wizard" type="object"
+                            icon="fa-external-link" class="oe_edit_only"
+                            title="Open Work Order"
+                            context="{'default_workcenter_id': workcenter_id}"/>
+                    <field name="show_json_popover" column_invisible="1"/>
+                    <field name="json_popover" widget="mrp_workorder_popover"
+                           string=" " width="0.1"
+                           attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                </tree>
+            </xpath>
+
+            <xpath expr="//button[@name='button_unbuild']" position="after">
+                <field name="is_stock_picking_created" invisible="1" />
+                <button name="action_create_stock_picking"
+                        invisible="is_stock_picking_created == True or state != 'confirmed'"
+                        string="Request Components"
+                        class="oe_highlight"
+                        type="object"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object" icon="fa-bars"
+                        name="action_open_related_stock_picking">
+
+                    <field string="Request Components"
+                           name="related_stock_picking_count"
+                           widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited tree view for all manufacturing timesheet-->
+    <record id="timesheet_view_tree_user" model="ir.ui.view">
+        <field name="name">account.analytic.line.view.tree.inherit.manufacturing.timesheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id"
+               ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']"
+                   position="after">
+                <field name="is_manufacturing" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited tree view for my manufacturing timesheet-->
+    <record id="hr_timesheet_line_tree" model="ir.ui.view">
+        <field name="name">account.analytic.line.view.tree.inherit.manufacturing.timesheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id"
+               ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']"
+                   position="after">
+                <field name="is_manufacturing" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited form view of project_project-->
+    <record id="project_invoice_form" model="ir.ui.view">
+        <field name="name">project.project.view.form.inherit.manufacturing.timesheet</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='allocated_hours']" position="after">
+                <field name="is_manufacturing"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherited tree view of mrp workorder to add employee_id -->
+    <record id="mrp_production_workorder_tree_view" model="ir.ui.view">
+        <field name="name">mrp.workorder.view.tree.inherit.manufacturing.timesheet</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='production_id']" position="after">
+                <field name="employee_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  Action for manufacturing timesheet-->
+    <record id="manufacturing_timesheet_action" model="ir.actions.act_window">
+        <field name="name">Timesheet</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'create': False}</field>
+        <field name="domain">[('is_manufacturing','=',True)]
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Timesheet
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="manufacturing_timesheet_menu_root"
+              name="Timesheet"
+              parent="mrp.menu_mrp_root"
+              sequence="23"/>
+
+    <menuitem id="manufacturing_timesheet_all_menu_root"
+              name="Timesheet"
+              parent="manufacturing_timesheet_menu_root"
+              action="manufacturing_timesheet_action"
+              sequence="5"/>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!--To show the amount in words on purchase report-->
+    <template id="purchase_report_view_amount_in_words"
+              inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <div class="mb-2">
+                <p class="text-end lh-sm" t-if="o.company_id.display_invoice_amount_total_words">
+                    Total Amount in Words: <br/>
+                    <small class="text-muted lh-sm"><span t-field="o.number_to_words"/></small>
+                </p>
+            </div>
+        </xpath>
+
+        <xpath expr="//p[@t-field='o.notes']" position="before">
+            <img t-if="o.qr" class="border border-dark rounded"
+                 t-att-src="image_data_uri(o.qr)"
+                 style="max-height: 180px;"/>
+        </xpath>
+    </template>
+
+    <!--To show the amount in words to the sales report-->
+    <template id="sale_report_view_amount_in_words"
+              inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@id='total']" position="after">
+            <div class="mb-2">
+                <p class="text-end lh-sm" t-if="doc.company_id.display_invoice_amount_total_words">
+                    Total Amount in Words: <br/>
+                    <small class="text-muted lh-sm"><span t-field="doc.number_to_words"/></small>
+                </p>
+            </div>
+        </xpath>
+    </template>
+</odoo>

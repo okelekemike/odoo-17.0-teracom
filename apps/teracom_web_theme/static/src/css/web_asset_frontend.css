@@ -1,0 +1,50 @@
+.breadcrumb-item + .breadcrumb-item::before {
+    content: var(--breadcrumb-divider, "|");
+}
+
+/* Mike Update */
+html ::-webkit-scrollbar,head ::-webkit-scrollbar,body ::-webkit-scrollbar,div ::-webkit-scrollbar,table ::-webkit-scrollbar,iframe ::-webkit-scrollbar {
+    height:6px !important;
+    width:6px !important;
+}
+
+html ::-webkit-scrollbar-track,
+head ::-webkit-scrollbar-track,
+body ::-webkit-scrollbar-track,
+div ::-webkit-scrollbar-track,
+table ::-webkit-scrollbar-track,
+iframe ::-webkit-scrollbar-track {
+    background:#f1f1f1 !important;
+}
+
+html ::-webkit-scrollbar-thumb,
+head ::-webkit-scrollbar-thumb,
+body ::-webkit-scrollbar-thumb,
+div ::-webkit-scrollbar-thumb,
+table ::-webkit-scrollbar-thumb,
+iframe ::-webkit-scrollbar-thumb {
+    background:#888 !important;
+}
+
+html ::-webkit-scrollbar-thumb:hover,
+head ::-webkit-scrollbar-thumb:hover,
+body ::-webkit-scrollbar-thumb:hover,
+div ::-webkit-scrollbar-thumb:hover,
+table ::-webkit-scrollbar-thumb:hover,
+iframe ::-webkit-scrollbar-thumb:hover {
+    background:#555 !important;
+}
+
+div.text-muted:has(a[title="odoo"]),
+.o_brand_promotion {
+    display: none !important;
+}
+
+.oe_website_login_container {
+    width: 500px;
+    height: calc(100% - 20px);
+    margin: 20px 30%;
+    padding: 20px;
+    background: #ffffff55;
+    border-radius: 10px;
+}

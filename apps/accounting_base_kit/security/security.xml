@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Record rule for Budget multi-company-->
+        <record id="budget_post_comp_rule" model="ir.rule">
+            <field name="name">Budget post multi-company</field>
+            <field name="model_id" ref="model_account_budget_post"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="budget_comp_rule" model="ir.rule">
+            <field name="name">Budget multi-company</field>
+            <field name="model_id" ref="model_budget_budget"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="budget_lines_comp_rule" model="ir.rule">
+            <field name="name">Budget lines multi-company</field>
+            <field name="model_id" ref="model_budget_lines"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="base.user_root" model="res.users">
+            <field eval="[(4,ref('analytic.group_analytic_accounting'))]" name="groups_id"/>
+        </record>
+        <record id="group_account_dashboard" model="res.groups">
+            <field name="name">Access to Accounting Dashboard</field>
+        </record>
+
+        <record id="account_asset_category_multi_company_rule" model="ir.rule">
+            <field name="name">Account Asset Category multi-company</field>
+            <field ref="model_account_asset_category" name="model_id"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
+        <record id="account_asset_asset_multi_company_rule" model="ir.rule">
+            <field name="name">Account Asset multi-company</field>
+            <field ref="model_account_asset_asset" name="model_id"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
+        <!--    Rename user group as Accountant    -->
+        <record id="account.group_account_user" model="res.groups">
+            <field name="name">Accountant</field>
+            <field name="implied_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="category_id" ref="base.module_category_accounting_accounting"/>
+        </record>
+
+        <!--    Rename user group as Chief Accountant    -->
+        <record id="account.group_account_manager" model="res.groups">
+            <field name="name">Chief Accountant</field>
+            <field name="implied_ids"
+                   eval="[(3, ref('account.group_account_invoice')), (4, ref('account.group_account_user'))]"/>
+            <field name="category_id" ref="base.module_category_accounting_accounting"/>
+        </record>
+
+        <!--    Loan Management    -->
+        <record id="account_loan_multi_company_rule" model="ir.rule">
+            <field name="name">Account Loan Multi-Company</field>
+            <field ref="model_account_loan" name="model_id" />
+            <field eval="True" name="global" />
+            <field name="domain_force">
+                ['|',('company_id','=',False),('company_id','in',company_ids)]
+            </field>
+        </record>
+
+        <!--User access for Payroll Community -->
+        <record model="ir.module.category"
+                id="module_category_hr_payroll_community">
+            <field name="name">Payroll</field>
+            <field name="description">Helps you manage your payrolls.</field>
+            <field name="sequence">16</field>
+        </record>
+        <record id="group_hr_payroll_community_user" model="res.groups">
+            <field name="name">Officer</field>
+            <field name="category_id"
+                   ref="accounting_base_kit.module_category_hr_payroll_community"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('hr.group_hr_user')), (4, ref('hr_contract.group_hr_contract_manager'))]"/>
+        </record>
+        <record id="group_hr_payroll_community_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id"
+                   ref="accounting_base_kit.module_category_hr_payroll_community"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('accounting_base_kit.group_hr_payroll_community_user'))]"/>
+            <field name="users"
+                   eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id"
+                   eval="[(4,ref('accounting_base_kit.group_hr_payroll_community_manager'))]"/>
+        </record>
+        <record id="hr_payroll_rule_officer" model="ir.rule">
+            <field name="name">Officer and subordinates Payslip</field>
+            <field name="model_id" ref="model_hr_payslip"/>
+            <field name="domain_force">['|','|', ('employee_id.user_id', '=',
+                user.id), ('employee_id.department_id', '=', False),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id)]
+            </field>
+            <field name="groups"
+                   eval="[(4, ref('accounting_base_kit.group_hr_payroll_community_user'))]"/>
+        </record>
+        <record id="hr_payslip_rule_manager" model="ir.rule">
+            <field name="name">All Payslip</field>
+            <field name="model_id" ref="model_hr_payslip"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups"
+                   eval="[(4, ref('accounting_base_kit.group_hr_payroll_community_manager'))]"/>
+        </record>
+        <record model="ir.rule" id="payroll_multi_company_rule">
+            <field name="name">Payroll multi company</field>
+            <field name="model_id" ref="model_hr_payslip"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False),
+                ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <!--To view their own record only-->
+        <record id="hr_resignation_rule_user" model="ir.rule">
+            <field name="name">Employee Resignation User</field>
+            <field name="model_id" ref="accounting_base_kit.model_hr_resignation"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <!--    Manager permission to view all record   -->
+        <record id="hr_resignation_rule_manager" model="ir.rule">
+            <field name="name">Employee Resignation Manager</field>
+            <field name="model_id" ref="accounting_base_kit.model_hr_resignation"/>
+            <field name="domain_force">
+                ['|',('employee_id.user_id','!=',user.id),('employee_id.user_id','=',False)]
+            </field>
+            <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        </record>
+        <!-- Access to their own contracts-->
+        <record id="hr_contract_rule_user" model="ir.rule">
+            <field name="name">Employee: Own Contracts</field>
+            <field name="model_id" ref="hr_contract.model_hr_contract"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Multi-company rule on the 'hr_loan' model -->
+        <record id="hr_loan_rule_company" model="ir.rule">
+            <field name="name">Loan Request Multi Company</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">
+                ['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+        <!-- Rule granting access to HR users to modify loan forms -->
+        <record id="hr_loan_rule_user" model="ir.rule">
+            <field name="name">Loan Forms Modification Accounts and Hr</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <!-- Rule allowing employees to modify their own loan records -->
+        <record id="hr_loan_rule_employee" model="ir.rule">
+            <field name="name">User: Modify own loan only</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]
+            </field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+        <record id="hr_loan_rule_manager" model="ir.rule">
+            <field name="name">Loan Forms Modification Accounts</field>
+            <field name="model_id" ref="model_hr_loan"/>
+            <field name="groups" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!--        Multi company rule for salary advance-->
+        <record id="rule_advance_salary_multi_company" model="ir.rule">
+            <field name="name">Advance Request Multi Company</field>
+            <field name="model_id" ref="model_salary_advance"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+        <!--        Rule for manager -->
+        <record id="hr_salary_advance_manager_rule" model="ir.rule">
+            <field name="name">Salary Advance</field>
+            <field name="model_id" ref="model_salary_advance"/>
+            <field name="groups" eval="[(4, ref('hr.group_hr_user')),(4, ref('account.group_account_user'))]"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        <!--         Rule for employee-->
+        <record id="hr_salary_advance_employee_rule" model="ir.rule">
+            <field name="name">Salary Advance Rule For Employee</field>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="global" eval="True"/>
+            <field name="model_id" ref="model_salary_advance"/>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Record rules for Bonus Request -->
+        <!-- Multi-company rule -->
+        <record id="bonus_request_rule_company" model="ir.rule">
+            <field name="name">Bonus Request Multi Company Rule</field>
+            <field name="model_id" ref="model_bonus_request"/>
+            <field name="domain_force">
+                ['|', ('company_id', '=', False),
+                ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <!-- Subscription Contract Company Rules Record -->
+        <record id="subscription_contract_company_rule" model="ir.rule">
+            <field name="name">Subscription Contract Company Rule</field>
+            <field ref="model_subscription_contracts" name="model_id"/>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
+        </record>
+
+        <!-- Created category for Receptionist-->
+        <record id="module_category_freight_management"
+                model="ir.module.category">
+            <field name="name">Freight</field>
+            <field name="sequence">0</field>
+            <field name="visible" eval="0"/>
+        </record>
+        <record id="group_freight" model="res.groups">
+            <field name="name">Freight Manager</field>
+            <field name="category_id" ref="module_category_freight_management"/>
+        </record>
+        <!-- Record rules for company-->
+        <record id="freight_order_rule_multi_company" model="ir.rule">
+            <field name="name">Freight order multi-company</field>
+            <field name="model_id" ref="model_freight_order"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_order_line_rule_multi_company" model="ir.rule">
+            <field name="name">Freight OrderLine multi-company</field>
+            <field name="model_id" ref="model_freight_order_line"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_port_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Port multi-company</field>
+            <field name="model_id" ref="model_freight_port"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_container_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Container multi-company</field>
+            <field name="model_id" ref="model_freight_container"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_price_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Price multi-company</field>
+            <field name="model_id" ref="model_freight_price"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_routes_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Routes multi-company</field>
+            <field name="model_id" ref="model_freight_routes"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_order_routes_line_rule_multi_company"
+                model="ir.rule">
+            <field name="name">Freight Order Routes Line multi-company</field>
+            <field name="model_id" ref="model_freight_order_routes_line"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_service_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Service multi-company</field>
+            <field name="model_id" ref="model_freight_service"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_service_line_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Service Line multi-company</field>
+            <field name="model_id" ref="model_freight_service_line"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_order_service_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Order Service multi-company</field>
+            <field name="model_id" ref="model_freight_order_service"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="custom_clearance_rule_multi_company" model="ir.rule">
+            <field name="name">Custom Clearance multi-company</field>
+            <field name="model_id" ref="model_custom_clearance"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="custom_clearance_line_rule_multi_company" model="ir.rule">
+            <field name="name">Custom Clearance Line multi-company</field>
+            <field name="model_id" ref="model_custom_clearance_line"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_track_rule_multi_company" model="ir.rule">
+            <field name="name">Freight Track multi-company</field>
+            <field name="model_id" ref="model_freight_track"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="freight_order_track_rule_multi_company" model="ir.rule">
+            <field name="name">Freight order Track multi-company</field>
+            <field name="model_id" ref="model_freight_order_track"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="clearance_revision_rule_multi_company" model="ir.rule">
+            <field name="name">Clearance revision multi-company</field>
+            <field name="model_id" ref="model_clearance_revision"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+        <record id="custom_clearance_revision_rule_multi_company"
+                model="ir.rule">
+            <field name="name">Custom Clearance Revision multi-company</field>
+            <field name="model_id" ref="model_custom_clearance_revision"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|', ('company_id', 'in', company_ids),
+                ('company_id', '=', False)]
+            </field>
+        </record>
+
+        <!-- Account Mass Reconcile  -->
+        <record id="mass_reconcile_rule" model="ir.rule">
+            <field name="name">Mass Reconcile Multi-Company</field>
+            <field name="model_id" ref="model_account_mass_reconcile" />
+            <field name="global" eval="True" />
+            <field
+                    name="domain_force"
+            >['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        </record>
+        <record id="mass_reconcile_history_rule" model="ir.rule">
+            <field name="name">Mass Reconcile History Multi-Company</field>
+            <field name="model_id" ref="model_mass_reconcile_history" />
+            <field name="global" eval="True" />
+            <field
+                    name="domain_force"
+            >['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        </record>
+        <record id="mass_reconcile_method_rule" model="ir.rule">
+            <field name="name">Mass Reconcile Method Multi-Company</field>
+            <field name="model_id" ref="model_account_mass_reconcile_method" />
+            <field name="global" eval="True" />
+            <field
+                    name="domain_force"
+            >['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        </record>
+
+        <record id="accounting_base_kit_comp_rule" model="ir.rule">
+            <field name="name">Account Follow-up multi company rule</field>
+            <field name="model_id" ref="model_followup_followup"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),
+                ('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="accounting_base_kit_stat_by_partner_comp_rule" model="ir.rule">
+            <field name="name">Account Follow-up Statistics by Partner Rule</field>
+            <field name="model_id" ref="model_followup_stat_by_partner"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),
+                ('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <!--    Module category for HR Appraisal user category-->
+        <record id="module_category_hr_appraisal" model="ir.module.category">
+            <field name="name">Appraisal</field>
+            <field name="description">Helps to evaluate employees...</field>
+            <field name="sequence">3</field>
+        </record>
+        <!--    Employee user group-->
+        <record id="oh_appraisal_group_employee" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="accounting_base_kit.module_category_hr_appraisal"/>
+        </record>
+        <!--    Manager user group-->
+        <record id="oh_appraisal_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="accounting_base_kit.module_category_hr_appraisal"/>
+            <field name="implied_ids" eval="[(4, ref('oh_appraisal_group_employee'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!--    Multi company rule of the model HR Appraisal-->
+        <record id="hr_appraisal_company_rule" model="ir.rule">
+            <field name="name">Hr Appraisal Multi Company Rule</field>
+            <field name="model_id" ref="model_hr_appraisal"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">
+                ['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
+        <!--    Rule for the user group employee in HR Appraisal-->
+        <record id="hr_appraisal_rule_employee" model="ir.rule">
+            <field name="name">HR Appraisal Employee Rule</field>
+            <field name="domain_force">[('creater_id','=',user.id)]</field>
+            <field name="global" eval="True"/>
+            <field name="model_id" ref="accounting_base_kit.model_hr_appraisal"/>
+            <field name="groups"
+                   eval="[(4,ref('accounting_base_kit.oh_appraisal_group_employee'))]"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!--    Rule for the user group manager in HR Appraisal-->
+        <record id="hr_appraisal_rule_manager" model="ir.rule">
+            <field name="name">HR Appraisal Manager Rule</field>
+            <field name="global" eval="True"/>
+            <field name="model_id" ref="accounting_base_kit.model_hr_appraisal"/>
+            <field name="groups"
+                   eval="[(4,ref('accounting_base_kit.oh_appraisal_group_manager'))]"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Employee Purchase Requisition   -->
+        <record id="employee_requisition" model="ir.module.category">
+            <field name="name">Purchase Requisition</field>
+            <field name="description">User access level for Material Request
+                module
+            </field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!--User groups-->
+        <record id="employee_requisition_user" model="res.groups">
+            <field name="name">Requisition Users</field>
+            <field name="category_id" ref="employee_requisition"/>
+        </record>
+
+        <record id="employee_requisition_head" model="res.groups">
+            <field name="name">Department Head</field>
+            <field name="category_id" ref="employee_requisition"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('accounting_base_kit.employee_requisition_user'))]"/>
+        </record>
+
+        <record id="employee_requisition_manager" model="res.groups">
+            <field name="name">Requisition Manager</field>
+            <field name="category_id" ref="employee_requisition"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('accounting_base_kit.employee_requisition_head'))]"/>
+        </record>
+
+        <!--Record rules-->
+        <record id="requisition_user_rule" model="ir.rule">
+            <field name="name">Requisition User Rule</field>
+            <field name="model_id" ref="model_employee_purchase_requisition"/>
+            <field name="domain_force">[('confirm_id', '=', user.id)]</field>
+            <field name="groups"
+                   eval="[(4, ref('accounting_base_kit.employee_requisition_user'))]"/>
+        </record>
+
+        <record id="department_head_rule" model="ir.rule">
+            <field name="name">Department Head Rule</field>
+            <field ref="model_employee_purchase_requisition" name="model_id"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups"
+                   eval="[(4, ref('accounting_base_kit.employee_requisition_head'))]"/>
+        </record>
+
+        <record id="requisition_manager_rule" model="ir.rule">
+            <field name="name">Requisition Manager Rule</field>
+            <field ref="model_employee_purchase_requisition" name="model_id"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups"
+                   eval="[(4, ref('accounting_base_kit.employee_requisition_manager'))]"/>
+        </record>
+
+        <record id="requisition_company_rule" model="ir.rule">
+            <field name="name">Purchase Requisition Company Rule</field>
+            <field ref="model_employee_purchase_requisition" name="model_id"/>
+            <field name="domain_force">[('company_id', '=', company_id)]</field>
+        </record>
+
+        <!--  HR Announcement Multi Company rule -->
+        <record id="hr_announcement_rule_company" model="ir.rule">
+            <field name="name">HR Announcement Multi Company</field>
+            <field name="model_id" ref="model_hr_announcement"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">
+                ['|',('company_id','=', False),('company_id','child_of',[user.company_id.id])]
+            </field>
+        </record>
+
+        <!--   Record rule for search history   -->
+        <record model="ir.rule" id="company_search_rule">
+            <field name="name">Company Search Rule</field>
+            <field name="model_id" ref="model_master_search"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+        </record>
+        <!--    Record rules for restrict search access    -->
+        <record model="ir.module.category" id="module_master_search">
+            <field name="name">Search Rights</field>
+            <field name="sequence">11</field>
+        </record>
+        <record id="master_search_read" model="res.groups">
+            <field name="name">Global Search</field>
+            <field name="comment">Global Search Group</field>
+        </record>
+
+        <!-- Module category for the module to add the security groups -->
+        <record id="module_employee_bonus_manager" model="ir.module.category">
+            <field name="name">Employee Bonus</field>
+            <field name="description">Access for Employee Bonus Module</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- The security groups for the module -->
+        <!-- The User group for creating bonus request -->
+        <record id="employee_bonus_manager_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_employee_bonus_manager"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- The Department Head group for validating bonus request -->
+        <record id="employee_bonus_manager_group_department" model="res.groups">
+            <field name="name">Department Head</field>
+            <field name="category_id" ref="module_employee_bonus_manager"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('employee_bonus_manager_group_user'))]"/>
+        </record>
+
+        <!-- The Manager group for approving bonus request -->
+        <record id="employee_bonus_manager_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_employee_bonus_manager"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('employee_bonus_manager_group_department'))]"/>
+            <field name="users"
+                   eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <!-- Add the default user to the security group User -->
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id"
+                   eval="[(4,ref('employee_bonus_manager_group_user'))]"/>
+        </record>
+
+        <!-- Module category for the module to add the security groups -->
+        <record id="module_employee_loan_manager" model="ir.module.category">
+            <field name="name">Employee Loans</field>
+            <field name="description">Access for Employee Loans Module</field>
+            <field name="sequence">51</field>
+        </record>
+
+        <!-- The security groups for the module -->
+        <!-- The User group for creating loan request -->
+        <record id="employee_loan_manager_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_employee_loan_manager"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- The Department Head group for validating loan request -->
+        <record id="employee_loan_manager_group_department" model="res.groups">
+            <field name="name">Department Head</field>
+            <field name="category_id" ref="module_employee_loan_manager"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('employee_loan_manager_group_user'))]"/>
+        </record>
+
+        <!-- The Manager group for approving loan request -->
+        <record id="employee_loan_manager_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_employee_loan_manager"/>
+            <field name="implied_ids"
+                   eval="[(4, ref('employee_loan_manager_group_department'))]"/>
+            <field name="users"
+                   eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <!-- Add the default user to the security group User -->
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id"
+                   eval="[(4,ref('employee_loan_manager_group_user'))]"/>
+        </record>
+
+        <!--    Category for managing the access for product price update-->
+        <record id="module_category_mass_price_update" model="ir.module.category">
+            <field name="name">Mass Price Update</field>
+            <field name="description">Helps to manage access to the mass price
+                update wizard
+            </field>
+        </record>
+
+        <!--    Group for Administrator-->
+        <record id="mass_price_update_group_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="comment">Access to the mass price update wizard menu
+            </field>
+            <field name="category_id"
+                   ref="module_category_mass_price_update"/>
+        </record>
+
+        <!--Employee Shift Schedule Rule-->
+        <record id="property_rule_hr_shift" model="ir.rule">
+            <field name="name">Hr Shift Multi Company</field>
+            <field name="model_id" ref="model_hr_shift_schedule"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="property_rule_hr_shift_generate" model="ir.rule">
+            <field name="name">Hr Shift Generate Multi Company</field>
+            <field name="model_id" ref="model_hr_shift_generate"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <!--  Employee Disciplinary Action Rule -->
+        <record id="disciplinary_action_employee" model="ir.rule">
+            <field name="name">Disciplinary Action Employee</field>
+            <field ref="model_disciplinary_action" name="model_id"/>
+            <field name="domain_force">[('employee_name.user_id.id','=',user.id)]
+            </field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+        <record id="disciplinary_action_manager" model="ir.rule">
+            <field name="name">Disciplinary Action Manager</field>
+            <field ref="model_disciplinary_action" name="model_id"/>
+            <field name="domain_force">[]</field>
+            <field name="groups" eval="[(4, ref('hr.group_hr_manager'))]"/>
+        </record>
+
+        <!-- Multi company Rule-->
+        <record id="report_balance_leave_rule_multi_company" model="ir.rule">
+            <field name="name">Time Off Balance Report: Multi Company Rule</field>
+            <field name="model_id" ref="model_report_balance_leave"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+
+        <!-- Pantry admin user group -->
+        <record id="group_pantry_admin" model="res.groups">
+            <field name="name">Pantry Admin</field>
+        </record>
+
+        <!-- Pantry admin rule -->
+        <record id="pantry_admin_rule" model="ir.rule">
+            <field name="name">Pantry Admin Rule</field>
+            <field name="model_id" ref="model_pantry_order"/>
+            <field name="domain_force">[]</field>
+            <field name="groups"
+                   eval="[(4, ref('accounting_base_kit.group_pantry_admin'))]"/>
+        </record>
+
+        <!-- Pantry user rule -->
+        <record id="pantry_users_rule" model="ir.rule">
+            <field name="name">Pantry User Rule</field>
+            <field name="model_id" ref="model_pantry_order"/>
+            <field name="domain_force">[('partner_id','=',user.partner_id.id)]</field>
+            <field name="groups"
+                   eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!--Account Move Reset Button-->
+        <record id="hide_reset_draft_button_group" model="res.groups">
+            <field name="name">Can Reset Account Move</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]" />
+        </record>
+
+    </data>
+</odoo>

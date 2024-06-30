@@ -1,0 +1,509 @@
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_accounting_base_kit" model="ir.ui.view">
+            <field name="name">res.config.view.inherited.base.accounting.kit</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="30"/>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='invoicing_settings']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="customer_credit_limit" on_change="1"/>
+                        </div>
+                        <div class="o_setting_right_pane" id="snailmail_settings">
+                            <label for="customer_credit_limit"/>
+                            <div class="text-muted">
+                                Enable credit limit for customers
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+
+                <!-- Remove the enterprise budget option -->
+
+                <xpath expr="//setting[@id='account_budget']" position="replace"/>
+                <xpath expr="//block[@id='bank_cash']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="use_anglo_saxon_accounting"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="use_anglo_saxon_accounting"/>
+                            <div class="text-muted">
+                                It will record the cost of good sold.
+                            </div>
+                        </div>
+                    </div>
+
+                </xpath>
+
+                <xpath expr="//app[@name='account']" position="inside">
+                    <h2>Payment Approval</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             title="Enables approval feature in payments."
+                             groups="account.group_account_manager">
+                            <div class="o_setting_left_pane">
+                                <field name="payment_approval"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="payment_approval"/>
+                                <div class="text-muted">
+                                    Enable to bring the approval in the payment.
+                                    Only account managers can approve the
+                                    request.
+                                </div>
+                                <div class="content-group"
+                                     invisible="payment_approval==False">
+                                    <div class="row">
+                                        <label string="Approver"
+                                               for="approval_user_id"
+                                               class="col-lg-3 o_light_label"/>
+                                        <field name="approval_user_id"
+                                               required="payment_approval==True"/>
+                                    </div>
+                                </div>
+                                <div class="content-group"
+                                     invisible="payment_approval==False">
+                                    <div class="row">
+                                        <label string="Amount"
+                                               for="approval_amount"
+                                               class="col-lg-3 o_light_label"/>
+                                        <field name="approval_amount"
+                                               required="payment_approval==True"/>
+                                    </div>
+                                    <div class="row">
+                                        <label string="Currency"
+                                               for="approval_currency_id"
+                                               class="col-lg-3 o_light_label"/>
+                                        <field name="approval_currency_id" options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+
+                <xpath expr="//block[@id='storno']" position="after">
+                    <h2>Loan Approval</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="loan_approve"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="loan_approve"/>
+                                <div class="text-muted">
+                                    Emploee loan approval from account manager
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <label for="loan_concurrent_count"/>
+                                    <div class="row mt8">
+                                        <field name="loan_concurrent_count"/>
+                                    </div>
+                                </div>
+                                <div class="text-muted">
+                                    Number of concurrent loans an employee can have.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+
+                <!-- Digitize bill from scanned documents -->
+                <xpath expr="//block[@id='account_vendor_bills']" position="inside">
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="digitize_bill">
+                        <div class="o_setting_left_pane">
+                            <field name="digitize_bill"/>
+                        </div>
+                        <div class="o_setting_right_pane"
+                             name="digitize_bill_right_pane">
+                            <label for="digitize_bill"/>
+                            <div class="text-muted">
+                                Digitize bill from scanned documents with .jpg, .jpeg or .png extension using OCR and Artificial Intelligence
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+        <!--    Window action for Payroll-->
+        <record id="action_open_payroll" model="ir.actions.act_window">
+            <field name="name">Payroll</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context"
+                   eval="{'search_default_category_id': ref('base.module_category_accounting_localizations'), 'search_default_name': 'Payroll'}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+        </record>
+        <!--    Form view of Settings-->
+        <record id="res_config_settings_view_form_payroll_inherit" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="45"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app name="payroll_community"
+                         data-string="Payroll"
+                         string="Payroll"
+                         data-key="payroll_community"
+                         logo="/accounting_base_kit/static/description/payroll-icon.png"
+                         groups="accounting_base_kit.group_hr_payroll_community_manager">
+                        <field name="module_l10n_fr_hr_payroll" invisible="1"/>
+                        <field name="module_l10n_be_hr_payroll" invisible="1"/>
+                        <field name="module_l10n_in_hr_payroll" invisible="1"/>
+                        <block title="Payroll Rules" name="payroll_community_setting_container">
+                            <div class="text-muted">
+                                Payroll rules that apply to your country
+                            </div>
+                            <div class="mt16" id="localization_text">
+                                <button name="%(action_open_payroll)d"
+                                        icon="fa-arrow-right" type="action"
+                                        string="Choose a Payroll Localization"
+                                        class="btn-link"/>
+                            </div>
+                        </block>
+                        <block title="Payroll Accounting" name="hr_payroll_accountant_setting_container">
+                            <setting id="hr_payroll_accountant"
+                                     string="Payroll Entries"
+                                     help="Post payroll slips in accounting">
+                                <field name="module_account_accountant"/>
+                            </setting>
+                        </block>
+                        <div class="row mt16 o_settings_container"
+                             id="hr_payroll_mail">
+                            <div class="col-lg-6 col-12 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="send_payslip_by_email"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="send_payslip_by_email"
+                                           string="Payroll Email Notification"/>
+                                    <div class="text-muted">
+                                        Automatically send Email with Payslip details On
+                                        Confirmation of Payslip.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt16 o_settings_container" id="hr_automatic_payroll">
+                            <div class="col-lg-6 col-12 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="generate_payslip"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Automatic Payroll" for="generate_payslip"/>
+                                    <div class="text-muted">
+                                        Automatic Generation of Payslip batches and Payslips
+                                    </div>
+                                    <div class="content-group" invisible="generate_payslip == False">
+                                        <group>
+                                            <field name="option" class="o_light_label"
+                                                   widget="radio" required="True"/>
+                                        </group>
+                                        <div class="text-muted" invisible="option in ['first','end']">
+                                            Note that, each month have either 30 or 31 days,
+                                            with the except for February,which had 29 days
+                                            and gained an extra day every fourth year.
+                                        </div>
+                                        <group col="2">
+                                            <field name="generate_day"
+                                                   invisible="option in ['first','end']"
+                                                   string="Day" type="object"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </app>
+                </xpath>
+                <xpath expr="//setting/field[@widget='upgrade_boolean']" position="attributes">
+                    <attribute name="widget">none</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+        <!--    Window action for Settings-->
+        <record id="res_config_settings_action_payroll_inherit" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'payroll_community'}</field>
+        </record>
+
+        <menuitem id="menu_hr_payroll_global_settings" name="Settings"
+                  parent="menu_hr_payroll_community_configuration"
+                  sequence="1"
+                  action="res_config_settings_action_payroll_inherit"
+                  groups="base.group_system"/>
+
+        <!--    Extended the Employee configuration settings to include notice_period configuration-->
+        <record id="res_config_settings_view_form_employee_updation" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.employee.updation</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="90"/>
+            <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//setting[@id='home_working_setting']" position="after">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="notice_period"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="notice_period"/>
+                            <div class="content-group" invisible="not notice_period">
+                                <div class="mt16">
+                                    <field name="no_of_days" style="width:50px;"/>
+                                    <span>days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+
+    <!--    Inherit the view of res.config.settings and add status and limit fields-->
+    <record id="res_config_settings_view_form_purchase" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.purchase.product.history
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='matrix_setting_container']" position="after">
+                <block title="Product Purchase History" name="purchase_product_history">
+                    <setting id="purchase_product_history_limit"
+                             string="Limit"
+                             help="Specify the limit to show of purchase history">
+                        <field name="po_limit"/>
+                    </setting>
+
+                    <setting id="purchase_product_history_status"
+                             string="Status"
+                             help="Specify the status of the purchase history order to show">
+                        <field name="po_status"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_config_settings_view_form_sale" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.sale.product.history
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='connectors_setting_container']" position="before">
+                <block title="Product Sales History" name="sale_product_history">
+                    <setting id="sale_product_history_limit"
+                             string="Limit"
+                             help="Specify the limit to show of sales history">
+                        <field name="so_limit"/>
+                    </setting>
+
+                    <setting id="sale_product_history_status"
+                             string="Status"
+                             help="Specify the status of the sales history order to show">
+                        <field name="so_status"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <!--    Adding fields in res.config.settings -->
+    <record id="res_config_settings_view_form_employee_late_checkin" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.employee.late.check.in</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//block[@name='overtime_settings']" position="after">
+                <block title="Late Check-In" id="employee_late_check_in">
+                    <setting id="deduction_amount" company_dependent="1"
+                             help="Amount to be deducted from payslip.
+                                (If Per Minutes is chosen then for each
+                                minute given amount is deducted,
+                                if Per Total is chosen then given amount is
+                                deducted from the payslip.)">
+                        <field name="deduction_amount" widget="monetary"/>
+                        <field name="deduction_type"/>
+                    </setting>
+                    <setting id="late_check_in_after" company_dependent="1"
+                             help="When should the late check-in count down starts.">
+                        <field name="late_check_in_after"/><span>Minutes</span>
+                    </setting>
+                    <setting id="maximum_minutes" company_dependent="1"
+                             help="Maximum time limit a employee was considered as late.">
+                        <field name="maximum_minutes"/><span>Minutes</span>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+    <!--Inherit res_config_settings_view_form for adding 'Print Bills'
+    and 'Confirm RFQ' boolean fields-->
+    <record id="res_config_settings_view_form_sale_purchase_automated" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.sale.purchase.automated
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='purchase']" position="inside">
+                <h2>Automate Orders</h2>
+                <div class="row mt16 o_settings_container"
+                     name="purchase_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_purchase"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_purchase"/>
+                            <div class="text-muted">
+                                Confirm RFQ to Purchase Order
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_bills"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_bills"/>
+                            <div class="text-muted">
+                                Create Bills for Purchase Order
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_print_bills"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_print_bills"/>
+                            <div class="text-muted">
+                                Print Bills for Purchase Order
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <!--xpath to res_config_settings_view_form of sales for adding 'Print Invoices',
+            'Confirm Quotation','Create Invoice' and 'Validate Invoice' boolean fields-->
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <h2>Automate Orders</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_sale"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_sale"/>
+                            <div class="text-muted">
+                                Confirm Quotation to Sales Order
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_invoice"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_invoice"/>
+                            <div class="text-muted">
+                                Create Invoices for Sales Order
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_validate_invoice"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_validate_invoice"/>
+                            <div class="text-muted">
+                                Validate Invoices for Sales Order
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="automate_print_invoices"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automate_print_invoices"/>
+                            <div class="text-muted">
+                                Print Invoices for Sales Order
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- POS Order Default Customer -->
+    <record id="custom_bi_pos_default_customer_form_view" model="ir.ui.view">
+        <field name="name">res.config.setting.form.default.customer.view</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     title="Default customer is set in POS Order."
+                     id="pos_default_customer_id" >
+                    <div class="o_setting_right_pane">
+                        <div>
+                            <label string="Default Customer" for="pos_res_partner_id"/>
+                            <div class="text-muted"> Set Default Customer on POS Order. </div>
+                            <div class="content-group mt16">
+                                <field name="pos_res_partner_id" colspan="4" nolabel="1"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  HR Contract Reminder  -->
+    <record id="res_config_settings_view_form_hr_contract" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.hr.contract</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@data-string='Employees']" position="inside">
+                <block title="Contract Reminder">
+                    <setting id="contract_expiration_reminder">
+                        <field name="contract_expiration_reminder"/>
+                    </setting>
+                    <setting id="hr_manager_contract_id">
+                        <field name="hr_manager_contract_id" widget="many2one_avatar_user" />
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

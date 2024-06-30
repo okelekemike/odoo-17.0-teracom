@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Freight order tree view-->
+    <record id="freight_order_view_tree" model="ir.ui.view">
+        <field name="name">freight.order.view.tree</field>
+        <field name="model">freight.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="transport_type"/>
+            </tree>
+        </field>
+    </record>
+    <!--Freight order form view-->
+    <record id="freight_order_view_form" model="ir.ui.view">
+        <field name="name">freight.order.view.form</field>
+        <field name="model">freight.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_create_custom_clearance"
+                            string="Custom Clearance" type="object"
+                            class="oe_highlight"
+                            data-hotkey="w"
+                            invisible="clearance == 'True'"/>
+                    <button name="action_submit" string="Submit"
+                            type="object" class="oe_highlight"
+                            data-hotkey="w" invisible="state != 'draft'"/>
+                    <button name="action_confirm" string="Confirm"
+                            type="object" class="oe_highlight"
+                            data-hotkey="w" invisible="state != 'submit'"/>
+                    <button name="action_create_invoice" string="Invoice"
+                            type="object" class="oe_highlight"
+                            data-hotkey="w" invisible="state != 'confirm'"/>
+                    <button name="action_track_order" string="Tracking"
+                            type="object" class="oe_highlight"
+                            invisible="state not in ('confirm', 'invoice')"
+                            data-hotkey="w"/>
+                    <button name="action_done" string="Done" type="object"
+                            class="oe_highlight"
+                            invisible="state not in ('confirm', 'invoice')"
+                            data-hotkey="w"/>
+                    <button name="action_cancel" string="Cancel"
+                            type="object"
+                            invisible="state not in ('draft', 'submit', 'confirm', 'invoice')"
+                            data-hotkey="w"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submit,confirm"
+                           readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="get_custom_clearance"
+                                icon="fa-id-card-o">
+                            <field string="Clearance" name="clearance_count"
+                                   widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="get_invoice"
+                                icon="fa-pencil-square-o">
+                            <field string="Invoice" name="invoice_count"
+                                   widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1 class="mt0">
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="shipper_id"/>
+                            <field name="consignee_id"/>
+                            <field name="order_date"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="clearance" invisible="1"/>
+                            <field name="type"/>
+                            <field name="transport_type"/>
+                            <field name="land_type"
+                                   invisible="transport_type != 'land'"/>
+                            <field name="water_type"
+                                   invisible="transport_type != 'water'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="loading_port_id"/>
+                        </group>
+                        <group>
+                            <field name="discharging_port_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="agent_id"/>
+                        </group>
+                        <group>
+                            <field name="expected_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order">
+                            <field name="order_ids">
+                                <tree string="Order Lines"
+                                      editable="bottom">
+                                    <field name="container_id"/>
+                                    <field name="product_id"/>
+                                    <field name="billing_type"/>
+                                    <field name="pricing_id"/>
+                                    <field name="volume"
+                                           invisible="billing_type != 'volume'"/>
+                                    <field name="weight"
+                                           invisible="billing_type != 'weight'"/>
+                                    <field name="price"/>
+                                    <field name="total_price"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right"
+                                   colspan="2">
+                                <div class="oe_inline o_td_label">
+                                    <label for="total_volume"/>
+                                </div>
+                                <field name="total_volume" nolabel="1"/>
+                                <div class="oe_inline o_td_label">
+                                    <label for="total_weight"/>
+                                </div>
+                                <field name="total_weight" nolabel="1"/>
+                                <div class="oe_inline o_td_label">
+                                    <label for="total_order_price"/>
+                                </div>
+                                <field name="total_order_price"
+                                       nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Routes">
+                            <field name="route_ids">
+                                <tree string="Routes" editable="bottom">
+                                    <field name="routes_id"/>
+                                    <field name="source_loc_id"/>
+                                    <field name="destination_loc_id"/>
+                                    <field name="transport_type"/>
+                                    <field name="sale"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right"
+                                   colspan="2">
+                                <div class="oe_inline o_td_label">
+                                    <label for="total_route_sale"/>
+                                </div>
+                                <field name="total_route_sale" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Services">
+                            <field name="service_ids">
+                                <tree string="Services" editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="service_id"/>
+                                    <field name="qty"/>
+                                    <field name="sale"/>
+                                    <field name="total_sale"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right"
+                                   colspan="2">
+                                <div class="oe_inline o_td_label">
+                                    <label for="total_service_sale"/>
+                                </div>
+                                <field name="total_service_sale"
+                                       nolabel="1"/>
+                            </group>
+                        </page>
+                        <page string="Track">
+                            <field name="track_ids">
+                                <tree string="Services" editable="bottom"
+                                      create="0">
+                                    <field name="source_loc_id"/>
+                                    <field name="destination_loc_id"/>
+                                    <field name="transport_type"/>
+                                    <field name="date"/>
+                                    <field name="type"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Action for freight order-->
+    <record id="freight_order_action" model="ir.actions.act_window">
+        <field name="name">Freight Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new freight order
+            </p>
+        </field>
+    </record>
+    <!--Defined menus-->
+    <menuitem id="freight_order_menu_root" name="Freights"
+              parent="stock.menu_stock_root"
+              sequence="14"/>
+    <menuitem id="freight_order_menu_shipping" name="Shipping"
+              parent="freight_order_menu_root" sequence="2"
+              action="freight_order_action"/>
+
+    <!--    Tree view of freight port-->
+    <record id="freight_port_view_tree" model="ir.ui.view">
+        <field name="name">freight.port.view.tree</field>
+        <field name="model">freight.port</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Form view of freight port-->
+    <record id="freight_port_view_form" model="ir.ui.view">
+        <field name="name">freight.port.view.form</field>
+        <field name="model">freight.port</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="land"/>
+                            <field name="air"/>
+                            <field name="water"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Search view of freight port-->
+    <record id="freight_port_view_search" model="ir.ui.view">
+        <field name="name">freight.port.view.search</field>
+        <field name="model">freight.port</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Inactive" name="inactive"
+                        domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+    <!--    Action for freight port-->
+    <record id="freight_port_action" model="ir.actions.act_window">
+        <field name="name">Freight Port</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.port</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new freight port
+            </p>
+        </field>
+    </record>
+    <!--    Freight price tree view-->
+    <record id="freight_price_view_tree" model="ir.ui.view">
+        <field name="name">freight.price.view.tree</field>
+        <field name="model">freight.price</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="volume"/>
+                <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Form view of freight price-->
+    <record id="freight_price_view_form" model="ir.ui.view">
+        <field name="name">freight.price.view.form</field>
+        <field name="model">freight.price</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="weight"/>
+                        </group>
+                        <group>
+                            <field name="volume"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Action for freight price-->
+    <record id="freight_price_action" model="ir.actions.act_window">
+        <field name="name">Freight Price</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.price</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new freight price
+            </p>
+        </field>
+    </record>
+    <!--Freight routes tree view-->
+    <record id="freight_routes_view_tree" model="ir.ui.view">
+        <field name="name">freight.routes.view.tree</field>
+        <field name="model">freight.routes</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--Freight price form view-->
+    <record id="freight_routes_view_form" model="ir.ui.view">
+        <field name="name">freight.rotes.view.form</field>
+        <field name="model">freight.routes</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="land_sale"/>
+                            <field name="air_sale"/>
+                            <field name="water_sale"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Action for freight routes-->
+    <record id="action_freight_routes" model="ir.actions.act_window">
+        <field name="name">Freight Routes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.routes</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new freight routes
+            </p>
+        </field>
+    </record>
+    <!--    Defined Menu item-->
+    <menuitem id="menu_configuration" name="Freight Management" sequence="210"
+              parent="stock.menu_stock_config_settings"/>
+    <menuitem id="menu_freight_port" name="Ports"
+              parent="menu_configuration" sequence="2"
+              action="freight_port_action"/>
+    <menuitem id="menu_freight_price" name="Pricing List"
+              parent="menu_configuration" sequence="2"
+              action="freight_price_action"/>
+    <menuitem id="menu_freight_routes" name="Route Operations"
+              parent="menu_configuration" sequence="2"
+              action="action_freight_routes"/>
+
+    <!--Tree view for freight container-->
+    <record id="freight_container_view_tree" model="ir.ui.view">
+        <field name="name">freight.container.view.tree</field>
+        <field name="model">freight.container</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+    <!--Form view of the freight container-->
+    <record id="freight_container_form_view" model="ir.ui.view">
+        <field name="name">freight.container.form.view</field>
+        <field name="model">freight.container</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" readonly="1"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="size"/>
+                            <field name="weight"/>
+                            <field name="volume"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                            <field name="size_uom_id"/>
+                            <field name="weight_uom_id"/>
+                            <field name="volume_uom_id"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Search view of the freight container-->
+    <record id="freight_container_view_search" model="ir.ui.view">
+        <field name="name">freight.container.view.search</field>
+        <field name="model">freight.container</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Inactive" name="inactive"
+                        domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+    <!--    Action-->
+    <record id="freight_container_action" model="ir.actions.act_window">
+        <field name="name">Freight Container</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.container</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new freight container
+            </p>
+        </field>
+    </record>
+
+    <!--    Tree view of the custom clearance-->
+    <record id="custom_clearance_view_tree" model="ir.ui.view">
+        <field name="name">custom.clearance.view.tree</field>
+        <field name="model">custom.clearance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="freight_id"/>
+            </tree>
+        </field>
+    </record>
+    <!--Form view of the custom clearance-->
+    <record id="custom_clearance_view_form" model="ir.ui.view">
+        <field name="name">custom.clearance.view.form</field>
+        <field name="model">custom.clearance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_revision" string="Revision"
+                            type="object" class="oe_highlight"
+                            invisible="state != 'confirm'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirm" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                                name="action_get_revision"
+                                icon="fa-id-card-o" string="Revision">
+                        </button>
+                    </div>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="freight_id"/>
+                            <field name="date"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="agent_id"/>
+                            <field name="loading_port_id"/>
+                            <field name="discharging_port_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Custom Clearance">
+                            <field name="line_ids">
+                                <tree string="Order Lines" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="document"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--Action for custom clearance-->
+    <record id="custom_clearance_action" model="ir.actions.act_window">
+        <field name="name">Custom Clearance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.clearance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new custom clearance
+            </p>
+        </field>
+    </record>
+    <!--    Menu for Custom Clearance-->
+    <menuitem id="custom_clearance_menu_root" name="Custom"
+              parent="freight_order_menu_root"
+              sequence="2"/>
+    <menuitem id="custom_clearance_menu" name="Custom Clearance"
+              parent="custom_clearance_menu_root" sequence="2"
+              action="custom_clearance_action"/>
+
+    <!--    Tree view of freight service-->
+    <record id="freight_service_view_tree" model="ir.ui.view">
+        <field name="name">freight.service.view.tree</field>
+        <field name="model">freight.service</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="sale_price"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Form view of freight service-->
+    <record id="freight_service_view_form" model="ir.ui.view">
+        <field name="name">freight.service.view.form</field>
+        <field name="model">freight.service</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="sale_price"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Vendors">
+                            <field name="line_ids">
+                                <tree string="Vendors" editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="sale"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Action for freight service-->
+    <record id="freight_service_action" model="ir.actions.act_window">
+        <field name="name">Freight Service</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.service</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new freight service
+            </p>
+        </field>
+    </record>
+    <!--Menu for freight service-->
+    <menuitem id="freight_container_menu_root" name="Container"
+              parent="menu_configuration" sequence="2"
+              action="freight_container_action"/>
+    <menuitem id="menu_freight_service" name="Services"
+              parent="menu_configuration" sequence="2"
+              action="freight_service_action"/>
+
+    <!--    Form view of freight order track-->
+    <record id="freight_order_track_view_form" model="ir.ui.view">
+        <field name="name">freight.order.track.view.form</field>
+        <field name="model">freight.order.track</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="freight_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="destination_loc_id"/>
+                        </group>
+                        <group>
+                            <field name="transport_type"/>
+                            <field name="source_loc_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_order_submit" string="Submit"
+                            type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!--    Action for order track-->
+    <record id="order_track_action" model="ir.actions.act_window">
+        <field name="name">Track Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">freight.order.track</field>
+        <field name="view_mode">form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new track order
+            </p>
+        </field>
+    </record>
+</odoo>

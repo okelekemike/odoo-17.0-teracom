@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="default_walk_in_partner" model="res.partner">
+            <field name="name">Walk-IN Customer</field>
+            <field name="is_company">0</field>
+            <field name="phone">+2348000000001</field>
+            <field name="mobile">+2348000000002</field>
+            <field name="email">walkin@company.com</field>
+            <field name="country_id" ref="base.ng"/>
+            <field name="state_id" ref='state_ng_fc'/>
+            <field name="city_id" ref='lcda_fc_2'/>
+            <field name="zip">900108</field>
+            <field name="image_1920" type="base64"
+                   file="accounting_base_kit/static/description/default_customer_icon.png"/>
+        </record>
+    </data>
+</odoo>

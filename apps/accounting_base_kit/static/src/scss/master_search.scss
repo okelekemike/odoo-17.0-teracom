@@ -1,0 +1,60 @@
+.oe_search_tab{
+    cursor: pointer;
+    transition: .2s;
+    &:hover {
+        background-color: #714B6761 !important;
+    }
+}
+.oe_details_tree{
+    display: none;
+}
+
+.oe_details_tree--show{
+    display: block !important;
+}
+
+.btn_master_search{
+    display: inline-block !important;
+    background-color: #714B67FF !important;
+    color: #fff !important;
+    margin-left: 1px;
+    margin-top: -1px;
+}
+.btn_master_search:hover{
+    background-color: rgb(255, 255, 255) !important;
+    color: rgb(61, 155, 187) !important;
+}
+.not-allowed{
+    color: #d94242;
+    border: 1px solid #ea9292;
+    border-radius: 5px;
+    background-color: #f9e7e7;
+    padding: 1px 55px;
+    width: 370px;
+    margin-bottom: 5px;
+    display: none;
+}
+
+.btn_w_6 {
+    width: 6% !important;
+    font-size: 18px;
+}
+
+.fa-chevron-down--up:before {
+    content: "\f077" !important;
+}
+
+.style_shift{
+    color: black !important;
+    font-size: 15px;
+    text-align: center;
+    padding: 10px 0px 2px 3px;
+}
+
+.o_kanban_view.o_kanban_dashboard.o_shift_kanban {
+
+    .oe_kanban_content{
+        padding-top: 50px!important;
+    }
+
+}

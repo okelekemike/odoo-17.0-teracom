@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Paper Format for thermal invoice report-->
+        <record id="paperformat_thermal_paper" model="report.paperformat">
+            <field name="name">Thermal Paper</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">280</field>
+            <field name="page_width">75</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">110</field>
+        </record>
+    </data>
+    <!--purchase requisition report-->
+    <record id="action_report_purchase_requisition" model="ir.actions.report">
+        <field name="name">Material Purchase Requisition Report</field>
+        <field name="model">employee.purchase.requisition</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_base_kit.report_purchase_requisition</field>
+        <field name="report_file">accounting_base_kit.report_purchase_requisition</field>
+    </record>
+    <record id="action_report_thermal_purchase_requisition" model="ir.actions.report">
+        <field name="name">Material Purchase Requisition Report</field>
+        <field name="model">employee.purchase.requisition</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_base_kit.report_thermal_purchase_requisition</field>
+        <field name="report_file">accounting_base_kit.report_thermal_purchase_requisition</field>
+        <field name="paperformat_id" ref="paperformat_thermal_paper"/>
+    </record>
+</odoo>

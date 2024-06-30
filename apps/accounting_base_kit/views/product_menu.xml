@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+	<!--    Form view of Settings-->
+	<record id="res_config_settings_view_form_product_inherit" model="ir.ui.view">
+		<field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
+		<field name="model">res.config.settings</field>
+		<field name="priority" eval="5"/>
+		<field name="inherit_id" ref="base.res_config_settings_view_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//form" position="inside">
+				<app name="product_community"
+					 data-string="Products"
+					 string="Products"
+					 data-key="product_community"
+					 logo="/accounting_base_kit/static/description/product_icon.png"
+					 groups="base.group_system">
+					<block title="Product Barcodes Generator">
+						<setting id="auto_generate_barcode"
+								 help="Auto Generate Barcodes for New Products.">
+							<field name="auto_generate_barcode"/>
+						</setting>
+					</block>
+					<block title="Product Internal Reference Generator">
+						<setting id="auto_generate_internal_ref"
+								 help="Auto Generate Internal Reference for New Products.">
+							<field name="auto_generate_internal_ref"/>
+						</setting>
+
+						<div class="col-12 col-lg-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="product_name_config"/>
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="product_name_config"/>
+								<div class="text-muted">
+									Product Name Configuration.
+								</div>
+								<div class="content-group" invisible="not product_name_config">
+									<div class="row mt16" id="pro_name_digit">
+										<label for="pro_name_digit" string="Product Name Digit" class="col-lg-3"/>
+										<field name="pro_name_digit"/>
+									</div>
+									<div class="row mt16" id="pro_name_separator">
+										<label for="pro_name_separator" string="Product Name Separator" class="col-lg-3"/>
+										<field name="pro_name_separator"/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-lg-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="pro_template_config"/>
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="pro_template_config"/>
+								<div class="text-muted">
+									Product Attribute Configuration.
+								</div>
+								<div class="content-group" invisible="not pro_template_config">
+									<div class="row mt16" id="pro_template_digit">
+										<label for="pro_template_digit" string="Attribute Name Digit" class="col-lg-3"/>
+										<field name="pro_template_digit"/>
+									</div>
+									<div class="row mt16" id="pro_template_separator">
+										<label for="pro_template_separator" string="Attribute Name Separator" class="col-lg-3"/>
+										<field name="pro_template_separator"/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-lg-6 o_setting_box">
+							<div class="o_setting_left_pane">
+								<field name="pro_categ_config"/>
+							</div>
+							<div class="o_setting_right_pane">
+								<label for="pro_categ_config"/>
+								<div class="text-muted">
+									Product Category Name Configuration.
+								</div>
+								<div class="content-group" invisible="not pro_categ_config">
+									<div class="row mt16" id="pro_categ_digit">
+										<label for="pro_categ_digit" string="Product Category Name Digit" class="col-lg-3"/>
+										<field name="pro_categ_digit"/>
+									</div>
+									<div class="row mt16" id="pro_categ_separator">
+										<label for="pro_categ_separator" string="Product Category Name Separator" class="col-lg-3"/>
+										<field name="pro_categ_separator"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</block>
+				</app>
+			</xpath>
+		</field>
+	</record>
+	<!--    Window action for Settings-->
+	<record id="res_config_settings_action_product_inherit" model="ir.actions.act_window">
+		<field name="name">Settings</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.config.settings</field>
+		<field name="view_mode">form</field>
+		<field name="target">inline</field>
+		<field name="context">{'module' : 'product_community'}</field>
+	</record>
+    <menuitem
+        id="menu_main"
+        sequence="22"
+        name="Products"
+        web_icon="accounting_base_kit,static/description/product_icon.png"
+        groups="base.group_user"
+    >
+	    <menuitem
+	        id="menu_product_template"
+	        sequence="5"
+	        name="Products"
+	        action="product.product_template_action_all"
+	    />
+	    <menuitem
+	        id="menu_product_product"
+	        sequence="10"
+	        name="Variants"
+	        action="product.product_normal_action"
+            groups="product.group_product_variant"
+	    />
+	    <menuitem
+	        id="menu_pricelists"
+	        sequence="50"
+	        name="Pricelists"
+	    >
+            <menuitem 
+            	id="menu_product_pricelist"
+                sequence="10"
+                name="Sales Pricelists"
+                action="product.product_pricelist_action2"
+                groups="product.group_product_pricelist"
+      		/>
+            <menuitem 
+            	id="menu_product_supplierinfo"
+                sequence="10"
+                name="Vendor Pricelists"
+                action="product.product_supplierinfo_type_action"
+      		/>
+    	</menuitem>
+	    <menuitem
+	        id="menu_product_configuration"
+	        sequence="80"
+	        name="Configuration"
+	    >
+	        <menuitem
+	            id="menu_product_configuration_settings"
+	            sequence="5"
+	            name="Settings"
+	            action="res_config_settings_action_product_inherit"
+	            groups="base.group_system"
+			/>
+		    <menuitem
+		        id="menu_configuration_product"
+		        sequence="10"
+		        name="Products"
+		    >
+			    <menuitem
+			        id="menu_product_category"
+			        sequence="5"
+			        name="Product Categories"
+			        action="product.product_category_action_form"
+			    />
+			    <menuitem
+			        id="menu_product_tag"
+			        sequence="10"
+			        name="Product Tags"
+			        action="product.product_tag_action"
+			    />
+                <menuitem 
+                	id="menu_product_attribute"
+                    sequence="15"
+			        name="Product Attributes"
+                    action="product.attribute_action"
+                    groups="product.group_product_variant"
+               />
+	    	</menuitem>
+		    <menuitem
+		        id="menu_configuration_logistics"
+		        sequence="15"
+		        name="Logistics"
+        		groups="uom.group_uom,product.group_stock_packaging"
+		    >
+			    <menuitem 
+			    	id="menu_uom_category"
+	                sequence="50"
+	                name="Units of Measure"
+	                action="uom.product_uom_categ_form_action"
+	                groups="uom.group_uom"
+	       		/>
+			    <menuitem 
+			    	id="menu_product_packaging" 
+			        sequence="10"
+			    	name="Product Packagings" 
+			    	action="product.action_packaging_view" 
+			    	groups="product.group_stock_packaging"
+			    />
+				<menuitem
+						  id="menu_production_lot_form"
+						  action="stock.action_production_lot_form"
+						  groups="stock.group_production_lot"
+						  sequence="8"/>
+	    	</menuitem>
+	    </menuitem>
+    </menuitem>
+
+</odoo>
+

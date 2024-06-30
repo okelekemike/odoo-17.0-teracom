@@ -1,0 +1,39 @@
+.report-filter-button {
+	background-color: #dfdada;
+	border: 0.1px solid #f4efef;
+	padding: 2px;
+	margin-top: 2px;
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+.btn-report-print {
+	color: #17a2b8;
+	font-weight: 700;
+}
+
+.filter,
+.comparison_range,
+.journals_filter,
+.accounts_filter,
+.analytic_filter,
+.search_Target_move {
+	padding: 0 5px;
+}
+
+.table_view_dfr,
+.table_main_view {
+	padding:0 10px;
+}
+
+div.input-group.date {
+	justify-content: center;
+}
+
+div.list-group label {
+	padding: 4px 15px
+}
+
+span.dropdown-menu.show, .dropdown-menu.journals.show {
+	text-align:center;
+}

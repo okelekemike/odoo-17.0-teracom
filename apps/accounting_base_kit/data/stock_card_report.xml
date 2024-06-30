@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="paperformat_stock_card" model="report.paperformat">
+        <field name="name">Stock Card A4</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">28</field>
+        <field name="margin_bottom">28</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">24</field>
+        <field name="dpi">110</field>
+    </record>
+
+    <record id="action_stock_card_report_pdf" model="ir.actions.report">
+        <field name="name">Stock Card PDF</field>
+        <field name="model">report.stock.card.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_base_kit.report_stock_card_report_pdf</field>
+        <field name="report_file">accounting_base_kit.report_stock_card_report_pdf</field>
+        <field name="print_report_name">'Stock Card Report - [%s]' % (object.location_id.complete_name)</field>
+        <field name="paperformat_id" ref="accounting_base_kit.paperformat_stock_card" />
+    </record>
+</odoo>

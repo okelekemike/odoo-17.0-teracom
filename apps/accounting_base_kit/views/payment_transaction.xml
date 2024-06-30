@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_transaction_form" model="ir.ui.view">
+        <field name="name">fonepay.payment.transaction.form.inherit</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group name="transaction_logs" string="Logs">
+                    <field name="transaction_logs" nolabel="1" colspan="2">
+                        <tree create="false" 
+                                decoration-info="level=='info'"
+                                decoration-warning="level=='warning'"
+                                decoration-danger="level=='error'">
+                            <field name="level"/>
+                            <field name="summary"/>
+                            <field name="create_date"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_image_suggestion,product.image.suggestion,model_product_image_suggestion,base.group_user,1,1,1,1
+
+access_hr_employee_checklist_user,access.employee.checklist.user,model_employee_checklist,hr.group_hr_user,1,1,1,1
+access_hr_employee_checklist_emp,access.employee.checklist.emp,model_employee_checklist,base.group_user,1,1,1,0
+access_hr_employee_document_employee,access.hr.employee.document.employee,model_hr_employee_document,base.group_user,1,0,0,0
+access_hr_employee_document_manager,access.hr.employee.document.manager,model_hr_employee_document,hr.group_hr_manager,1,1,1,1
+access_hr_employee_document_user,access.hr.employee.document.user,model_hr_employee_document,hr.group_hr_user,1,1,1,0
+access_hr_document_employee,access.hr.document.employee,model_hr_document,base.group_user,1,0,0,0
+access_hr_document_manager,access.hr.document.manager,model_hr_document,hr.group_hr_manager,1,1,1,1
+access_hr_document_user,access.hr.document.user,model_hr_document,hr.group_hr_user,1,1,1,0
+access_document_type_manager,access.document.type,model_document_type,hr.group_hr_manager,1,1,1,1
+
+access_res_users_pass_history,access_res_users_pass_history,model_res_users_pass_history,base.group_user,1,0,1,0
+access_res_users_pass_history_portal,access_res_users_pass_history portal,model_res_users_pass_history,base.group_portal,1,0,1,0
+
+access_db_backup_configure_user,access.db.backup.configure.user,model_db_backup_configure,base.group_user,1,1,1,1
+access_dropbox_auth_code_user,access.dropbox.auth.code.user,model_dropbox_auth_code,base.group_user,1,1,1,1
+
+access_change_bulk_password_user,access_change_bulk_password_user,model_change_bulk_password_user,,1,1,1,1
+
+access_translation_helper,access.translation.helper,model_translation_helper,base.group_user,1,1,1,1

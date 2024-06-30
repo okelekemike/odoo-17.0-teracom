@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Scheduled action for Employee data expiration -->
+    <record id="ir_con_employee_data_reminder" model="ir.cron">
+        <field name="name">HR Employee Data Expiration</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="state">code</field>
+        <field name="code">model.expiry_mail_reminder()</field>
+    </record>
+
+    <!--  Scheduled cron job for managing Employee Resignation-->
+    <record id="ir_cron_employee_resignation" model="ir.cron">
+        <field name="name">HR Resignation: Update Employee Status</field>
+        <field name="model_id" ref="model_hr_resignation"/>
+        <field name="state">code</field>
+        <field name="code">model.update_employee_status()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall"/>
+    </record>
+
+    <!--  Scheduled cron job for managing HR announcement's expiry dates.-->
+    <record id="ir_cron_hr_announcement_expiry_date" model="ir.cron">
+        <field name="name">HR Announcement Expiry Date</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_hr_announcement"/>
+        <field name="state">code</field>
+        <field name="code">model.get_expiry_state()</field>
+    </record>
+
+    <record id="ir_cron_auto_reminder_hr_contract" model="ir.cron">
+        <field name="name">Contract: Auto Reminder Contract</field>
+        <field name="model_id" ref="model_hr_contract" />
+        <field name="state">code</field>
+        <field name="code">model._cron_auto_reminder_hr_contract()</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+        <field eval="False" name="doall" />
+    </record>
+
+    <data noupdate="1">
+        <!--send weekly statement report to partners-->
+        <record id="ir_cron_weekly_statement_report" model="ir.cron">
+            <field name="name">Weekly Statement Report</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_week_statement_report()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:00:00')"/>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <!--send monthly statement report to partners-->
+        <record id="ir_cron_monthly_statement_report" model="ir.cron">
+            <field name="name">Monthly Statement Report</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_month_statement_report()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="nextcall" eval="(DateTime.now() + relativedelta(day=1, months=1)).strftime('%Y-%m-%d 04:30:00')" />
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <!-- Cron Job for automatic state change of contracts -->
+        <record id="ir_cron_scheduler_recurring_action" model="ir.cron">
+            <field name="name">Subscription Contract State Change</field>
+            <field name="model_id" ref="model_subscription_contracts"/>
+            <field name="state">code</field>
+            <field name="code">model.subscription_contract_state_change()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall">1</field>
+        </record>
+    </data>
+    <data noupdate="0">
+        <!--The daily function late_check_in_records verifies whether employees are tardy.-->
+        <record forcecreate="True" id="ir_cron_late_check_in" model="ir.cron">
+            <field name="name">Attendance: Late Check-In</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="state">code</field>
+            <field name="code">model.late_check_in_records()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+
+        <!--Stock Lot: Check and Archive-->
+        <record id="ir_cron_data_check_lot_active" model="ir.cron">
+            <field name="name">Stock Lot: Check and Archive</field>
+            <field name="model_id" ref="model_stock_lot"/>
+            <field name="state">code</field>
+            <field name="code">model._check_lot_active()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+
+    <!--Calculate the amount for the 'Late Check-In' rule.-->
+    <record id="late_check_in" model="hr.salary.rule">
+        <field name="name">Late Check-In</field>
+        <field name="sequence" eval="6"/>
+        <field name="code">LC</field>
+        <field name="category_id" ref="accounting_base_kit.DED"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+            amount = 0
+            try:
+            if inputs.LC:
+            amount = inputs.LC.amount
+            except:
+            amount = 0
+            result = -amount
+        </field>
+    </record>
+
+    <!--Salary structure for late Check-In-->
+    <record id="late_check_in_salary_structure" model="hr.payroll.structure">
+        <field name="code">LCS</field>
+        <field name="name">Base Salary Structure For Late Check-In</field>
+        <field name="rule_ids" eval="[(6, 0, [ref('accounting_base_kit.hr_rule_basic'),
+        ref('accounting_base_kit.hr_rule_net'),ref('accounting_base_kit.hr_rule_taxable'),
+        ref('late_check_in')])]"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Automate Payroll Processing for Active Employees  -->
+    <record id="ir_cron_payslip_generation" model="ir.cron">
+        <field name="name">Payroll: Generate payslip batches and payslips</field>
+        <field name="model_id" ref="accounting_base_kit.model_hr_payslip_run"/>
+        <field name="state">code</field>
+        <field name="code">model._check_options()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+    </record>
+</odoo>

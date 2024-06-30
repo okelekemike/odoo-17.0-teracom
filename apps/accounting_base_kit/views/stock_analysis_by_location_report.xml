@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherited Form view for product template to add the field in the view-->
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.stock.analysis.by.location.report</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group//field[@name='list_price']" position="after">
+                <field name="qty_incoming" invisible="1"/>
+                <field name="qty_outgoing" invisible="1"/>
+                <field name="qty_avail" invisible="1"/>
+                <field name="qty_virtual" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inherited Form view for product to add the field in the view-->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.stock.analysis.by.location.report</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="qty_incoming" invisible="1"/>
+                <field name="qty_outgoing" invisible="1"/>
+                <field name="qty_avail" invisible="1"/>
+                <field name="qty_virtual" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Pivot view for product variants-->
+    <record id="stock_location_product_variant_view_pivot" model="ir.ui.view">
+        <field name="name">stock.location.product.variant.view.pivot</field>
+        <field name="model">stock.location.product.variant</field>
+        <field name="arch" type="xml">
+            <pivot string="Stock Location Report">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="row"/>
+                <field name="on_hand_qty" type="measure"/>
+                <field name="qty_incoming" type="measure"/>
+                <field name="qty_outgoing" type="measure"/>
+                <field name="forecast_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <!-- Tree view for product variants-->
+    <record id="product_variant_report_tree_view" model="ir.ui.view">
+        <field name="name">stock_location_product_variant_view_tree</field>
+        <field name="model">stock.location.product.variant</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="on_hand_qty"/>
+                <field name="qty_incoming"/>
+                <field name="qty_outgoing"/>
+                <field name="forecast_qty"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Action for the pivot view for Product variants -->
+    <record model="ir.actions.act_window"
+            id="product_variant_pivot_view_action">
+        <field name="name">Product Variants: Stock Location Report</field>
+        <field name="res_model">stock.location.product.variant</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="stock_location_product_variant_view_pivot"/>
+    </record>
+    <!-- Pivot view for Products-->
+    <record id="stock_location_product_view_pivot" model="ir.ui.view">
+        <field name="name">stock.location.product.view.pivot</field>
+        <field name="model">stock.location.product</field>
+        <field name="arch" type="xml">
+            <pivot string="Stock Location Report">
+                <field name="product_id" type="row"/>
+                <field name="location_id" type="row"/>
+                <field name="on_hand_qty" type="measure"/>
+                <field name="qty_incoming" type="measure"/>
+                <field name="qty_outgoing" type="measure"/>
+                <field name="forecast_qty" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    <!-- Tree view for product report view-->
+    <record id="product_report_tree_view" model="ir.ui.view">
+        <field name="name">stock_location_product_view_tree</field>
+        <field name="model">stock.location.product</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="on_hand_qty"/>
+                <field name="qty_incoming"/>
+                <field name="qty_outgoing"/>
+                <field name="forecast_qty"/>
+            </tree>
+        </field>
+    </record>
+    <!-- Action for the pivot view for Products-->
+    <record model="ir.actions.act_window" id="product_pivot_view_action">
+        <field name="name">Product: Stock Location Report</field>
+        <field name="res_model">stock.location.product</field>
+        <field name="view_mode">tree,form,pivot</field>
+        <field name="view_id" ref="stock_location_product_view_pivot"/>
+    </record>
+
+
+    <!--Report action for stock analysis by location-->
+    <record id="stock_by_location_report" model="ir.actions.report">
+        <field name="name">Stock Location Report</field>
+        <field name="model">stock.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">accounting_base_kit.report_stock_location</field>
+        <field name="report_file">accounting_base_kit.report_stock_location</field>
+        <field name="print_report_name">'Stock Location Report - %s'</field>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--Templates for the stock location report-->
+    <template id="report_stock_location">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Stock Location Report</h2>
+                    <div>
+                        <strong>Report Date:</strong>
+                        <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
+                    </div>
+                    <table class="table">
+                        <thead style="width:max-content">
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Location</th>
+                                <th>OnHand Quantity</th>
+                                <th>Incoming Quantity</th>
+                                <th>Outgoing Quantity</th>
+                                <th>Forecast Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody style="text-align:center;">
+                            <t t-foreach="grouped_data.items()" t-as="group">
+                                <t t-set="product_id" t-value="group[0]"/>
+                                <t t-set="product_data" t-value="group[1]"/>
+                                <t t-foreach="product_data" t-as="data">
+                                    <tr>
+                                        <td t-esc="product_id"/>
+                                        <td t-esc="data['location']"/>
+                                        <td t-esc="data['on_hand_qty']"/>
+                                        <td t-esc="data['qty_incoming']"/>
+                                        <td t-esc="data['qty_outgoing']"/>
+                                        <td t-esc="data['forecast_qty']"/>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="2" style="text-align: right;">
+                                        <strong>Total:</strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="sum([x['on_hand_qty'] for x in product_data])"/>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="sum([x['qty_incoming'] for x in product_data])"/>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="sum([x['qty_outgoing'] for x in product_data])"/>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="sum([x['forecast_qty'] for x in product_data])"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--Form view of wizard that opens to generate report-->
+    <record id="stock_location_report_view_form" model="ir.ui.view">
+        <field name="name">stock.location.report.view</field>
+        <field name="model">stock.location.report</field>
+        <field name="arch" type="xml">
+            <form string="Stock Location Report">
+                <group class="oe_title">
+                    <group>
+                        <field name="report_type" widget="radio"/>
+                        <field name="product_variant_id" invisible="report_type == 'product'"/>
+                        <field name="product_id"  invisible="report_type == 'product_variant'"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_pdf_report" string="Print PDF"
+                            type="object" class="btn-primary"/>
+                    <button name="action_xlsx_report" string="PRINT XLSX"
+                            type="object" class="btn-primary" disabled="0"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!--Window action of stock location report-->
+    <record id="stock_location_report_menu_action" model="ir.actions.act_window">
+        <field name="name">Stock Location PDF &amp; Excel Report</field>
+        <field name="res_model">stock.location.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="stock_location_report_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!--  created menu in inventory for stock location reports  -->
+    <menuitem id="menu_stock_location_report"
+              name="Locations Analysis"
+              sequence="115"
+              parent="stock.menu_warehouse_report"
+    />
+    <menuitem id="menu_product_variant_pivot_report"
+              name="Product Variant"
+              sequence="1"
+              action="product_variant_pivot_view_action"
+              parent="menu_stock_location_report"
+    />
+    <menuitem id="menu_product_pivot_report"
+              name="Products"
+              sequence="0"
+              action="product_pivot_view_action"
+              parent="menu_stock_location_report"
+    />
+    <menuitem id="menu_stock_location_report_pdf_excel"
+              name="Stock Location Reports"
+              parent="menu_stock_location_report"
+              action="stock_location_report_menu_action"
+              sequence="2"/>
+</odoo>

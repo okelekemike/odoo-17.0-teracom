@@ -1,0 +1,591 @@
+<odoo>
+    <data>
+
+        <record id="view_om_account_followup_followup_line_tree" model="ir.ui.view">
+            <field name="name">followup.lines.tree</field>
+            <field name="model">followup.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-up Steps">
+                    <field name="name"/>
+                    <field name="delay"/>
+                    <field name="send_email"/>
+                    <field name="send_letter"/>
+                    <field name="manual_action"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_followup_line_form" model="ir.ui.view">
+            <field name="name">followup.lines.form</field>
+            <field name="model">followup.lines</field>
+            <field name="arch" type="xml">
+                <form string="Follow-up Steps">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <div class="oe_inline">
+                        After
+                        <field name="delay" class="oe_inline"/>
+                        days overdue, do the following actions:
+                    </div>
+                    <div>
+                        <field name="manual_action" class="oe_inline"/>
+                        <label for="manual_action"/>
+                    </div>
+                    <div>
+                        <field name="send_email" class="oe_inline"/>
+                        <label for="send_email"/>
+                    </div>
+                    <div>
+                        <field name="send_letter" class="oe_inline"/>
+                        <label for="send_letter"/>
+                    </div>
+
+                    <group string="Manual Action" invisible="not manual_action">
+                        <field name="manual_action_responsible_id"/>
+
+                        <field name="manual_action_note"
+                               required="not manual_action"
+                               placeholder="e.g. Call the customer, check if it's paid, ..."
+                        />
+                    </group>
+                    <group string="Send an Email" invisible="not send_email">
+                        <field name="email_template_id" required="not send_email"/>
+                    </group>
+                    <group string="Send a Letter or Email"
+                           invisible="not send_email and not send_letter">
+                        <p colspan="2" class="oe_grey">
+                            Write here the introduction in the letter,
+                            according to the level of the follow-up. You can
+                            use the following keywords in the text. Don't
+                            forget to translate in all languages you installed
+                            using to top right icon.
+                            <table>
+                                <tr>
+                                    <td t-translation="off">%%(partner_name)s
+                                    </td>
+                                    <td>: Partner Name</td>
+                                </tr>
+                                <tr>
+                                    <td t-translation="off">%%(date)s</td>
+                                    <td>: Current Date</td>
+                                </tr>
+                                <tr>
+                                    <td t-translation="off">
+                                        %%(user_signature)s
+                                    </td>
+                                    <td>: User Name</td>
+                                </tr>
+                                <tr>
+                                    <td t-translation="off">%%(company_name)s
+                                    </td>
+                                    <td>: User's Company Name</td>
+                                </tr>
+                            </table>
+                        </p>
+                        <field name="description" nolabel="1" colspan="2"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_followup_form" model="ir.ui.view">
+            <field name="name">followup.followup.form</field>
+            <field name="model">followup.followup</field>
+            <field name="arch" type="xml">
+                <form string="Follow-up">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <label for="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" widget="selection"
+                           class="oe_inline"
+                           groups="base.group_multi_company"/>
+                    <p class="oe_grey">
+                        To remind customers of paying their invoices, you can
+                        define different actions depending on how severely
+                        overdue the customer is. These actions are bundled
+                        into follow-up levels that are triggered when the due
+                        date of an invoice has passed a certain
+                        number of days. If there are other overdue invoices for
+                        the
+                        same customer, the actions of the most
+                        overdue invoice will be executed.
+                    </p>
+                    <field name="followup_line"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_followup_tree" model="ir.ui.view">
+            <field name="name">followup.followup.tree</field>
+            <field name="model">followup.followup</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-up">
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_filter" model="ir.ui.view">
+            <field name="name">account.followup.select</field>
+            <field name="model">followup.followup</field>
+            <field name="arch" type="xml">
+                <search string="Search Follow-up">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_om_account_followup_definition_form" model="ir.actions.act_window">
+            <field name="name">Follow-up Levels</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">followup.followup</field>
+            <field name="search_view_id" ref="view_om_account_followup_filter"/>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to define follow-up levels and their related actions.
+                </p>
+                <p>
+                    For each step, specify the actions to be taken and delay in
+                    days. It is
+                    possible to use print and e-mail templates to send specific
+                    messages to
+                    the customer.
+                </p>
+            </field>
+        </record>
+
+        <record id="view_move_line_reconcile_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Items to Reconcile" create="false">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="full_reconcile_id"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_manual_reconcile_action" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_reconcile_tree"/>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p>
+                    No journal items found.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="om_account_followup_main_menu"
+                  parent="account.menu_finance_configuration"
+                  name="Follow-Ups"/>
+
+        <menuitem id="om_account_followup_menu"
+                  name="Follow-Up Levels"
+                  action="action_om_account_followup_definition_form"
+                  parent="om_account_followup_main_menu" />
+
+        <menuitem id="om_account_followup_main_menu"
+                  parent="account.menu_finance_configuration"
+                  name="Follow-Up"/>
+
+        <menuitem id="om_account_followup_menu"
+                  name="Follow-Up Levels"
+                  action="action_om_account_followup_definition_form"
+                  parent="om_account_followup_main_menu"/>
+
+        <record id="view_move_line_reconcile_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Items to Reconcile" create="false">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="full_reconcile_id"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_manual_reconcile_action" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_reconcile_tree"/>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p>No journal items found.</p>
+            </field>
+        </record>
+
+        <record id="account_move_line_partner_tree" model="ir.ui.view">
+            <field name="name">account.move.line.partner.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="32" name="priority"/>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Partner Entries">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}"
+                           domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
+                    <field name="followup_line_id"/>
+                    <field name="followup_date"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="date_maturity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_move_line_form" model="ir.ui.view">
+            <field name="name">account.move.line.form.followup</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date_maturity" position="after">
+                    <field name="followup_line_id"/>
+                    <field name="followup_date"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="customer_followup_tree" model="ir.ui.view">
+            <field name="name">res.partner.followup.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Customer Followup" create="false" delete="false">
+                    <field name="display_name"/>
+                    <field name="payment_next_action_date"/>
+                    <field name="payment_next_action"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="payment_responsible_id"/>
+                    <field name="payment_earliest_due_date"/>
+                    <field name="latest_followup_level_id"/>
+                    <field name="payment_amount_overdue"/>
+                    <field name="payment_amount_due"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_partner_inherit_customer_followup_tree" model="ir.ui.view">
+            <field name="name">res.partner.followup.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+                    <field name="payment_responsible_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="customer_followup_search_view" model="ir.ui.view">
+            <field name="name">Search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[1]" position="after">
+                    <group string="Follow-up">
+                        <filter string="Partners with Overdue Credits"
+                                domain="[('payment_amount_overdue', '>', 0.0)]"
+                                name="credits"/>
+                        <separator/>
+                        <filter string="Follow-ups To Do"
+                                domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('payment_amount_overdue', '>', 0.0)]"
+                                name="todo"/>
+                        <separator/>
+                        <filter string="No Responsible" name="no_responsibe" domain="[('payment_responsible_id', '=', False)]"/>
+                        <filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]" name="my"/>
+                    </group>
+                </xpath>
+                <xpath expr="//group[1]" position="inside">
+                    <filter string="Follow-up Responsible" name="responsibe"
+                            context="{'group_by':'payment_responsible_id'}"/>
+                    <filter string="Followup Level" name="followup_level"
+                            context="{'group_by':'latest_followup_level_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_customer_followup" model="ir.actions.act_window">
+            <field name="name">Manual Follow-Ups</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('payment_amount_due', '>', 0.0)]</field>
+            <field name="context">{'Followupfirst':True, 'search_default_todo': True}</field>
+            <field name="search_view_id" ref="customer_followup_search_view"/>
+        </record>
+
+        <record id="view_partner_inherit_followup_form" model="ir.ui.view">
+            <field name="name">res.partner.followup.form.inherit</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales_purchases']" position="after">
+                    <page string="Payment Follow-Up"
+                          groups="account.group_account_invoice"
+                          name="followup_tab">
+
+                        <div class="oe_right"
+                             name="followup_button">
+                            <button name="do_button_print" type="object"
+                                    string="Print Overdue Payments"
+                                    groups="account.group_account_user"
+                                    help="Print overdue payments report independent of follow-up line"
+                                    invisible="payment_amount_due &lt;= 0.0"/>
+                            <button name="do_partner_mail" type="object"
+                                    string="Send Overdue Email"
+                                    groups="account.group_account_user"
+                                    help="If not specified by the latest follow-up level, it will send from the default email template"
+                                    invisible="payment_amount_due &lt;= 0.0"/>
+                        </div>
+
+                        <p invisible="not latest_followup_date">
+                            The
+                            <field name="latest_followup_date"
+                                   class="oe_inline"/>
+                            , the latest payment follow-up was:
+                            <field name="latest_followup_level_id"
+                                   class="oe_inline"/>
+                        </p>
+                        <group>
+                            <group string="Follow-Up Settings">
+                                <label for="payment_responsible_id"/>
+                                <div class="o_row">
+                                    <field name="payment_responsible_id"
+                                           placeholder="Responsible of credit collection"
+                                           class="oe_inline"/>
+                                </div>
+                                <label for="payment_next_action_date"/>
+                                <div class="o_row">
+                                    <field name="payment_next_action_date"
+                                           class="oe_inline"/>
+                                    <button name="action_done" type="object"
+                                            string="⇾ Mark as Done"
+                                            help="Click to mark the action as done."
+                                            class="oe_link"
+                                            invisible="not payment_next_action_date"
+                                            groups="account.group_account_user"/>
+                                </div>
+                                <field name="payment_next_action"
+                                       placeholder="Action to be taken e.g. Give a phone call, Check if it's paid, ..."/>
+                            </group>
+
+                            <group string="Follow-Up Resolutions">
+                                <label for="payment_note" class="oe_edit_only"/>
+                                <div class="o_row">
+                                    <field name="payment_note"
+                                           placeholder="He said the problem was temporary and promised to pay 50%% before 15th of May, balance before 1st of July."/>
+                                </div>
+                                <label for="payment_note_date" class="oe_edit_only"/>
+                                <div class="o_row">
+                                    <field name="payment_note_date"/>
+                                </div>
+                            </group>
+                        </group>
+                        <p class="oe_grey">
+                            Below is the history of the transactions of this
+                            customer. You can check "No Follow-up" in
+                            order to exclude it from the next follow-up
+                            actions.
+                        </p>
+                        <field name="unreconciled_aml_ids">
+                            <tree string="Account Move line" editable="bottom"
+                                  create="false" delete="false"
+                                  colors="red:(not date_maturity or date_maturity&lt;=current_date) and result&gt;0">
+                                <field name="date" readonly="True"/>
+                                <field name="company_id" readonly="True"
+                                       groups="base.group_multi_company"/>
+                                <field name="move_id" readonly="True"/>
+                                <field name="blocked"/>
+                                <field name="date_maturity" readonly="True"/>
+                                <field name="result" readonly="True"/>
+                                <field name="followup_line_id" invisible='1'/>
+                            </tree>
+                        </field>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="payment_amount_due"/>
+                        </group>
+                        <div class="oe_clear"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_view_customer_followup_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_partner_inherit_followup_form"/>
+            <field name="act_window_id" ref="action_customer_followup"/>
+        </record>
+
+        <record id="action_view_customer_followup_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="act_window_id" ref="action_customer_followup"/>
+        </record>
+
+        <menuitem id="om_account_followup_s"
+                  action="action_customer_followup"
+                  parent="menu_finance_followup"
+                  name="Do Manual Follow-Ups"
+                  sequence="3"/>
+
+        <record id="action_customer_my_followup" model="ir.actions.act_window">
+            <field name="name">My Follow-Ups</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('payment_amount_due', '>', 0.0)]</field>
+            <field name="context">{'Followupfirst':True, 'search_default_todo': True, 'search_default_my': True}</field>
+            <field name="search_view_id" ref="customer_followup_search_view"/>
+        </record>
+
+        <menuitem id="menu_sale_followup"
+                  parent="menu_finance_followup"
+                  sequence="10"
+                  action="action_customer_my_followup"
+                  groups="account.group_account_invoice"/>
+
+        <template id="report_followup">
+            <t t-call="web.html_container">
+                <t t-foreach="ids_to_objects(data['partner_ids'])" t-as="o">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <p>
+                                <span t-field="o.invoice_partner_id"/>
+                                <br/>
+                                <t t-if="o.partner_id.vat">
+                                    <span t-field="o.partner_id.vat"/>
+                                    <br/>
+                                </t>
+                                Document: Customer account statement
+                                <br/>
+                                Date:
+                                <span t-esc="data['date']"/>
+                                <br/>
+                                Customer ref:
+                                <span t-field="o.partner_id.ref"/>
+                            </p>
+
+                            <p t-raw="get_text(o,data['followup_id']).replace('\n', '&lt;br&gt;')"/>
+
+                            <t t-foreach="getLines(o)" t-as="cur_lines">
+                                <table class="table table-condensed"
+                                       style="margin-top: 50px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice Date</th>
+                                            <th>Description</th>
+                                            <th class="text-center">Ref</th>
+                                            <th class="text-center">Maturity Date</th>
+                                            <th class="text-right">Amount</th>
+                                            <th class="text-center">Due</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="cur_lines['line']"
+                                            t-as="line">
+                                            <td>
+                                                <span t-esc="line['date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['ref']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line['date_maturity']"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="line['balance']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['blocked'] and 'X' or ''"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <p>Total:
+                                    <span t-esc="cur_lines['total']"/>
+                                </p>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <record id="action_report_followup" model="ir.actions.report">
+            <field name="name">Follow-Up Report</field>
+            <field name="model">followup.followup</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">accounting_base_kit.report_followup</field>
+            <field name="report_file">accounting_base_kit.report_followup</field>
+        </record>
+
+        <record id="om_account_followup_stat_by_partner_search" model="ir.ui.view">
+            <field name="name">followup.stat.by.partner.search</field>
+            <field name="model">followup.stat.by.partner</field>
+            <field name="arch" type="xml">
+                <search string="Partner to Remind">
+                    <field name="date_followup"/>
+                    <filter string="Balance > 0"
+                            domain="[('balance','&gt;',0)]" icon="terp-dolar"
+                            name="balance_positive"/>
+                    <field name="partner_id"/>
+                    <field name="max_followup_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="om_account_followup_stat_by_partner_tree" model="ir.ui.view">
+            <field name="name">followup.stat.by.partner.tree</field>
+            <field name="model">followup.stat.by.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Partner to Remind">
+                    <field name="partner_id"/>
+                    <field name="balance" sum="Total Balance"/>
+                    <field name="max_followup_id"/>
+                    <field name="date_followup"/>
+                    <field name="date_move_last"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Adding new fields to the res.company, that related to the watermark-->
+<odoo>
+    <record id="res_company_view_form" model="ir.ui.view">
+        <field name="name">res.company.view.form.inherit.pdf.report.with.watermark</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="watermark"/>
+                <field name="watermark_type" widget="radio"
+                       invisible="watermark == False"/>
+                <field name="content_text"
+                       invisible ="watermark_type in ('image' , 'logo') or watermark == False"/>
+                <field name="font_size"
+                       invisible ="watermark_type in ('image' , 'logo') or watermark == False"/>
+                <field name="color_picker" widget='color'
+                       invisible ="watermark_type in ('image' , 'logo' , False) or watermark == False"/>
+                <field name="pdf_background_image" widget='image' style="width:100px;height:100px;"
+                       invisible ="watermark_type in ('text' , 'logo' , False) or watermark == False"/>
+                <field name="rotating_angle"
+                       invisible="watermark == False"/>
+            </field>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Settings">
+                    <group>
+                        <div class="o_setting_left_pane">
+                            <field name="avoid_products_name_duplication"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="avoid_products_name_duplication"/>
+                            <div class="text-muted">
+                                Restrict creation of the products with a name which already exists
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <div class="o_setting_left_pane">
+                            <field name="avoid_internal_references_duplication"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="avoid_internal_references_duplication"/>
+                            <div class="text-muted">
+                                Restrict creation of the products with Internal Reference which already exists
+                            </div>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
