@@ -11,6 +11,9 @@ class ResConfigSettings(models.TransientModel):
     pos_discount_pc = fields.Float(related='pos_config_id.discount_pc', readonly=False)
     pos_discount_product_id = fields.Many2one('product.product', compute='_compute_pos_discount_product_id', store=True, readonly=False)
 
+    pos_discount_type = fields.Selection(related='pos_config_id.discount_type', readonly=False)
+    pos_discount_max_amount = fields.Float(related='pos_config_id.discount_max_amount', readonly=False)
+
     @api.depends('company_id', 'pos_module_pos_discount', 'pos_config_id')
     def _compute_pos_discount_product_id(self):
         default_product = self.env.ref("point_of_sale.product_product_consumable", raise_if_not_found=False) or self.env['product.product']

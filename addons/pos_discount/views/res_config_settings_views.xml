@@ -14,6 +14,23 @@
                     <label string="Discount %" for="pos_discount_pc" class="col-lg-3 o_light_label"/>
                     <field name="pos_discount_pc"/>
                 </div>
+                <div class="row">
+                    <label string="Discount Type"
+                           for="pos_discount_type"
+                           class="col-lg-3 o_light_label"
+                           invisible="pos_module_pos_discount==False"/>
+                    <field name="pos_discount_type"
+                           invisible="pos_module_pos_discount==False"
+                           required="pos_module_pos_discount"/>
+                </div>
+                <div class="row">
+                    <label string="Max Value"
+                           class="col-lg-3 o_light_label"
+                           for="pos_discount_max_amount"
+                           invisible="pos_discount_type == 'percentage' or pos_module_pos_discount==False"/>
+                    <field name="pos_discount_max_amount"
+                           invisible="pos_discount_type == 'percentage' or pos_module_pos_discount==False"/>
+                </div>
             </div>
         </field>
     </record>

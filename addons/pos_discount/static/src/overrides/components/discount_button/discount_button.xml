@@ -5,7 +5,7 @@
         <span class="control-button js_discount btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
             <i class="fa fa-tag me-1"></i>
             <span> </span>
-            <span>Discount</span>
+            <span>Global Discount</span>
         </span>
     </t>
 

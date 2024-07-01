@@ -14,6 +14,19 @@ class PosConfig(models.Model):
     discount_product_id = fields.Many2one('product.product', string='Discount Product',
         domain="[('sale_ok', '=', True)]", help='The product used to apply the discount on the ticket.')
 
+    discount_type = fields.Selection(
+        string="Global Discount Type",
+        selection=[("percentage", "Percentage"), ("amount", "Amount"), ("both", "Both")],
+        default="percentage",
+        help="Global discount type Percentage / Amount or chose Both to decide on the go."
+    )
+
+    discount_max_amount = fields.Float(
+        string="Max Discount Amount",
+        default=0,
+        help="Maximum discount Percentage / Amount"
+    )
+
     @api.model
     def _default_discount_value_on_module_install(self):
         configs = self.env['pos.config'].search([])
