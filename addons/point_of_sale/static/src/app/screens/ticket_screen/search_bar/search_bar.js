@@ -49,6 +49,14 @@ export class SearchBar extends Component {
         this.state.selectedFilter = key;
         this.props.onFilterSelected(this.state.selectedFilter);
     }
+    // MIKE CODE MODIFICATIONS
+    _onSelectFilterOption() {
+        this.filterOptionsList = [...this.props.config.filter.options.keys()];
+        if (this.filterOptionsList.find((e) => e === this.state.selectedFilter) === undefined) {
+            this._onSelectFilter(this.filterOptionsList[0])
+        }
+        return this.props.config.filter.options.get(this.state.selectedFilter).text
+    }
     /**
      * When pressing vertical arrow keys, do not move the input cursor.
      */

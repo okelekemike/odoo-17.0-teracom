@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="SetProductListButton">
+        <div class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.onClick_ProductListScreen()">
+            <i class="fa fa-product-hunt" aria-hidden="true" role="img"
+               aria-label="Products" title="Products"/> Products
+        </div>
+    </t>
+
+    <t t-name="pos_product_create_edit.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//li[hasclass('backend-button')]" position="before">
+            <li t-if="pos.get_cashier().role == 'manager' and pos.mainScreen.component.name == 'ProductScreen'"
+                class="menu-item navbar-button edit-button"
+                t-on-click="onClick_ProductListScreen">
+                <a class="dropdown-item py-2">Products</a>
+            </li>
+        </xpath>
+    </t>
+</templates>

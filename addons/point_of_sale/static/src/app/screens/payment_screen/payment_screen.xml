@@ -73,7 +73,7 @@
                 <span class="partner-name">
                     <t t-if="currentOrder.get_partner()" t-esc="currentOrder.get_partner().name"/>
                     <t t-else="">Customer</t>
-                </span> 
+                </span>
             </button>
             <button class="button js_invoice btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.is_to_invoice() }" 
                 t-on-click="toggleIsToInvoice">
@@ -90,7 +90,7 @@
                 t-on-click="openCashbox">
                 <i class="fa fa-archive me-2" />Open Cashbox 
             </button>
-            <button t-if="pos.config.ship_later" class="button btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.getShippingDate() }" 
+            <button t-if="pos.config.ship_later" class="button js_ship_later btn btn-light py-3 text-start rounded-0 border-bottom" t-att-class="{ 'highlight text-bg-primary': currentOrder.getShippingDate() }"
                 t-on-click="toggleShippingDatePicker">
                 <i class="fa fa-clock-o me-2" />Ship Later 
                 <span t-if="currentOrder.getShippingDate()">

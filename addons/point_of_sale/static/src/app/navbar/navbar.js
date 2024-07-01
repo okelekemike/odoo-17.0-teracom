@@ -15,6 +15,8 @@ import { Component, useState, useExternalListener } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { PutOnHoldButton } from "@point_of_sale/app/navbar/put_on_hold_button/put_on_hold_button";
+import { PosProductBarcode } from "@point_of_sale/app/pos_add_product_webcam_barcode/pos_barcode";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -26,6 +28,8 @@ export class Navbar extends Component {
         SaleDetailsButton,
         SyncNotification,
         BackButton,
+        PutOnHoldButton,
+        PosProductBarcode,
     };
     static props = {};
     setup() {
@@ -46,7 +50,7 @@ export class Navbar extends Component {
     }
 
     get customerFacingDisplayButtonIsShown() {
-        return this.pos.config.iface_customer_facing_display;
+        return this.pos.config.iface_customer_facing_display && !this.ui.isSmall;
     }
     get showCashMoveButton() {
         return Boolean(this.pos?.config?.cash_control && this.pos?.config?.has_cash_move_permission);
@@ -107,6 +111,10 @@ export class Navbar extends Component {
 
     showBackButton() {
         return this.pos.showBackButton() && this.ui.isSmall;
+    }
+
+    showPutOnHoldButton() {
+        return this.pos.showPutOnHoldButton();
     }
 
     toggleProductView() {

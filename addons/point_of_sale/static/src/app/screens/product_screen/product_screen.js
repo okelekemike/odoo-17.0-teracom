@@ -40,6 +40,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
+        this.discount_mode = "discount";
         onMounted(this.onMounted);
 
         useBarcodeReader({
@@ -78,7 +79,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             { value: "4" },
             { value: "5" },
             { value: "6" },
-            { value: "discount", text: _t("% Disc"), disabled: !this.pos.config.manual_discount },
+            { value: this.discount_mode,
+                text: _t(this.discount_mode === "discount" ? "% Disc" : this.pos.getCurrencySymbol() + " Disc"),
+                disabled: !this.pos.config.manual_discount || !this.pos.isAdmin() },
             { value: "7" },
             { value: "8" },
             { value: "9" },
@@ -87,7 +90,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 text: _t("Price"),
                 disabled: !this.pos.cashierHasPriceControlRights(),
             },
-            { value: "-", text: "+/-" },
+            { value: "-", text: "+/-", disabled: !this.pos.isAdmin()},
             { value: "0" },
             { value: this.env.services.localization.decimalPoint },
             // Unicode: https://www.compart.com/en/unicode/U+232B
@@ -98,10 +101,15 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         }));
     }
     onNumpadClick(buttonValue) {
-        if (["quantity", "discount", "price"].includes(buttonValue)) {
+        if (["quantity", "discount", "discount_fixed", "price"].includes(buttonValue)) {
             this.numberBuffer.capture();
             this.numberBuffer.reset();
-            this.pos.numpadMode = buttonValue;
+            if (["discount", "discount_fixed"].includes(this.pos.numpadMode) && ["discount", "discount_fixed"].includes(buttonValue)) {
+                this.discount_mode = buttonValue === "discount" ? "discount_fixed" : "discount";
+                this.pos.numpadMode = this.discount_mode;
+            } else {
+                this.pos.numpadMode = buttonValue;
+            }
             return;
         }
         this.numberBuffer.sendKey(buttonValue);
@@ -150,11 +158,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
             return;
         }
-        if (
-            selectedLine &&
-            this.pos.numpadMode === "quantity" &&
-            this.pos.disallowLineQuantityChange()
-        ) {
+        if (selectedLine && this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
             const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
@@ -213,7 +217,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                         val,
                         Boolean(selectedLine.comboLines?.length)
                     );
-                    if (selectedLine.comboLines) {
+                    if(selectedLine.comboLines){
                         for (const line of selectedLine.comboLines) {
                             line.set_quantity(val, true);
                         }
@@ -224,6 +228,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 }
             } else if (numpadMode === "discount") {
                 this.pos.setDiscountFromUI(selectedLine, val);
+            } else if (numpadMode === "discount_fixed") {
+                this.pos.setFixedDiscountFromUI(selectedLine, val);
             } else if (numpadMode === "price") {
                 selectedLine.price_type = "manual";
                 selectedLine.set_unit_price(val);
@@ -350,7 +356,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             title: _t("Set the new quantity"),
         });
         if (confirmed) {
-            const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
+        const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
             return await this.updateQuantityNumber(newQuantity);
         }
     }
@@ -366,18 +372,18 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             } else {
                 await this.handleDecreaseLine(newQuantity);
             }
-            return true;
-        }
+                return true;
+            }
         return false;
     }
     async handleDecreaseUnsavedLine(newQuantity) {
         const order = this.pos.get_order();
         const selectedLine = order.get_selected_orderline();
         const decreaseQuantity = selectedLine.get_quantity() - newQuantity;
-        selectedLine.set_quantity(newQuantity);
-        if (newQuantity == 0) {
-            order._unlinkOrderline(selectedLine);
-        }
+                selectedLine.set_quantity(newQuantity);
+                if (newQuantity == 0) {
+                    order._unlinkOrderline(selectedLine);
+                }
         return decreaseQuantity;
     }
     async handleDecreaseLine(newQuantity) {
@@ -402,15 +408,15 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             if (newLine === selectedLine) {
                 selectedLine.set_quantity(newQuantity, true);
             } else {
-                newLine.set_quantity(-decreasedQuantity, true);
-                order.add_orderline(newLine);
+            newLine.set_quantity(-decreasedQuantity, true);
+            order.add_orderline(newLine);
             }
         }
         if (newLine !== selectedLine && selectedLine.saved_quantity != 0) {
             selectedLine.set_quantity(selectedLine.saved_quantity);
         }
         return decreasedQuantity;
-    }
+        }
     getNewLine() {
         const selectedLine = this.currentOrder.get_selected_orderline();
         let newLine = selectedLine;

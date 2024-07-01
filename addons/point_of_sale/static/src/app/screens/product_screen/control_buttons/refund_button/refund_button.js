@@ -24,6 +24,6 @@ export class RefundButton extends Component {
 ProductScreen.addControlButton({
     component: RefundButton,
     condition: function () {
-        return true;
+        return this.pos.isAdmin();
     },
 });

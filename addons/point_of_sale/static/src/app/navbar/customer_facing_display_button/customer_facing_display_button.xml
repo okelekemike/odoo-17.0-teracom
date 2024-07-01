@@ -15,7 +15,6 @@
             <div t-if="customerDisplay.status === 'success'" class="js_connected oe_icon oe_green text-success">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Connected" title="Customer Screen Connected"></i>
             </div>
-            <span class="ms-1">Customer Screen</span>
         </button>
     </t>
 

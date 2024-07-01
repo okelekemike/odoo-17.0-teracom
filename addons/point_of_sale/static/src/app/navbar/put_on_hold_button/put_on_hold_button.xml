@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PutOnHoldButton">
+        <span
+            class="put-onhold-button d-flex align-items-center gap-2 px-4 fw-bolder cursor-pointer"
+            t-on-click="onClick"
+        >
+            <i class="fa fa-2x fa-hand-rock-o pb-1" role="img" aria-label="Put on Hold" title="Put Order on Hold" />
+            <span t-if="!ui.isSmall">Put on Hold</span>
+        </span>
+    </t>
+
+</templates>

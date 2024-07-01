@@ -28,4 +28,13 @@ export class ProductInfoPopup extends AbstractAwaitablePopup {
         const isCashierManager = this.pos.get_cashier().role === "manager";
         return isAccessibleToEveryUser || isCashierManager;
     }
+
+    //MIKE CODE MODIFICATIONS - Get the image of clicked product
+    get largeImageUrl() {
+        const product = this.props.product;
+        return `/web/image?model=product.product&field=image_1920&id=${product.id}&write_date=${product.write_date}&unique=1`;
+    }
+    get hasImageUrl() {
+        return this.props.product.image_128;
+    }
 }

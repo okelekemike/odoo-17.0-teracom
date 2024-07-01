@@ -16,12 +16,12 @@
                 <li class="price-per-unit">
                     <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" /> 
                     <t t-if="line.price !== 0">
-                        x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
+                        X <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
                         <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
                     </t>
                 </li>
                 <li t-if="line.price !== 0 and line.discount and line.discount !== '0'">
-                    With a <em><t t-esc="line.discount" />% </em> discount
+                    With a <em><t t-esc="line.discount" />% (<t t-esc="line.discountAmt" />)</em> Discount
                 </li>
                 <t t-slot="default" />
                 <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break text-bg-warning text-warning bg-opacity-25">

@@ -2,8 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ReprintReceiptButton">
-        <button class="control-button btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
-            <i class="fa fa-print me-1"></i>
+        <button class="control-button js_print_receipt btn btn-light rounded-0 fw-bolder" t-on-click="() => this.click()">
+            <i class="fa fa-print me-1"/>
             <span> </span>
             <span>Print Receipt</span>
         </button>

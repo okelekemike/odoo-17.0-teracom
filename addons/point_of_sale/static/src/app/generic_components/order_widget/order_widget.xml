@@ -7,11 +7,25 @@
                     <t t-slot="default" line="line"/>
                 </t>
             </div>
+            <!--MIKE CODE MODIFICATIONS-->
+            <div t-if="props.note" class="order-summary w-100 py-2 px-3 bg-100 text-end fw-bolder fs-2 lh-sm">
+                <i class="fa fa-sticky-note me-1" role="img"
+                   aria-label="Order Note" title="Order Note"
+                   style="font-size: 14px;"/>
+                <span t-esc="props.note" class="fs-6 text-muted subentry"/>
+            </div>
             <div t-if="props.total or props.tax" class="order-summary w-100 py-2 px-3 bg-100 text-end fw-bolder fs-2 lh-sm">
                 Total:
                 <span t-esc="props.total" class="total"/>
                 <div t-if="props.tax" class="fs-6 text-muted subentry">
                     Taxes: <span t-esc="props.tax" class="tax"/>
+                </div>
+                <t t-set="total_qty" t-value="props.lines.reduce((accumulator,line)=> accumulator+line.quantity,0)"/>
+                <t t-set="total_no" t-value="props.lines.length"/>
+                <div t-if="total_qty or total_no" class="fs-6 text-muted subentry">
+                    Total Items: <span t-esc="total_no" class="tax"/>
+                    |
+                    Total Qty: <span t-esc="total_qty" class="tax"/>
                 </div>
             </div>
             <t t-slot="details"/>

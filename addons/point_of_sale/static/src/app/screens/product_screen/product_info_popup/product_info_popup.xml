@@ -3,7 +3,7 @@
     <t t-name="point_of_sale.ProductInfoPopup">
             <div class="popup product-info-popup">
                 <div class="modal-header">
-                    <h4 class="modal-title">Product information</h4>
+                    <h4 class="modal-title">Product Information</h4>
                     <div class="btn" t-on-click="cancel">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </div>
@@ -134,7 +134,17 @@
                             </table>
                         </div>
                     </div>
+                    <div class="product-large-image mt-3 mb-4 pb-4 border-bottom text-start" t-if="hasImageUrl">
+                        <h3 class="section-title" style="margin-bottom: 25px; border-bottom: 1.5px solid;">Image</h3>
+                        <img t-att-src="largeImageUrl" t-att-alt="props.product.display_name" style="width:90%; margin: auto 5%"/>
+                    </div>
                 </main>
+                <t t-set-slot="footer">
+                    <button class="btn btn-primary"
+                            style="float: left; margin: 15px;"
+                            t-on-click="props.close">Ok
+                    </button>
+                </t>
             </div>
     </t>
 </templates>

@@ -7,7 +7,8 @@
                 class="leftpane d-flex flex-column border-end bg-200" >
                 <OrderWidget lines="currentOrder.orderlines" t-slot-scope="scope"
                     total="env.utils.formatCurrency(currentOrder.get_total_with_tax())"
-                    tax="!env.utils.floatIsZero(currentOrder.get_total_tax()) and env.utils.formatCurrency(currentOrder.get_total_tax()) or ''">
+                    tax="!env.utils.floatIsZero(currentOrder.get_total_tax()) and env.utils.formatCurrency(currentOrder.get_total_tax()) or ''"
+                    note="currentOrder.get_order_note()">
                     <t t-set="line" t-value="scope.line" />
                     <Orderline line="line.getDisplayData()"
                         t-on-click="() => this.selectLine(line)"
@@ -27,7 +28,7 @@
                     <t t-set-slot="details" />
                 </OrderWidget>
                 <div class="pads border-top">
-                    <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300"
+                    <div class="control-buttons d-flex flex-wrap border-bottom overflow-hidden bg-300" style="display:none !important;"
                         t-if="!ui.isSmall">
                         <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
                             <t t-component="cb.component" t-key="cb.name"/>

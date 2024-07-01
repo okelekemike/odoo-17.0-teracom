@@ -28,7 +28,7 @@
                         class="filter btn btn-secondary d-flex align-items-center dropdown-toggle"
                         t-on-click.stop="() => { state.showFilterOptions = !state.showFilterOptions }">
                         <span>
-                            <t t-esc="props.config.filter.options.get(state.selectedFilter).text" />
+                            <t t-esc="_onSelectFilterOption()" />
                         </span>
                         <ul t-if="state.showFilterOptions" class="options dropdown-menu dropdown-menu-end py-1">
                             <t t-foreach="filterOptionsList" t-as="key" t-key="key">

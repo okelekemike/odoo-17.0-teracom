@@ -3,7 +3,7 @@
 import { Component, useEffect, useRef } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/generic_components/centered_icon/centered_icon";
 import { _t } from "@web/core/l10n/translation";
-
+// MIKE CODE MODIFICATIONS
 export class OrderWidget extends Component {
     static template = "point_of_sale.OrderWidget";
     static props = {
@@ -11,6 +11,7 @@ export class OrderWidget extends Component {
         slots: { type: Object },
         total: { type: String, optional: true },
         tax: { type: String, optional: true },
+        note: { type: String, optional: true },
     };
     static components = { CenteredIcon };
     setup() {

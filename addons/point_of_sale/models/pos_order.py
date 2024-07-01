@@ -34,7 +34,7 @@ class PosOrder(models.Model):
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         taxes = taxes.compute_all(price, line.order_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
         return sum(tax.get('amount', 0.0) for tax in taxes)
-
+    # * MIKE CODE MODIFICATIONS *
     @api.model
     def _order_fields(self, ui_order):
         process_line = partial(self.env['pos.order.line']._order_line_fields, session_id=ui_order['pos_session_id'])
@@ -60,6 +60,7 @@ class PosOrder(models.Model):
             'access_token': ui_order.get('access_token', ''),
             'ticket_code': ui_order.get('ticket_code', ''),
             'last_order_preparation_change': ui_order.get('last_order_preparation_change', '{}'),
+            'note': ui_order.get('order_note', ''),
         }
 
     @api.model
@@ -1207,6 +1208,7 @@ class PosOrder(models.Model):
             'access_token': order.access_token,
             'ticket_code': order.ticket_code,
             'last_order_preparation_change': order.last_order_preparation_change,
+            'order_note': order.note
         }
 
     @api.model

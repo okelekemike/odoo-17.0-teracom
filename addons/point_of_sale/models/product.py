@@ -149,11 +149,51 @@ class ProductProduct(models.Model):
             'suppliers': supplier_list,
             'variants': variant_list
         }
+    # * MIKE CODE MODIFICATIONS *
+    @api.model
+    def create_from_ui(self, payload):
+        """ Create or modify a Product from the point of sale ui.
+            Product contains the Product's fields. """
+
+        base64_content = payload.get('image_1920', False)
+        image = base64_content.split(',', 1)[-1]
+        if payload.get('pos_categ_ids') and isinstance(
+                payload.get('pos_categ_ids'), str):
+            pos_categ_ids = [int(item) for item in
+                             payload.get('pos_categ_ids').split(',')]
+        else:
+            pos_categ_ids = payload.get('pos_categ_ids')
+        product_id = payload.get('id')
+        values = {
+            'name': payload.get('name'),
+            'image_1920': image,
+            'standard_price': float(
+                payload.get('standard_price')) if payload.get(
+                'standard_price') else 0,
+            'lst_price': float(payload.get('lst_price')) if payload.get(
+                'lst_price') else 0,
+            'pos_categ_ids': pos_categ_ids if payload.get(
+                'pos_categ_ids') and payload.get(
+                'pos_categ_ids') != '0' else False,
+            'barcode': payload.get('barcode'),
+            'default_code': payload.get('default_code'),
+            'available_in_pos': True
+        }
+        if payload.get('image_1920') == "":
+            del values['image_1920']
+        if product_id:  # Modifying existing product
+            self.browse(product_id).write(values)
+        else:
+            product = self.create(values)
+            product_id = product.id
+        return product_id
+
 
 class ProductAttributeCustomValue(models.Model):
     _inherit = "product.attribute.custom.value"
 
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
+
 
 class UomCateg(models.Model):
     _inherit = 'uom.category'

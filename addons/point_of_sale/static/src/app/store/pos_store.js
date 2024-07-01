@@ -83,19 +83,21 @@ export class PosStore extends Reactive {
         "barcode_reader",
         "hardware_proxy",
         "ui",
+        "action",
     ];
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui }) {
+    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, ui, action, }) {
         this.env = env;
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
         this.ui = ui;
+        this.action = action;
 
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
         this.unwatched = markRaw({});
@@ -180,6 +182,9 @@ export class PosStore extends Reactive {
         this.closeOtherTabs();
         this.preloadImages();
         this.showScreen("ProductScreen");
+
+        /* MIKE'S CODE ADDITIONS */
+        this._customShortcut();
     }
     toggleImages(imageType = "product") {
         if (imageType === "product") {
@@ -219,6 +224,10 @@ export class PosStore extends Reactive {
 
     async setDiscountFromUI(line, val) {
         line.set_discount(val);
+    }
+
+    async setFixedDiscountFromUI(line, val) {
+        line.set_discount_fixed(val);
     }
 
     getDefaultPricelist() {
@@ -573,6 +582,9 @@ export class PosStore extends Reactive {
     get_cashier_user_id() {
         return this.user.id;
     }
+    isAdmin() {
+        return this.get_cashier().role === "manager";
+    }
     get orderPreparationCategories() {
         if (this.printers_category_ids_set) {
             return new Set([...this.printers_category_ids_set]);
@@ -664,12 +676,12 @@ export class PosStore extends Reactive {
                 json.statement_ids.length > 0
             ) {
                 try {
-                    orders.push(this.createReactiveOrder(json));
+                orders.push(this.createReactiveOrder(json));
                     continue;
                 } catch (error) {
                     console.error("There was an error while loading the order", json, error);
-                }
             }
+        }
             this.db.remove_unpaid_order(json);
         }
 
@@ -1188,7 +1200,7 @@ export class PosStore extends Reactive {
                 }
                 this.set_synch("connected");
             }
-            throw error;
+                throw error;
         } finally {
             this._after_flush_orders(orders);
         }
@@ -1275,9 +1287,8 @@ export class PosStore extends Reactive {
                 "create_from_ui",
                 [orders, options.draft || false],
                 {
-                    context: this._getCreateOrderContext(orders, options),
-                }
-            );
+                context: this._getCreateOrderContext(orders, options),
+            });
 
             for (const serverId of serverIds) {
                 const order = this.env.services.pos.orders.find(
@@ -1518,18 +1529,18 @@ export class PosStore extends Reactive {
         }
 
         // 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        var recompute_base = function (base_amount, incl_tax_amounts) {
+        var recompute_base = function(base_amount, incl_tax_amounts){
             let fixed_amount = incl_tax_amounts.fixed_amount;
             let division_amount = 0.0;
-            for (const [, tax_factor] of incl_tax_amounts.division_taxes) {
+            for(const [, tax_factor] of incl_tax_amounts.division_taxes){
                 division_amount += tax_factor;
             }
             let percent_amount = 0.0;
-            for (const [, tax_factor] of incl_tax_amounts.percent_taxes) {
+            for(const [, tax_factor] of incl_tax_amounts.percent_taxes){
                 percent_amount += tax_factor;
             }
 
-            if (company.country && company.country.code === "IN") {
+            if(company.country && company.country.code === "IN"){
                 let total_tax_amount = 0.0;
                 for(const [i, tax_factor] of incl_tax_amounts.percent_taxes){
                     const tax_amount = round_pr(base_amount * tax_factor / (100 + percent_amount), currency_rounding);
@@ -1595,8 +1606,7 @@ export class PosStore extends Reactive {
                             tax.amount * tax.sum_repartition_factor,
                         ]);
                     } else if (tax.amount_type === "fixed") {
-                        incl_tax_amounts.fixed_amount +=
-                            Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
+                        incl_tax_amounts.fixed_amount += Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
                     } else {
                         var tax_amount = self._compute_all(tax, base, quantity);
                         incl_tax_amounts.fixed_amount += tax_amount;
@@ -1612,10 +1622,7 @@ export class PosStore extends Reactive {
             });
         }
 
-        var total_excluded = round_pr(
-            recompute_base(base, incl_tax_amounts),
-            initial_currency_rounding
-        );
+        var total_excluded = round_pr(recompute_base(base, incl_tax_amounts), initial_currency_rounding);
         var total_included = total_excluded;
 
         // 4) Iterate the taxes in the sequence order to fill missing base/amount values.
@@ -1641,7 +1648,7 @@ export class PosStore extends Reactive {
             } else if (!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined) {
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
-            }else{
+            } else {
                 var tax_amount = self._compute_all(tax, tax_base_amount, quantity, true);
             }
 
@@ -2032,6 +2039,12 @@ export class PosStore extends Reactive {
         );
     }
 
+    showPutOnHoldButton() {
+        return (
+            this.mainScreen.component === ProductScreen
+        );
+    }
+
     doNotAllowRefundAndSales() {
         return false;
     }
@@ -2050,6 +2063,470 @@ export class PosStore extends Reactive {
 
     redirectToBackend() {
         window.location = "/web#action=point_of_sale.action_client_pos_menu";
+    }
+
+    /* MIKE'S CODE ADDITIONS */
+    _customShortcut() {
+        document.addEventListener("keydown", (e) => {
+            /* popup screen key down events */
+            if ($('div.popups').is(':visible')) {
+                if ($("div.popup-control-buttons").is(':visible')) {
+                    let controlButtonL = $(".control-buttons .control-button");
+                    let controlButtonS = $(".control-buttons .control-button.selected");
+                    if (e.key === "ArrowUp") { // click on "Arrow Up" button
+                        if (controlButtonS.length > 0) {
+                            controlButtonS.removeClass("selected");
+                            controlButtonS.prev(".control-button").addClass("selected");
+                        } else {
+                            if (controlButtonL.length > 0) {
+                                $(controlButtonL[controlButtonL.length - 1]).addClass("selected");
+                            }
+                        }
+                    } else if (e.key === "ArrowDown") {// click on "Arrow Down" button
+                        if (controlButtonS.length > 0) {
+                            controlButtonS.removeClass("selected");
+                            controlButtonS.next(".control-button").addClass("selected");
+                        } else {
+                            if (controlButtonL.length > 0) {
+                                $(controlButtonL[0]).addClass("selected");
+                            }
+                        }
+                    } else if (e.key === " " && !controlButtonS.hasClass('disabled')) { // click on "space" button
+                        controlButtonS.removeClass("selected").trigger("click");
+                    }
+                }
+
+                if ($("div.popup-selection").is(':visible')) {
+                    let selectionL = $(".selection-item");
+                    let selectionS = $(".selection-item.selected");
+                    if (e.key === "ArrowUp") { // click on "Arrow Up" button
+                        if (selectionS.length > 0) {
+                            selectionS.removeClass("selected");
+                            selectionS.prev(".selection-item").addClass("selected");
+                        } else {
+                            if (selectionL.length > 0) {
+                                $(selectionL[selectionL - 1]).addClass("selected");
+                            }
+                        }
+                    } else if (e.key === "ArrowDown") {// click on "Arrow Down" button
+                        if (selectionS.length > 0) {
+                            selectionS.removeClass("selected");
+                            selectionS.next(".selection-item").addClass("selected");
+                        } else {
+                            if (selectionL.length > 0) {
+                                $(selectionL[0]).addClass('selected');
+                            }
+                        }
+                    } else if (e.key === " " && !selectionS.hasClass('disabled')) { // click on "space" button
+                        selectionS.removeClass("selected").trigger("click");
+                    }
+                }
+                /* cash control screen key down events */
+                if ($("div.popup.close-pos-popup").is(':visible')) {
+                    if (e.key === "Enter" && !$("textarea").is(":focus")) { // click on "Enter" button
+                        e.preventDefault();
+                        $(".modal-footer-left .btn-primary").trigger('click');
+                    }
+                }
+                if ($(".footer").is(':visible')) {
+                    if (e.key === "Escape") {  // click on "Esc" button
+                        e.preventDefault();
+                        $(".footer .cancel").trigger('click');
+                    }
+                    if (e.key === "Enter" && !$("textarea").is(":focus")) {  // click on "Enter" button
+                        e.preventDefault();
+                        $(".footer .confirm").trigger('click');
+                        $(".footer .btn-primary").trigger('click');
+                    }
+                }
+            }
+            /* login screen key down events */
+            else if ($("div.screen-login").is(':visible') && !$("div.screen-login").hasClass('oe_hidden')) {
+                if (e.altKey && e.code === "KeyC") {   // click on "Alt + C" button
+                    $($("div.screen-login")[0]).find("button.login-button").trigger("click");
+                }
+            }
+            /* product screen key down events */
+            else if ($("div.product-screen").is(':visible') && !$("div.product-screen").hasClass('oe_hidden')) {
+                let searchInput = $("div.input-container input");
+                let orderlineL = $("div.order-container .orderline");
+                let orderlineS = $("div.order-container .orderline.selected");
+                if (e.key === "F2") {      // click on "F2" button
+                    e.preventDefault();
+                    if (searchInput.is(':focus')) {
+                        searchInput.blur();
+                    } else {
+                        searchInput.focus();
+                    }
+                } else if (e.altKey && e.key === "F2") { // "Alt + F2"
+                    e.preventDefault();
+                    $("div.input-container i.fa-times").trigger("click");
+                } else if (e.altKey && e.code === "KeyM") { // "Alt + M"
+                    e.preventDefault();
+                    $("div.search-more-button button").trigger("click");
+
+                } else if (e.key === "ArrowUp") { // click on "Arrow Up" button
+                    if (orderlineS.length > 0) {
+                        orderlineS.removeClass("selected");
+                        orderlineS.prev(".orderline").addClass("selected").trigger('click');
+                    } else {
+                        if (orderlineL.length > 0) {
+                            $(orderlineL[orderlineL.length - 1]).addClass("selected").trigger('click');
+                        }
+                    }
+                } else if (e.key === "ArrowDown") {  // click on "Arrow Down" button
+                    if (orderlineS.length > 0) {
+                        orderlineS.removeClass("selected");
+                        orderlineS.next(".orderline").addClass("selected").trigger('click');
+                    } else {
+                        if (orderlineL.length > 0) {
+                            $(orderlineL[0]).addClass("selected").trigger('click');
+                        }
+                    }
+                } else if (e.key === "F3") {    // click on "F3" button
+                    e.preventDefault();
+                    $("div.actionpad button.mobile-more-button").trigger('click');
+                } else if (e.key === "F12") {   // click on "F12" button
+                    e.preventDefault();
+                    $("div.actionpad button.pay-order-button").trigger('click');
+                } else if (e.altKey && e.code === "Backspace") {    // click on "Alt + Backspace" button
+                    e.preventDefault();
+                    $("div.pos-rightheader span.order-button").trigger('click');
+                } else if (e.altKey && e.code === "KeyC") {    // click on "Alt + C" button
+                    e.preventDefault();
+                    $("div.actionpad button.set-partner").trigger('click');
+                } else if (e.key === "F4" && $("span.put-onhold-button").is(':visible')) {  // click on "F4" button
+                    e.preventDefault();
+                    $("span.put-onhold-button").trigger('click');
+                } else if (e.key === "F6" && $("span.scan-barcode-button").is(':visible')) {  // click on "F6" button
+                    e.preventDefault();
+                    $("span.scan-barcode-button").trigger('click');
+                }
+            }
+            /* payment screen key down events */
+            else if ($("div.payment-screen").is(':visible') && !$("div.payment-screen").hasClass('oe_hidden')) {
+                let paymentmethodL = $(".paymentmethod");
+                let paymentmethodS = $(".paymentmethod.selected");
+                let paymentlineL = $(".paymentline");
+                let paymentlineS = $(".paymentline.selected");
+                if (e.key === "Escape") {     // click on "Esc" button
+                    $("div.top-content div.back").trigger('click');
+                } else if (e.key === "F12" && !$("div.left-content div.next").hasClass("disabled")) {      // click on "F12" button
+                    e.preventDefault();
+                    $("div.left-content div.next").trigger('click');
+                }  else if (e.altKey && e.code === "KeyC") {    // click on "Alt + C" button
+                    e.preventDefault();
+                    $("div.payment-buttons .partner-button").trigger('click');
+                } else if (e.altKey && e.code === "KeyI") {     // click on "Alt + I" button
+                    e.preventDefault();
+                    $("div.payment-buttons .js_invoice").trigger('click');
+                } else if (e.altKey && e.code === "KeyD") {     // click on "Alt + D" button
+                    e.preventDefault();
+                    $("div.payment-buttons .js_cashdrawer").trigger('click');
+                } else if (e.altKey && e.code === "KeyT") {     // click on "Alt + T" button
+                    e.preventDefault();
+                    $("div.payment-buttons .js_tip").trigger('click');
+                } else if (e.altKey && e.code === "KeyS") {     // click on "Alt + S" button
+                    e.preventDefault();
+                    $("div.payment-buttons .js_ship_later").trigger('click');
+
+                } else if (e.key === "ArrowUp") {      // click on "Arrow Up" button
+                    if (paymentmethodS.length > 0) {
+                        paymentmethodS.removeClass("selected");
+                        paymentmethodS.prev(".paymentmethod").addClass("selected");
+                    } else {
+                        if (paymentmethodL.length > 0) {
+                            $(paymentmethodL[paymentmethodL.length - 1]).addClass('selected');
+                        }
+                    }
+                } else if (e.key === "ArrowDown") {      // click on "Arrow Down" button
+                    if (paymentmethodS.length > 0) {
+                        paymentmethodS.removeClass("selected");
+                        paymentmethodS.next(".paymentmethod").addClass("selected");
+                    } else {
+                        if (paymentmethodL.length > 0) {
+                            $(paymentmethodL[0]).addClass('selected');
+                        }
+                    }
+                } else if (e.key === " ") {      // click on "space" button
+                    // e.preventDefault();
+                    paymentmethodS.removeClass("selected").trigger("click");
+
+                } else if (e.key === "PageUp") {      // click on "Page Up" button
+                    if (paymentlineS.length > 0) {
+                        paymentlineS.removeClass("selected");
+                        paymentlineS.prev(".paymentline").addClass("selected").trigger('click');
+                    } else {
+                        if (paymentlineL.length > 0) {
+                            $(paymentlineL[paymentlineL - 1]).addClass("selected").trigger('click');
+                        }
+                    }
+                } else if (e.key === "PageDown") {    // click on "Page Down" button
+                    if (paymentlineS.length > 0) {
+                        paymentlineS.removeClass("selected");
+                        paymentlineS.next(".paymentline").addClass("selected").trigger('click');
+                    } else {
+                        if (paymentlineL.length > 0) {
+                            $(paymentlineL[0]).addClass("selected").trigger('click');
+                        }
+                    }
+                } else if (e.altKey && e.key === "Delete") { // click on "Alt + Delete" button
+                    e.preventDefault();
+                    $(".paymentlines .paymentline.selected .delete-button").trigger("click");
+                }
+            }
+            /* receipt preview screen key down events */
+            else if ($("div.receipt-screen").is(':visible') && !$("div.receipt-screen").hasClass('oe_hidden')) {
+                let nextButton = $(".button.next");
+                let printButton = $(".button.print");
+                let sendButton = $(".button.send");
+                let backButton = $(".button.back");
+                if (e.key === "F12" && nextButton.is(":visible")) {      // click on "F12" button
+                    e.preventDefault();
+                    nextButton.trigger('click');
+                } else if (e.altKey && e.code === "KeyP" && printButton.is(":visible")) {    // click on "Alt + P" button
+                    e.preventDefault();
+                    printButton.trigger("click");
+
+                } else if (e.altKey && e.code === "KeyE" && sendButton.is(":visible")) {    // click on "Alt + E" button
+                    e.preventDefault();
+                    sendButton.trigger("click");
+                } else if (e.key === "Escape" && backButton.is(":visible")) {    // click on "Esc" button
+                    backButton.trigger('click');
+                }
+            }
+            /* floor screen key down events */
+            else if ($("div.floor-screen").is(':visible') && !$("div.floor-screen").hasClass('oe_hidden')) {
+                let floorTableL = $(".floor-map .table")
+                let floorTableS = $(".floor-map .table.selected")
+                if (e.key === "ArrowUp") {      // click on "Arrow Up" button
+                    if (floorTableS.length > 0) {
+                        floorTableS.removeClass("selected");
+                        floorTableS.prev(".table").addClass("selected");
+                    } else {
+                        if (floorTableL.length > 0) {
+                            $(floorTableL[floorTableL.length - 1]).addClass('selected');
+                        }
+                    }
+                } else if (e.key === "ArrowDown") {      // click on "Arrow Down" button
+                    if (floorTableS.length > 0) {
+                        floorTableS.removeClass("selected");
+                        floorTableS.next(".table").addClass("selected");
+                    } else {
+                        if (floorTableL.length > 0) {
+                            $(floorTableL[0]).addClass('selected');
+                        }
+                    }
+                } else if (e.key === " ") {      // click on "space" button
+                    // e.preventDefault();
+                    floorTableS.removeClass("selected").trigger("click");
+                }
+            }
+            /* scale preview screen key down events */
+            else if ($("div.scale-screen").is(':visible') && !$("div.scale-screen").hasClass('oe_hidden')) {
+                let productQty = $("input.o_product_qty");
+                if (e.key === "F2" && !productQty.is(":focus")) {      // click on "F2" button
+                    e.preventDefault();
+                    productQty.focus();
+
+                } else if (e.key === "F12" && $("div.buy-product")) {      // click on "F12" button
+                    e.preventDefault();
+                    productQty.blur();
+                    $("div.buy-product").focus().trigger('click');
+                }
+            }
+            /* partnerlist screen key down events */
+            else if ($("div.partnerlist-screen").is(':visible') && !$("div.partnerlist-screen").hasClass('oe_hidden')) {
+                let searchInput = $("div.pos-search-bar input");
+                let selectedPartnerL = $(".partner-line");
+                let selectedPartnerS = $(".partner-line.highlight.active");
+                let unselectPartnerN = $(".partner-line.highlight.active button.unselect-tag");
+                let unselectPartnerM = $(".partner-line.highlight.active button.unselect-tag-mobile");
+                let partnerDetails   = $(".partner-line.highlight.active button.edit-partner-button");
+                let newCustomer = $(".button.new-customer");
+                let saveButton = $(".button.js_save");
+                let backButton = $(".button.back");
+                let moreInfoButton = $(".button.more-info.js_info .btn");
+                let ordersButton = $(".button.more-info.js_orders .btn");
+
+                if (e.key === "F2" && !searchInput.is(":focus")) {      // click on "F2" button
+                    e.preventDefault();
+                    searchInput.focus();
+                } else {
+                    selectedPartnerS.focus();
+                }
+                if (e.key === "Escape") {   // click on "Esc" button
+                    backButton.trigger('click');
+                } else if (e.altKey && e.code === "KeyN") {      // click on "Alt + N" button
+                    e.preventDefault();
+                    newCustomer.trigger("click");
+
+                } else if (e.altKey && e.code === "KeyS") {      // click on "Alt + S" button
+                    e.preventDefault();
+                    saveButton.trigger("click");
+
+                } else if (e.altKey && e.code === "KeyD") {      // click on "Alt + D" button
+                    e.preventDefault();
+                    partnerDetails.trigger("click");
+
+                } else if (e.altKey && e.code === "KeyM") {      // click on "Alt + M" button
+                    e.preventDefault();
+                    moreInfoButton.trigger("click");
+
+                } else if (e.altKey && e.code === "KeyU") {      // click on "Alt + U" button
+                    e.preventDefault();
+                    unselectPartnerN.trigger("click");
+                    unselectPartnerM.trigger("click");
+
+                } else if (e.altKey && e.code === "KeyO") {      // click on "Alt + O" button
+                    e.preventDefault();
+                    ordersButton.trigger("click");
+
+                } else if (e.key === "ArrowUp") {      // click on "Arrow Up" button
+                    if (selectedPartnerS.length > 0) {
+                        selectedPartnerS.removeClass("highlight").removeClass("active");
+                        selectedPartnerS.prev(".partner-line").addClass("highlight").addClass("active");
+                    } else {
+                        if (selectedPartnerL.length > 0) {
+                            $(selectedPartnerL[selectedPartnerL.length - 1]).addClass("highlight").addClass("active");
+                        }
+                    }
+                } else if (e.key === "ArrowDown") {      // click on "Arrow Down" button
+                    if (selectedPartnerS.length > 0) {
+                        selectedPartnerS.removeClass("highlight").removeClass("active");
+                        selectedPartnerS.next(".partner-line").addClass("highlight").addClass("active");
+                    } else {
+                        if (selectedPartnerL.length > 0) {
+                            $(selectedPartnerL[0]).addClass("highlight").addClass("active");
+                        }
+                    }
+                } else if (e.key === " ") { // click on "Space" button
+                    selectedPartnerS.trigger("click");
+                }
+            }
+            /* receipt ticket screen key down events */
+            else if ($("div.ticket-screen").is(':visible') && !$("div.ticket-screen").hasClass('oe_hidden')) {
+                let searchInput = $(".pos-search-bar input");
+                let filterOptions = $("div.filter ul.options");
+                let filterOptionL = $("div.filter ul.options li");
+                let filterOptionS = $("div.filter ul.options li.selected");
+                let orderRowL = $("div.orders div.order-row");
+                let orderRowS = $("div.orders div.order-row.selected");
+                let orderlineL = $("div.order-container .orderline");
+                let orderlineS = $("div.order-container .orderline.selected");
+
+                if (e.key === "F2" && !searchInput.is(":focus")) {      // click on "F2" button
+                    e.preventDefault();
+                    searchInput.focus();
+                } else {
+                    e.preventDefault();
+                    searchInput.blur()
+                    orderRowS.focus();
+                }
+                if (e.key === "Escape") {   // click on "Esc" button
+                    $("div.controls div.buttons button.discard").trigger("click");
+
+                } else if (e.altKey &&  e.code === "KeyF") {   // click on "Alt + F" button
+                    e.preventDefault();
+                    $(".pos-search-bar div.filter").trigger("click");
+
+                } else if (e.key === "ArrowUp") {      // click on "Arrow Up" button
+                    if (!filterOptions.is(':visible')) {
+                        orderRowS.focus();
+                        if (orderRowS.length > 0) {
+                            orderRowS.removeClass("selected");
+                            orderRowS.prev(".order-row").addClass("selected");
+                        } else {
+                            if (orderRowL.length > 0) {
+                                $(orderRowL[orderRowL.length - 1]).addClass("selected");
+                            }
+                        }
+                    } else {
+                        filterOptionS.focus();
+                        if (filterOptionS.length > 0) {
+                            filterOptionS.removeClass("selected");
+                            filterOptionS.prev("li").addClass("selected");
+                        } else {
+                            if (filterOptionL.length > 0) {
+                                $(filterOptionL[filterOptionL.length - 1]).addClass("selected");
+                            }
+                        }
+                    }
+                } else if (e.key === "ArrowDown") {      // click on "Arrow Down" button
+                    if (!filterOptions.is(':visible')) {
+                        orderRowS.focus();
+                        if (orderRowS.length > 0) {
+                            orderRowS.removeClass("selected");
+                            orderRowS.next(".order-row").addClass("selected");
+                        } else {
+                            if (orderRowL.length > 0) {
+                                $(orderRowL[0]).addClass("selected");
+                            }
+                        }
+                    } else {
+                        filterOptionS.focus();
+                        if (filterOptionS.length > 0) {
+                            filterOptionS.removeClass("selected");
+                            filterOptionS.next("li").addClass("selected");
+                        } else {
+                            if (filterOptionL.length > 0) {
+                                $(filterOptionL[0]).addClass("selected");
+                            }
+                        }
+                    }
+                } else if (e.key === " ") { // click on "space" button
+                    if (!filterOptions.is(':visible')) {
+                        orderRowS.click();
+                    } else {
+                        filterOptionS.click();
+                    }
+
+                } else if (e.key === "PageUp") { // click on "Page Up" button
+                    if (orderlineS.length > 0) {
+                        orderlineS.removeClass("selected");
+                        orderlineS.prev(".orderline").addClass("selected").click();
+                    } else {
+                        if (orderlineL.length > 0) {
+                            $(orderlineL[orderlineL.length - 1]).addClass("selected").click();
+                        }
+                    }
+
+                } else if (e.key === "PageDown") { // click on "Page Down" button
+                    if (orderlineS.length > 0) {
+                        orderlineS.removeClass("selected");
+                        orderlineS.next(".orderline").addClass("selected").click();
+                    } else {
+                        if (orderlineL.length > 0) {
+                            $(orderlineL[0]).addClass("selected").click();
+                        }
+                    }
+                } else if (e.altKey && e.key === "Delete") {      // click on "Alt + Delete" button
+                    if (orderRowS) {
+                        $("div.orders div.order-row.selected .delete-button").click();
+                    }
+                } else if (e.altKey &&  e.code === "KeyC") {   // click on "Alt + C" button
+                    $("button.button.set-partner").trigger("click");
+                } else if (e.altKey &&  e.code === "KeyN") {   // click on "Alt + N" button
+                    $("button.highlight.btn-primary").trigger("click");
+                } else if (e.altKey &&  e.code === "KeyI") {   // click on "Alt + I" button
+                    $("button.js_invoice").trigger("click");
+                } else if (e.altKey &&  e.code === "KeyP") {   // click on "Alt + P" button
+                    $("button.js_print_receipt").trigger("click");
+                } else if (e.altKey &&  e.code === "KeyR") {   // click on "Alt + R" button
+                    $("button.button.pay.validation").trigger("click");
+                } else if (e.key === "F12") {   // click on "F12" button
+                    e.preventDefault();
+                    $("button.validation").trigger("click");
+                }
+            }
+            else {
+                if (e.altKey && e.key === "Escape" && $(".floor-button").is(':visible')) { // click on "Alt + Esc" button
+                    e.preventDefault();
+                    $("span.floor-button").trigger('click');
+                }
+                /* functions key down events */
+            }
+        });
     }
 }
 

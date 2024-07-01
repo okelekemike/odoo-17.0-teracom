@@ -81,6 +81,10 @@ export class TicketScreen extends Component {
     //#region EVENT HANDLERS
     async onFilterSelected(selectedFilter) {
         this._state.ui.filter = selectedFilter;
+        // MIKE CODE MODIFICATIONS
+        if (this.pos.isAdmin() && this._state.ui.filter == "SYNCED") {
+            this._state.ui.filter = "ACTIVE_ORDERS";
+        }
         if (this._state.ui.filter == "ACTIVE_ORDERS" || this._state.ui.filter === null) {
             this._state.ui.selectedOrder = this.pos.get_order();
         }
@@ -237,7 +241,7 @@ export class TicketScreen extends Component {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
                     this.numberBuffer.reset();
-                    if (!toRefundDetail.orderline.comboParent) {
+                    if(!toRefundDetail.orderline.comboParent){
                         this.popup.add(ErrorPopup, {
                             title: _t("Maximum Exceeded"),
                             body: _t(
@@ -322,9 +326,7 @@ export class TicketScreen extends Component {
             const originalOrderline = refundDetail.orderline;
             const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
             if (originalOrderline.comboParent) {
-                const comboParentLine = originalToDestinationLineMap.get(
-                    originalOrderline.comboParent.id
-                );
+                const comboParentLine = originalToDestinationLineMap.get(originalOrderline.comboParent.id);
                 if (comboParentLine) {
                     destinationOrderline.comboParent = comboParentLine;
                 }
@@ -669,7 +671,7 @@ export class TicketScreen extends Component {
     }
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
-        orderStates.set("SYNCED", { text: _t("Paid") });
+        if (this.pos.isAdmin()) { orderStates.set("SYNCED", { text: _t("Paid") }); }
         return orderStates;
     }
     /**

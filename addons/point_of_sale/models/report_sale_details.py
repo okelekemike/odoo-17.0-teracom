@@ -273,11 +273,29 @@ class ReportSaleDetails(models.AbstractModel):
                 'invoices': session._get_invoice_total_list(),
             })
             invoiceTotal += session._get_total_invoice()
-
+        # MIKE CODE MODIFICATIONS
+        payments_lines =[]
         for payment in payments:
             if payment.get('id'):
-                payment['name'] = self.env['pos.payment.method'].browse(payment['id']).name + ' ' + self.env['pos.session'].browse(payment['session']).name
 
+                method_payments = self.env['pos.payment'].search([('payment_method_id', '=', payment.get('id')),
+                                                                  ('session_id', '=', payment.get('session'))])
+                payment_dictionary = {
+                    'name': self.env['pos.payment.method'].browse(
+                        payment.get('id')).name + ' ' + self.env['pos.session'].browse(payment.get('session')).name,
+                    'total': payment.get('total'),
+                    'final_count': payment.get('final_count'),
+                    'money_counted': payment.get('money_counted'),
+                    'money_difference': payment.get('money_difference'),
+                    'cash_moves': payment.get('cash_moves'),
+                    'count': payment.get('count'),
+                    'session': payment.get('session'),
+                    'payments':  sorted([{
+                        'pos_order_id': pay.pos_order_id.pos_reference,
+                        'amount': pay.amount,
+                    } for pay in method_payments], key=lambda l: l['pos_order_id']) if not payment['cash'] else [],
+                }
+                payments_lines.append(payment_dictionary)
         return {
             'opening_note': sessions[0].opening_notes if len(sessions) == 1 else False,
             'closing_note': sessions[0].closing_notes if len(sessions) == 1 else False,
@@ -288,7 +306,7 @@ class ReportSaleDetails(models.AbstractModel):
             'date_stop': date_stop,
             'session_name': session_name if session_name else False,
             'config_names': config_names,
-            'payments': payments,
+            'payments': payments_lines,
             'company_name': self.env.company.name,
             'taxes': list(taxes.values()),
             'taxes_info': taxes_info,

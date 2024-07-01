@@ -148,11 +148,7 @@ export class Product extends PosModel {
         const attributes = this.attribute_line_ids
             .map((id) => this.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        if (
-            attributes.some(
-                (attribute) => attribute.values.length > 1 || attribute.values[0].is_custom
-            )
-        ) {
+        if (attributes.some((attribute) => attribute.values.length > 1 || attribute.values[0].is_custom)) {
             return await this.env.services.popup.add(ProductConfiguratorPopup, {
                 product: this,
                 attributes: attributes,
@@ -297,7 +293,7 @@ export class Product extends PosModel {
             alert(
                 _t(
                     "An error occurred when loading product prices. " +
-                        "Make sure all pricelists are available in the POS."
+                    "Make sure all pricelists are available in the POS."
                 )
             );
         }
@@ -305,8 +301,8 @@ export class Product extends PosModel {
         const rules = !pricelist
             ? []
             : (this.applicablePricelistItems[pricelist.id] || []).filter((item) =>
-                  this.isPricelistItemUsable(item, date)
-              );
+                this.isPricelistItemUsable(item, date)
+            );
 
         let price = this.lst_price + (price_extra || 0);
         const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
@@ -353,11 +349,11 @@ export class Product extends PosModel {
         return price;
     }
     get_display_price({
-        pricelist = this.pos.getDefaultPricelist(),
-        quantity = 1,
-        price = this.get_price(pricelist, quantity),
-        iface_tax_included = this.pos.config.iface_tax_included,
-    } = {}) {
+                          pricelist = this.pos.getDefaultPricelist(),
+                          quantity = 1,
+                          price = this.get_price(pricelist, quantity),
+                          iface_tax_included = this.pos.config.iface_tax_included,
+                      } = {}) {
         const order = this.pos.get_order();
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
@@ -524,7 +520,7 @@ export class Orderline extends PosModel {
      *    @param {Object} modifiedPackLotLines key-value pair of String (the cid) & String (the new lot_name)
      *    @param {Array} newPackLotLines array of { lot_name: String }
      */
-    setPackLotLines({ modifiedPackLotLines, newPackLotLines, setQuantity = true }) {
+    setPackLotLines({ modifiedPackLotLines, newPackLotLines , setQuantity = true }) {
         // Set the new values for modified lot lines.
         const lotLinesToRemove = [];
         for (const lotLine of this.pack_lot_lines) {
@@ -575,11 +571,26 @@ export class Orderline extends PosModel {
             typeof discount === "number"
                 ? discount
                 : isNaN(parseFloat(discount))
-                ? 0
-                : oParseFloat("" + discount);
+                    ? 0
+                    : oParseFloat("" + discount);
         var disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.discountStr = "" + disc;
+        var unit_price = this.get_unit_price();
+        this.discountAmount = (parsed_discount * unit_price) / 100;
+    }
+    set_discount_fixed(discount) {
+        var unit_price = this.get_unit_price();
+        var parsed_discount =
+            typeof discount === "number"
+                ? discount
+                : isNaN(parseFloat(discount))
+                    ? 0
+                    : oParseFloat("" + discount);
+        var disc = (parsed_discount / unit_price) * 100;
+        this.discount = disc;
+        this.discountStr = "" + disc;
+        this.discountAmount = parsed_discount;
     }
     // returns the discount [0,100]%
     get_discount() {
@@ -587,6 +598,9 @@ export class Orderline extends PosModel {
     }
     get_discount_str() {
         return this.discountStr;
+    }
+    get_discount_amt() {
+        return this.discountAmount;
     }
     set_price_extra(price_extra) {
         this.price_extra = parseFloat(price_extra) || 0.0;
@@ -627,7 +641,7 @@ export class Orderline extends PosModel {
             } else if (-quant <= maxQtyToRefund) {
                 toRefundDetail.qty = -quant;
             } else {
-                if (!this.comboParent) {
+                if(!this.comboParent){
                     this.env.services.popup.add(ErrorPopup, {
                         title: _t("Greater than allowed"),
                         body: _t(
@@ -773,17 +787,9 @@ export class Orderline extends PosModel {
             orderline.compute_fixed_price(order_line_price),
             this.pos.currency.decimal_places
         );
-        let hasSameAttributes =
-            Object.keys(Object(orderline.attribute_value_ids)).length ===
-            Object.keys(Object(this.attribute_value_ids)).length;
-        if (
-            hasSameAttributes &&
-            Object(orderline.attribute_value_ids)?.length &&
-            Object(this.attribute_value_ids)?.length
-        ) {
-            hasSameAttributes = orderline.attribute_value_ids.every(
-                (value, index) => value === this.attribute_value_ids[index]
-            );
+        let hasSameAttributes = Object.keys(Object(orderline.attribute_value_ids)).length === Object.keys(Object(this.attribute_value_ids)).length;
+        if(hasSameAttributes && Object(orderline.attribute_value_ids)?.length && Object(this.attribute_value_ids)?.length) {
+            hasSameAttributes = orderline.attribute_value_ids.every((value, index) => value === this.attribute_value_ids[index]);
         }
         return (
             !this.skipChange &&
@@ -854,8 +860,8 @@ export class Orderline extends PosModel {
         var parsed_price = !isNaN(price)
             ? price
             : isNaN(parseFloat(price))
-            ? 0
-            : oParseFloat("" + price);
+                ? 0
+                : oParseFloat("" + price);
         this.price = round_di(parsed_price || 0, this.pos.dp["Product Price"]);
     }
     get_unit_price() {
@@ -878,7 +884,7 @@ export class Orderline extends PosModel {
         return (
             this.display_discount_policy() === "without_discount" &&
             this.env.utils.roundCurrency(this.get_unit_display_price()) <
-                this.env.utils.roundCurrency(this.get_taxed_lst_unit_price()) &&
+            this.env.utils.roundCurrency(this.get_taxed_lst_unit_price()) &&
             this.get_taxed_lst_unit_price()
         );
     }
@@ -1126,24 +1132,20 @@ export class Orderline extends PosModel {
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
         const addedPtal_id = [];
-        for (const value of values) {
-            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]) {
-                if (addedPtal_id.includes(ptal_id)) {
+        for (const value of values){
+            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]){
+                if (addedPtal_id.includes(ptal_id)){
                     continue;
                 }
                 const attribute = this.pos.attributes_by_ptal_id[ptal_id];
-                const attFound = attribute.values
-                    .filter((target) => {
-                        return Object.values(values).includes(target.id);
+                const attFound = attribute.values.filter((target) => {
+                    return Object.values(values).includes(target.id);
                     })
                     .map((att) => ({ ...att })); // make a copy
                 attFound.forEach((att) => {
                     if (att.is_custom) {
                         customAttributes.forEach((customAttribute) => {
-                            if (
-                                att.id ===
-                                customAttribute.custom_product_template_attribute_value_id
-                            ) {
+                            if (att.id === customAttribute.custom_product_template_attribute_value_id) {
                                 att.name = customAttribute.value;
                             }
                         });
@@ -1177,13 +1179,12 @@ export class Orderline extends PosModel {
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
             oldUnitPrice: this.env.utils.formatCurrency(this.get_old_unit_display_price()),
             discount: this.get_discount_str(),
+            discountAmt: this.env.utils.formatCurrency(this.get_discount_amt()),
             customerNote: this.get_customer_note(),
             internalNote: this.getNote(),
             comboParent: this.comboParent?.get_full_product_name(),
             pack_lot_lines: this.get_lot_lines(),
-            price_without_discount: this.env.utils.formatCurrency(
-                this.getUnitDisplayPriceBeforeDiscount()
-            ),
+            price_without_discount: this.env.utils.formatCurrency(this.getUnitDisplayPriceBeforeDiscount()),
             attributes: this.attribute_value_ids
                 ? this.findAttribute(this.attribute_value_ids, this.custom_attribute_value_ids)
                 : [],
@@ -1400,6 +1401,8 @@ export class Order extends PosModel {
 
         this.partner = null;
 
+        this.order_note = "";
+
         this.uiState = {
             ReceiptScreen: {
                 inputEmail: "",
@@ -1562,6 +1565,7 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+        this.order_note = json.order_note || "";
     }
     export_as_JSON() {
         var orderLines, paymentLines;
@@ -1600,6 +1604,7 @@ export class Order extends PosModel {
             access_token: this.access_token || "",
             last_order_preparation_change: JSON.stringify(this.lastOrderPrepaChange),
             ticket_code: this.ticketCode || "",
+            order_note: this.order_note || "",
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -1634,8 +1639,7 @@ export class Order extends PosModel {
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),
-            ticket_code:
-                this.pos.company.point_of_sale_ticket_unique_code &&
+            ticket_code: this.pos.company.point_of_sale_ticket_unique_code &&
                 this.finalized &&
                 this.ticketCode,
             base_url: this.pos.base_url,
@@ -1647,6 +1651,7 @@ export class Order extends PosModel {
                 ...this.pos.getReceiptHeaderData(this),
                 trackingNumber: this.trackingNumber,
             },
+            order_note: this.order_note,
         };
     }
     // This function send order change to printer
@@ -2815,8 +2820,8 @@ export class Order extends PosModel {
         if (newPartner) {
             newPartnerFiscalPosition = newPartner.property_account_position_id
                 ? this.pos.fiscal_positions.find(
-                      (position) => position.id === newPartner.property_account_position_id[0]
-                  )
+                    (position) => position.id === newPartner.property_account_position_id[0]
+                )
                 : defaultFiscalPosition;
             newPartnerPricelist =
                 this.pos.pricelists.find(
@@ -2860,5 +2865,11 @@ export class Order extends PosModel {
     }
     _getOrderOptions() {
         return {};
+    }
+    set_order_note(note) {
+        this.order_note = note || "";
+    }
+    get_order_note() {
+        return this.order_note;
     }
 }

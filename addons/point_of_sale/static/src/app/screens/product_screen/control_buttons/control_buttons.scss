@@ -6,6 +6,7 @@
 .control-button {
     flex: 1 1 29%;
     padding: $o-horizontal-padding * 0.5;
+    min-width: 50% !important;
 }
 
 .control-button.altlight,

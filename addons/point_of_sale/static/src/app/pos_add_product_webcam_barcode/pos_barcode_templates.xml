@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Pos barcode button-->
+<template id="Pos_Product_Barcode">
+    <t t-name="ProductBarcodePos" owl="1">
+
+        <span
+                t-if="props.isHeaderBtn"
+                class="scan-barcode-button d-flex align-items-center gap-2 px-4 fw-bolder cursor-pointer"
+                t-on-click="onClick">
+            <i class="fa fa-2x fa-barcode pb-1"
+               role="img" aria-label="Scan Barcode"
+               title="Scan product barcode with webcam"/>
+            <span t-if="!ui.isSmall">Scan Barcode</span>
+        </span>
+
+        <div
+                t-else=""
+                class="control-button btn btn-light rounded-0 fw-bolder"
+                t-on-click="onClick">
+            <i class="fa fa-barcode pb-1"/>
+            <span> </span>
+            <span>Barcode</span>
+        </div>
+    </t>
+</template>

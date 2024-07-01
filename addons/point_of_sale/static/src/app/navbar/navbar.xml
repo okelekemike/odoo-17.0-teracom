@@ -9,7 +9,9 @@
             </div>
             <div class="pos-rightheader d-flex flex-grow-1 h-100">
                 <BackButton t-if="showBackButton()"/>
+                <PutOnHoldButton t-if="showPutOnHoldButton()"/>
                 <div class="status-buttons d-flex flex-grow-1 flex-basis-0 justify-content-end h-100">
+                    <PosProductBarcode t-if="showPutOnHoldButton()" isHeaderBtn="true"/>
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
                     <ProxyStatus t-if="pos.config.use_proxy" />
@@ -35,13 +37,17 @@
                                         Cash In/Out
                                     </a>
                                 </li>
-                                <li class="menu-item navbar-button" t-on-click="() => pos.toggleImages('product')">
+                                <li t-if="pos.mainScreen.component.name == 'ProductScreen'"
+                                    class="menu-item navbar-button"
+                                    t-on-click="() => pos.toggleImages('product')">
                                     <a class="dropdown-item py-2">
                                         <t t-if="pos.show_product_images">Hide Product Images</t>
                                         <t t-else="">Show Product Images</t>
                                     </a>
                                 </li>
-                                <li class="menu-item navbar-button" t-on-click="() => pos.toggleImages('category')">
+                                <li t-if="pos.mainScreen.component.name == 'ProductScreen'"
+                                    class="menu-item navbar-button"
+                                    t-on-click="() => pos.toggleImages('category')">
                                     <a class="dropdown-item py-2">
                                         <t t-if="pos.show_category_images">Hide Category Images</t>
                                         <t t-else="">Show Category Images</t>
